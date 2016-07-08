@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('signature_key')
                     ->isRequired()
                 ->end()
-                ->scalarNode('signature_keyset')
+                ->scalarNode('keyset')
                     ->isRequired()
                 ->end()
                 ->scalarNode('signature_algorithm')

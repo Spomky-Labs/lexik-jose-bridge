@@ -9,7 +9,7 @@
             <argument type="service" id="lexik_jose_bridge.encoder.jwt_creator"/>
             <argument type="service" id="lexik_jose_bridge.encoder.jwt_loader"/>
             <argument type="service" id="lexik_jose_bridge.encoder.signature_key"/>
-            <argument type="service" id="lexik_jose_bridge.encoder.signature_keyset"/>
+            <argument type="service" id="lexik_jose_bridge.encoder.keyset"/>
             <argument>%lexik_jose_bridge.encoder.signature_algorithm%</argument>
         </service>
     </services>

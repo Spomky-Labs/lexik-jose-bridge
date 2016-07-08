@@ -60,17 +60,17 @@ jose:
                 password: "tests"
                 additional_values:
                     kid: "KEY1"
-                    alg: "RS256"
+                    alg: "RS512"
         lexik_public_key:
             file:
                 path: "%kernel.root_dir%/keys/public.key"
                 additional_values:
                     kid: "KEY1"
-                    alg: "RS256"
+                    alg: "RS512"
     easy_jwt_creator:
         lexik:
             signature_algorithms:
-                - "RS256"
+                - "RS512"
             key_encryption_algorithms:
                 - "A256GCMKW"
             content_encryption_algorithms:
@@ -78,7 +78,7 @@ jose:
     easy_jwt_loader:
         lexik:
             signature_algorithms:
-                - "RS256"
+                - "RS512"
             key_encryption_algorithms:
                 - "A256GCMKW"
             content_encryption_algorithms:
@@ -96,13 +96,13 @@ lexik_jwt_authentication:
     public_key_path:    "Not used"
     encoder:
         service: "lexik_jose_bridge.encoder"
-        encryption_algorithm: "RS256"
 
 lexik_jose:
     jwt_creator: "jose.jwt_creator.lexik"
     jwt_loader: "jose.jwt_loader.lexik"
+    signature_algorithm: "RS512"
     signature_key: "jose.key.lexik_private_key"
-    signature_keyset: "jose.key_set.signature_keyset"
+    keyset: "jose.key_set.signature_keyset"
     encryption:
         enabled: true
         encryption_key: 'jose.key.lexik_encryption_key'
