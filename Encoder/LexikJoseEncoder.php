@@ -3,17 +3,13 @@
 namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
 use Base64Url\Base64Url;
-use InvalidArgumentException;
 use Jose\JWTCreator;
 use Jose\JWTLoader;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWKSetInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\ExpiredJWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\UnverifiedJWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\JWTEncodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTEncodeFailureException;
 
 /**
  * Json Web Token encoder/decoder.
@@ -89,7 +85,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
      * @param string                    $key_encryption_algorithm
      * @param string                    $content_encryption_algorithm
      */
-    public function enableEncryptionSupport(JWKInterface $encryption_key, $key_encryption_algorithm , $content_encryption_algorithm)
+    public function enableEncryptionSupport(JWKInterface $encryption_key, $key_encryption_algorithm, $content_encryption_algorithm)
     {
         $this->encryption_key = $encryption_key;
         $this->key_encryption_algorithm = $key_encryption_algorithm;
@@ -119,7 +115,6 @@ class LexikJoseEncoder implements JWTEncoderInterface
             );
 
             if (null !== $this->encryption_key) {
-
                 $jwt = $this->jwt_creator->encrypt(
                     $jwt,
                     [
@@ -145,7 +140,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
         try {
             $jws = $this->jwt_loader->load($token, $this->keyset, null !== $this->encryption_key);
             $this->jwt_loader->verify($jws, $this->keyset);
-            
+
             return $jws->getPayload();
         } catch (\InvalidArgumentException $e) {
             throw new JWTDecodeFailureException('Invalid JWT Token', $e);

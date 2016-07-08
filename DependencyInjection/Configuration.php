@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode    = $treeBuilder->root('lexik_jose');
+        $rootNode = $treeBuilder->root('lexik_jose');
 
         $rootNode
             ->addDefaultsIfNotSet()
@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                         if (false === $value['enabled']) {
                             return false;
                         }
+
                         return empty($value['encryption_key']) || empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
                     })
                     ->thenInvalid('The configuration options for encryption are invalid.')

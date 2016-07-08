@@ -26,7 +26,7 @@ trait LoginContext
      *
      * @return \Behat\Mink\Session
      */
-    abstract function getSession($name = null);
+    abstract public function getSession($name = null);
 
     /**
      * @return null|string
@@ -42,7 +42,7 @@ trait LoginContext
     public function iStoreTheToken()
     {
         $content = json_decode($this->getSession()->getPage()->getContent(), true);
-        
+
         $this->token = $content['token'];
     }
 }

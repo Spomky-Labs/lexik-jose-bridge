@@ -23,7 +23,7 @@ trait ResponseContext
      *
      * @return \Behat\Mink\Session
      */
-    abstract function getSession($name = null);
+    abstract public function getSession($name = null);
 
     /**
      * @Then the response content-type should be :content_type
@@ -31,10 +31,9 @@ trait ResponseContext
     public function theResponseContentTypeShouldBe($content_type)
     {
         $header = $this->getSession()->getResponseHeaders();
-        
+
         Assertion::keyExists($header, 'content-type', 'The response header has no content-type.');
         Assertion::inArray($content_type, $header['content-type'], sprintf('The response header content-type does not contain "%s".', $content_type));
-
     }
 
     /**
@@ -43,10 +42,10 @@ trait ResponseContext
     public function theResponseShouldContainAToken()
     {
         $content = json_decode($this->getSession()->getPage()->getContent(), true);
-        
+
         Assertion::notNull($content, 'The response is not a JSON object.');
         Assertion::keyExists($content, 'token', 'The response does not contain a token.');
-        
+
         dump($content['token']);
     }
 }
