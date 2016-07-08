@@ -45,7 +45,5 @@ trait ResponseContext
 
         Assertion::notNull($content, 'The response is not a JSON object.');
         Assertion::keyExists($content, 'token', 'The response does not contain a token.');
-
-        dump($content['token']);
     }
 }
