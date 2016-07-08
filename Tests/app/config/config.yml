@@ -1,0 +1,110 @@
+imports:
+    - { resource: security.yml }
+
+framework:
+    test: ~
+    secret: test
+    translator: ~
+    default_locale:  "en"
+    form: ~
+    csrf_protection: ~
+    validation:
+        enable_annotations: true
+    session:
+        storage_id: session.storage.mock_file
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    templating:
+        engines: ['twig']
+    assets:
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            true
+    strict_variables: true
+#monolog:
+#    handlers:
+#        main:
+#            type: stream
+#            path: "%kernel.logs_dir%/%kernel.environment%.log"
+#            level: debug
+#            channels: [!event]
+#        console:
+#            type:   console
+#            channels: [!event, !doctrine]
+
+jose:
+    key_sets:
+        signature_keyset:
+            keys:
+                id:
+                    - "jose.key.lexik_public_key"
+                    - "jose.key.lexik_encryption_key"
+    keys:
+        lexik_encryption_key:
+            values:
+                values:
+                    kty: "oct"
+                    kid: "KEY2"
+                    use: "enc"
+                    alg: "A256GCMKW"
+                    k: "qC57l_uxcm7Nm3K-ct4GFjx8tM1U8CZ0NLBvdQstiS8"
+        lexik_private_key:
+            file:
+                path: "%kernel.root_dir%/keys/private.key"
+                password: "tests"
+                additional_values:
+                    kid: "KEY1"
+                    alg: "RS256"
+        lexik_public_key:
+            file:
+                path: "%kernel.root_dir%/keys/public.key"
+                additional_values:
+                    kid: "KEY1"
+                    alg: "RS256"
+    easy_jwt_creator:
+        lexik:
+            signature_algorithms:
+                - "RS256"
+            key_encryption_algorithms:
+                - "A256GCMKW"
+            content_encryption_algorithms:
+                - "A256GCM"
+    easy_jwt_loader:
+        lexik:
+            signature_algorithms:
+                - "RS256"
+            key_encryption_algorithms:
+                - "A256GCMKW"
+            content_encryption_algorithms:
+                - "A256GCM"
+            claim_checkers:
+                - "exp"
+                - "iat"
+                - "nbf"
+            header_checkers:
+                - "crit"
+
+
+lexik_jwt_authentication:
+    private_key_path:   "Not used"
+    public_key_path:    "Not used"
+    encoder:
+        service: "lexik_jose_bridge.encoder"
+        encryption_algorithm: "RS256"
+
+lexik_jose:
+    jwt_creator: "jose.jwt_creator.lexik"
+    jwt_loader: "jose.jwt_loader.lexik"
+    signature_key: "jose.key.lexik_private_key"
+    signature_keyset: "jose.key_set.signature_keyset"
+    encryption:
+        enabled: true
+        encryption_key: 'jose.key.lexik_encryption_key'
+        key_encryption_algorithm: 'A256GCMKW'
+        content_encryption_algorithm: 'A256GCM'

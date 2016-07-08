@@ -1,0 +1,25 @@
+default:
+    formatters:
+        pretty: true
+    autoload:
+        '': '%paths.base%'
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                debug: true
+                path: 'Tests/app/AppKernel.php'
+                bootstrap: 'Tests/app/autoload.php'
+        Behat\MinkExtension:
+            show_cmd: firefox %s
+            base_url: 'https://www.example.test/'
+            sessions:
+                symfony2:
+                    symfony2: ~
+    suites:
+        default:
+            paths:
+                - '%paths.base%/Features'
+            contexts:
+                - 'SpomkyLabs\LexikJoseBundle\Features\Context\FeatureContext'
+            mink_session: 'symfony2'
+            bundle: 'SpomkyLabsLexikJoseBundle'

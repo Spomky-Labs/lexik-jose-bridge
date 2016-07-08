@@ -1,0 +1,47 @@
+{
+    "name": "spomky-labs/lexik-jose-bridge",
+    "type": "symfony-bundle",
+    "description": "Bridge to allow the use of the Spomky-Labs Jose Bundle with the Lexik JWT Authentication Bundle",
+    "keywords": ["Jose", "Bundle", "Symfony"],
+    "homepage": "https://github.com/Spomky-Labs/lexik-jose-bridge",
+    "license": "MIT",
+    "authors": [
+        {
+          "name": "Florent Morselli"
+        }
+    ],
+    "require": {
+        "spomky-labs/jose-bundle": "^1.0@beta",
+        "lexik/jwt-authentication-bundle": "2.*@dev"
+    },
+    "require-dev": {
+        "symfony/form": "^2.7|^3.0",
+        "symfony/validator": "^2.7|^3.0",
+        "symfony/var-dumper": "^2.7|^3.0",
+        "symfony/twig-bundle": "^2.7|^3.0",
+        "symfony/expression-language": "^2.7|^3.0",
+        "sensio/framework-extra-bundle": "^3.0",
+        "behat/behat": "^3.0",
+        "behat/mink": "*",
+        "behat/mink-extension": "^2.1",
+        "behat/mink-browserkit-driver": "*",
+        "behat/symfony2-extension":  "^2.1",
+        "symfony/monolog-bundle": "~2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SpomkyLabs\\LexikJoseBundle\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SpomkyLabs\\TestBundle\\": "Tests/Bundle/TestBundle",
+            "SpomkyLabs\\LexikJoseBundle\\Features\\Context\\": "Tests/Context"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
