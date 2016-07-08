@@ -3,6 +3,7 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 
 [![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=master)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Spomky-Labs/lexik-jose-bridge/badge.svg?branch=master)](https://coveralls.io/github/Spomky-Labs/lexik-jose-bridge?branch=master)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
 
