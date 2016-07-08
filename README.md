@@ -5,7 +5,16 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/Spomky-Labs/lexik-jose-bridge/badge.svg?branch=master)](https://coveralls.io/github/Spomky-Labs/lexik-jose-bridge?branch=master)
 
+[![HHVM Status](http://hhvm.h4cc.de/badge/spomky-labs/lexik-jose-bridge.png)](http://hhvm.h4cc.de/package/spomky-labs/lexik-jose-bridge)
+[![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/OAuth2ServerBundle/badge.svg)](https://travis-ci.org/Spomky-Labs/OAuth2ServerBundle)
+
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
+
+[![Latest Stable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/stable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
+[![Total Downloads](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/downloads.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
+[![Latest Unstable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
+[![License](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
+
 
 # The Release Process
 
