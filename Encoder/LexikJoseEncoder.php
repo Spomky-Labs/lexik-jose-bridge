@@ -117,12 +117,19 @@ class LexikJoseEncoder implements JWTEncoderInterface
      */
     private function sign(array $payload)
     {
-        $payload['jti'] = Base64Url::encode(random_bytes(64));
+        $payload = array_merge(
+            $payload,
+            [
+                'jti' => Base64Url::encode(random_bytes(64)),
+                'nbf' => time(),
+                'iat' => time(),
+            ]
+        );
         $headers = [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
             'alg'  => $this->signature_algorithm,
-            'crit' => ['exp'],
+            'crit' => ['exp', 'nbf', 'iat'],
         ];
         if ($this->signature_key->has('kid')) {
             $headers['kid'] = $this->signature_key->get('kid');
@@ -149,7 +156,6 @@ class LexikJoseEncoder implements JWTEncoderInterface
                 'cty'  => 'JWT',
                 'alg' => $this->key_encryption_algorithm,
                 'enc' => $this->content_encryption_algorithm,
-                'jti' => Base64Url::encode(random_bytes(64)),
             ],
             $this->encryption_key
         );
