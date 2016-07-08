@@ -46,13 +46,13 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        
+
         $container->setAlias('lexik_jose_bridge.encoder.jwt_creator', $config['jwt_creator']);
         $container->setAlias('lexik_jose_bridge.encoder.jwt_loader', $config['jwt_loader']);
         $container->setAlias('lexik_jose_bridge.encoder.signature_key', $config['signature_key']);
         $container->setAlias('lexik_jose_bridge.encoder.signature_keyset', $config['signature_keyset']);
         $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
-        
+
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
         if (true === $config['encryption']['enabled']) {
             $container->setAlias('lexik_jose_bridge.encoder.encryption.encryption_key', $config['encryption']['encryption_key']);
