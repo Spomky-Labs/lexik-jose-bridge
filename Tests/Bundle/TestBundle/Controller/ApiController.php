@@ -22,39 +22,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ApiController extends Controller
 {
     /**
-     * @Route("/foo")
-     * @Security("is_granted('AUTHENTICATED_FULLY')")
+     * @Route("/hello")
      * @Template()
      */
-    public function fooAction()
+    public function helloAction()
     {
-        return [];
-    }
-
-    /**
-     * @Route("/bar")
-     * @Template()
-     */
-    public function barAction()
-    {
-        return [];
-    }
-
-    /**
-     * @Route("/plic")
-     * @Template()
-     */
-    public function plicAction()
-    {
-        return [];
-    }
-
-    /**
-     * @Route("/ploc")
-     * @Template()
-     */
-    public function plocAction()
-    {
-        return [];
+        return [
+            'user' => $this->getUser(),
+        ];
     }
 }

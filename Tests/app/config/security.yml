@@ -12,6 +12,11 @@ security:
                         password: admin1
                         roles: 'ROLE_ADMIN'
     firewalls:
+        api:
+            pattern:  ^/api
+            stateless: true
+            lexik_jwt:
+                throw_exceptions: true
         login:
             pattern:  ^/
             stateless: true

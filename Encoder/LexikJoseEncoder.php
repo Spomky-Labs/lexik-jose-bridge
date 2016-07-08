@@ -98,38 +98,61 @@ class LexikJoseEncoder implements JWTEncoderInterface
     public function encode(array $payload)
     {
         try {
-            $payload['jti'] = Base64Url::encode(random_bytes(64));
-            $headers = [
-                'typ'  => 'JWT',
-                'cty'  => 'JWT',
-                'alg'  => $this->signature_algorithm,
-                'crit' => ['alg'],
-            ];
-            if ($this->signature_key->has('kid')) {
-                $headers['kid'] = $this->signature_key->get('kid');
-            }
-            $jwt = $this->jwt_creator->sign(
-                $payload,
-                $headers,
-                $this->signature_key
-            );
+            $jwt = $this->sign($payload);
 
             if (null !== $this->encryption_key) {
-                $jwt = $this->jwt_creator->encrypt(
-                    $jwt,
-                    [
-                        'alg' => $this->key_encryption_algorithm,
-                        'enc' => $this->content_encryption_algorithm,
-                        'jti' => Base64Url::encode(random_bytes(64)),
-                    ],
-                    $this->encryption_key
-                );
+                $jwt = $this->encrypt($jwt);
             }
 
             return $jwt;
         } catch (\InvalidArgumentException $e) {
             throw new JWTEncodeFailureException('An error occurred while trying to encode the JWT token.', $e);
         }
+    }
+
+    /**
+     * @param array $payload
+     *
+     * @return string
+     */
+    private function sign(array $payload)
+    {
+        $payload['jti'] = Base64Url::encode(random_bytes(64));
+        $headers = [
+            'typ'  => 'JWT',
+            'cty'  => 'JWT',
+            'alg'  => $this->signature_algorithm,
+            'crit' => ['exp'],
+        ];
+        if ($this->signature_key->has('kid')) {
+            $headers['kid'] = $this->signature_key->get('kid');
+        }
+
+        return $this->jwt_creator->sign(
+            $payload,
+            $headers,
+            $this->signature_key
+        );
+    }
+
+    /**
+     * @param string $jwt
+     *
+     * @return string
+     */
+    public function encrypt($jwt)
+    {
+        return $this->jwt_creator->encrypt(
+            $jwt,
+            [
+                'typ'  => 'JWT',
+                'cty'  => 'JWT',
+                'alg' => $this->key_encryption_algorithm,
+                'enc' => $this->content_encryption_algorithm,
+                'jti' => Base64Url::encode(random_bytes(64)),
+            ],
+            $this->encryption_key
+        );
     }
 
     /**

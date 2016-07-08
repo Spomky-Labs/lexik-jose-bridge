@@ -46,7 +46,6 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->validate()
                     ->ifTrue(function ($value) {
-                        dump($value);
                         if (false === $value['enabled']) {
                             return false;
                         }
