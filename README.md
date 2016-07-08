@@ -14,10 +14,11 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 [![License](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 
+This Symfony Bundle provides a JWT Encoder that uses the [Spomky-Labs/JoseBundle](https://github.com/Spomky-Labs/JoseBundle) as JWT Creator/Loader.
 
 # The Release Process
 
-The release process [is described here](doc/Release.md).
+The release process [is described here](Resources/doc/Release.md).
 
 # Prerequisites
 
@@ -33,7 +34,7 @@ We also track bugs and code quality using [Scrutinizer-CI]() and [Sensio Insight
 
 Coding Standards are verified by [StyleCI]().
 
-Code coverage is not performed, but `Behavior driven development` (BDD) are used to test this bundle. 
+Code coverage is not performed, but `Behavior driven development` (BDD) is used to test this bundle. 
 
 # Installation
 
@@ -43,7 +44,7 @@ The preferred way to install this bundle is to rely on Composer:
 composer require spomky-labs/lexik-jose-bridge
 ```
 
-Then, add the bundle into your kernel:
+Then, add the bundle and the Spomky-Labs/JoseBundle into your kernel:
 
 ```php
 <?php
@@ -57,6 +58,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             ...
+            new SpomkyLabs\JoseBundle\SpomkyLabsJoseBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
 
@@ -71,7 +73,7 @@ This bundle needs to be configured. Please [see this page](Resources/doc/Configu
 
 # How to use
 
-Have a look at [this page](Resources/doc/Use.md) to know hot to configure and use this bundle.
+Have a look at [this page](Resources/doc/Use.md) to know hot to use this bundle.
 
 # Contributing
 
