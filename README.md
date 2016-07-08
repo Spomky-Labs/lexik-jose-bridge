@@ -28,7 +28,7 @@ This library needs at least:
 
 # Continuous Integration
 
-It has been successfully tested using `PHP 5.6`, `PHP 7` and `HHVM` on Symfony `2.8`, `3.0`, `3.1` and `3.2 (dev)`.
+It has been successfully tested using `PHP 5.6`, `PHP 7` and `HHVM` on Symfony `2.8`, `3.0` and `3.1`.
 
 We also track bugs and code quality using [Scrutinizer-CI]() and [Sensio Insight]().
 
