@@ -92,8 +92,6 @@ jose:
 
 
 lexik_jwt_authentication:
-    private_key_path:   "Not used"
-    public_key_path:    "Not used"
     encoder:
         service: "lexik_jose_bridge.encoder"
 
