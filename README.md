@@ -5,7 +5,7 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=master)
 
 [![HHVM Status](http://hhvm.h4cc.de/badge/spomky-labs/lexik-jose-bridge.png)](http://hhvm.h4cc.de/package/spomky-labs/lexik-jose-bridge)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/OAuth2ServerBundle/badge.svg)](https://travis-ci.org/Spomky-Labs/OAuth2ServerBundle)
+[![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/lexik-jose-bridge/badge.svg)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
 

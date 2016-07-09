@@ -11,7 +11,7 @@
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -28,12 +28,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('signature_key')
-                    ->isRequired()
-                ->end()
-                ->scalarNode('signature_algorithm')
-                    ->isRequired()
-                ->end()
+                ->scalarNode('signature_key')->isRequired()->end()
+                ->scalarNode('signature_algorithm')->isRequired()->end()
             ->end();
 
         $this->addEncryptionSection($rootNode);
@@ -42,9 +38,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @param \Symfony\Component\Config\Definition\Builder\NodeDefinition $node
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
-    private function addEncryptionSection(NodeDefinition $node)
+    private function addEncryptionSection(ArrayNodeDefinition $node)
     {
         $node
             ->addDefaultsIfNotSet()
@@ -52,22 +48,14 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('encryption')
                     ->addDefaultsIfNotSet()
                     ->validate()
-                    ->ifTrue(self::verifyEncryptionOptions())
-                    ->thenInvalid('The configuration options for encryption are invalid.')
+                        ->ifTrue(self::verifyEncryptionOptions())
+                        ->thenInvalid('The configuration options for encryption are invalid.')
                     ->end()
                     ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
-                        ->scalarNode('encryption_key')
-                            ->defaultNull()
-                        ->end()
-                        ->scalarNode('key_encryption_algorithm')
-                            ->defaultNull()
-                        ->end()
-                        ->scalarNode('content_encryption_algorithm')
-                            ->defaultNull()
-                        ->end()
+                        ->booleanNode('enabled')->defaultFalse()->end()
+                        ->scalarNode('encryption_key')->defaultNull()->end()
+                        ->scalarNode('key_encryption_algorithm')->defaultNull()->end()
+                        ->scalarNode('content_encryption_algorithm')->defaultNull()->end()
                     ->end()
                 ->end()
             ->end();
