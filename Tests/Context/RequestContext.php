@@ -91,7 +91,7 @@ trait RequestContext
     {
         $this->getRequestBuilder()->addRequestParameter($key, $value);
     }
-    
+
     /**
      * @Given I add the token in the authorization header
      */
@@ -103,7 +103,7 @@ trait RequestContext
         $this->getRequestBuilder()->addHeader('Authorization', 'Bearer '.$token);
     }
 
-        /**
+    /**
      * @Given the request content type is :content_type
      */
     public function theContentTypeIs($content_type)
@@ -137,7 +137,7 @@ trait RequestContext
         if (!$this->getSession()->getDriver() instanceof BrowserKitDriver) {
             throw new \RuntimeException('Unsupported driver.');
         }
-        
+
         $client = $this->getSession()->getDriver()->getClient();
         $client->followRedirects(false);
 
