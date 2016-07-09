@@ -31,19 +31,20 @@ twig:
 jose:
     keys:
         lexik_encryption_key:
-            values:
-                values:
-                    kty: "oct"
-                    kid: "KEY2"
+            oct:
+                size: 256
+                storage_path: '%kernel.cache_dir%/encryption.key'
+                ttl: 10
+                additional_values:
                     use: "enc"
                     alg: "A256GCMKW"
-                    k: "qC57l_uxcm7Nm3K-ct4GFjx8tM1U8CZ0NLBvdQstiS8"
         signature_key:
-            file:
-                path: "%kernel.root_dir%/keys/private.key"
-                password: "tests"
+            rsa:
+                size: 4096
+                storage_path: '%kernel.cache_dir%/signature.key'
+                ttl: 10
                 additional_values:
-                    kid: "KEY1"
+                    use: "sig"
                     alg: "RS512"
 
 lexik_jwt_authentication:
