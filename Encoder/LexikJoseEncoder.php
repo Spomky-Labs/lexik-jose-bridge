@@ -148,12 +148,13 @@ class LexikJoseEncoder implements JWTEncoderInterface
         $headers = [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
-            'alg' => $this->key_encryption_algorithm,
-            'enc' => $this->content_encryption_algorithm,
+            'alg'  => $this->key_encryption_algorithm,
+            'enc'  => $this->content_encryption_algorithm,
         ];
         if ($this->encryption_key->has('kid')) {
             $headers['kid'] = $this->encryption_key->get('kid');
         }
+
         return $this->jwt_creator->encrypt($jwt, $headers, $this->encryption_key);
     }
 
