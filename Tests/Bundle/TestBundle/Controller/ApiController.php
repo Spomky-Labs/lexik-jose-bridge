@@ -22,10 +22,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ApiController extends Controller
 {
     /**
+     * @Route("/anonymous")
+     * @Template()
+     */
+    public function anonymousAction()
+    {
+        return [
+            'user' => $this->getUser(),
+        ];
+    }
+
+    /**
      * @Route("/hello")
+     * @Security("is_granted('ROLE_USER')")
      * @Template()
      */
     public function helloAction()
+    {
+        return [
+            'user' => $this->getUser(),
+        ];
+    }
+
+    /**
+     * @Route("/admin")
+     * @Security("is_granted('ROLE_ADMIN')")
+     * @Template()
+     */
+    public function adminAction()
     {
         return [
             'user' => $this->getUser(),

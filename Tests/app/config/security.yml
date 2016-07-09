@@ -1,6 +1,8 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
     providers:
         in_memory:
             memory:
@@ -15,6 +17,7 @@ security:
         api:
             pattern:  ^/api
             stateless: true
+            anonymous: true
             lexik_jwt:
                 throw_exceptions: true
         login:

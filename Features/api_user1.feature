@@ -14,5 +14,17 @@ Feature: A user can authenticate against a website
 
   Scenario: The user is authenticated and send a valid request
     Given I add the token in the authorization header
+    When I am on the page "https://www.example.test/api/anonymous"
+    Then the response status code should be 200
+    And I should see "Hello user1!"
+
+  Scenario: The user is authenticated and send a valid request
+    Given I add the token in the authorization header
     When I am on the page "https://www.example.test/api/hello"
-    Then I should see "Hello user1!"
+    Then the response status code should be 200
+    And I should see "Hello user1!"
+
+  Scenario: The user is authenticated and send a valid request but does not have the role ROLE_ADMIN
+    Given I add the token in the authorization header
+    When I am on the page "https://www.example.test/api/admin"
+    Then the response status code should be 403
