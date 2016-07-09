@@ -41,7 +41,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsValid(
             [
                 [
-                    'signature_key' => 'foo_key',
+                    'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
                 ],
             ]
@@ -53,9 +53,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'signature_key' => 'foo_key',
+                    'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
-                    'encryption' => [
+                    'encryption'          => [
                         'enabled' => true,
                     ],
                 ],
@@ -69,10 +69,10 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'signature_key' => 'foo_key',
+                    'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
-                    'encryption' => [
-                        'enabled' => true,
+                    'encryption'          => [
+                        'enabled'        => true,
                         'encryption_key' => 'foo_key',
                     ],
                 ],
@@ -86,11 +86,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'signature_key' => 'foo_key',
+                    'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
-                    'encryption' => [
-                        'enabled' => true,
-                        'encryption_key' => 'foo_key',
+                    'encryption'          => [
+                        'enabled'                  => true,
+                        'encryption_key'           => 'foo_key',
                         'key_encryption_algorithm' => 'foo_key_encryption_algorithm',
                     ],
                 ],
@@ -104,12 +104,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsValid(
             [
                 [
-                    'signature_key' => 'foo_key',
+                    'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
-                    'encryption' => [
-                        'enabled' => true,
-                        'encryption_key' => 'foo_key',
-                        'key_encryption_algorithm' => 'foo_key_encryption_algorithm',
+                    'encryption'          => [
+                        'enabled'                      => true,
+                        'encryption_key'               => 'foo_key',
+                        'key_encryption_algorithm'     => 'foo_key_encryption_algorithm',
                         'content_encryption_algorithm' => 'foo_content_encryption_algorithm',
                     ],
                 ],

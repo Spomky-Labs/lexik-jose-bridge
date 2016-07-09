@@ -118,7 +118,7 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
                 $jose_config['encrypters'],
                 [
                     $this->getAlias() => [
-                        'key_encryption_algorithms' => [$bundle_config['encryption']['key_encryption_algorithm']],
+                        'key_encryption_algorithms'     => [$bundle_config['encryption']['key_encryption_algorithm']],
                         'content_encryption_algorithms' => [$bundle_config['encryption']['content_encryption_algorithm']],
                     ],
                 ]
@@ -184,7 +184,7 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
                 $jose_config['decrypters'],
                 [
                     $this->getAlias() => [
-                        'key_encryption_algorithms' => [$bundle_config['encryption']['key_encryption_algorithm']],
+                        'key_encryption_algorithms'     => [$bundle_config['encryption']['key_encryption_algorithm']],
                         'content_encryption_algorithms' => [$bundle_config['encryption']['content_encryption_algorithm']],
                     ],
                 ]
@@ -205,7 +205,7 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
             $jose_config['checkers'],
             [
                 $this->getAlias() => [
-                    'claims' => ['exp', 'iat', 'nbf'],
+                    'claims'  => ['exp', 'iat', 'nbf'],
                     'headers' => ['crit'],
                 ],
             ]
@@ -227,7 +227,7 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
             [
                 $this->getAlias() => [
                     'verifier' => sprintf('jose.verifier.%s', $this->getAlias()),
-                    'checker' => sprintf('jose.checker.%s', $this->getAlias()),
+                    'checker'  => sprintf('jose.checker.%s', $this->getAlias()),
                 ],
             ]
         );
