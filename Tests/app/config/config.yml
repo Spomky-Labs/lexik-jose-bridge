@@ -27,24 +27,8 @@ framework:
 twig:
     debug:            true
     strict_variables: true
-#monolog:
-#    handlers:
-#        main:
-#            type: stream
-#            path: "%kernel.logs_dir%/%kernel.environment%.log"
-#            level: debug
-#            channels: [!event]
-#        console:
-#            type:   console
-#            channels: [!event, !doctrine]
 
 jose:
-    key_sets:
-        signature_keyset:
-            keys:
-                id:
-                    - "jose.key.lexik_public_key"
-                    - "jose.key.lexik_encryption_key"
     keys:
         lexik_encryption_key:
             values:
@@ -54,53 +38,21 @@ jose:
                     use: "enc"
                     alg: "A256GCMKW"
                     k: "qC57l_uxcm7Nm3K-ct4GFjx8tM1U8CZ0NLBvdQstiS8"
-        lexik_private_key:
+        signature_key:
             file:
                 path: "%kernel.root_dir%/keys/private.key"
                 password: "tests"
                 additional_values:
                     kid: "KEY1"
                     alg: "RS512"
-        lexik_public_key:
-            file:
-                path: "%kernel.root_dir%/keys/public.key"
-                additional_values:
-                    kid: "KEY1"
-                    alg: "RS512"
-    easy_jwt_creator:
-        lexik:
-            signature_algorithms:
-                - "RS512"
-            key_encryption_algorithms:
-                - "A256GCMKW"
-            content_encryption_algorithms:
-                - "A256GCM"
-    easy_jwt_loader:
-        lexik:
-            signature_algorithms:
-                - "RS512"
-            key_encryption_algorithms:
-                - "A256GCMKW"
-            content_encryption_algorithms:
-                - "A256GCM"
-            claim_checkers:
-                - "exp"
-                - "iat"
-                - "nbf"
-            header_checkers:
-                - "crit"
-
 
 lexik_jwt_authentication:
     encoder:
         service: "lexik_jose_bridge.encoder"
 
 lexik_jose:
-    jwt_creator: "jose.jwt_creator.lexik"
-    jwt_loader: "jose.jwt_loader.lexik"
     signature_algorithm: "RS512"
-    signature_key: "jose.key.lexik_private_key"
-    keyset: "jose.key_set.signature_keyset"
+    signature_key: "jose.key.signature_key"
     encryption:
         enabled: true
         encryption_key: 'jose.key.lexik_encryption_key'
