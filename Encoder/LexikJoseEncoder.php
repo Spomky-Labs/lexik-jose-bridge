@@ -135,11 +135,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
             $headers['kid'] = $this->signature_key->get('kid');
         }
 
-        return $this->jwt_creator->sign(
-            $payload,
-            $headers,
-            $this->signature_key
-        );
+        return $this->jwt_creator->sign($payload, $headers, $this->signature_key);
     }
 
     /**
@@ -158,11 +154,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
         if ($this->encryption_key->has('kid')) {
             $headers['kid'] = $this->encryption_key->get('kid');
         }
-        return $this->jwt_creator->encrypt(
-            $jwt,
-            $headers,
-            $this->encryption_key
-        );
+        return $this->jwt_creator->encrypt($jwt, $headers, $this->encryption_key);
     }
 
     /**
