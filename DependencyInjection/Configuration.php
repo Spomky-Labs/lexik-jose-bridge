@@ -11,6 +11,7 @@
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -33,16 +34,25 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('signature_algorithm')
                     ->isRequired()
                 ->end()
+            ->end();
+
+        $this->addEncryptionSection($rootNode);
+
+        return $treeBuilder;
+    }
+
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\NodeDefinition $node
+     */
+    private function addEncryptionSection(NodeDefinition $node)
+    {
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
                 ->arrayNode('encryption')
                     ->addDefaultsIfNotSet()
                     ->validate()
-                    ->ifTrue(function ($value) {
-                        if (false === $value['enabled']) {
-                            return false;
-                        }
-
-                        return empty($value['encryption_key']) || empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
-                    })
+                    ->ifTrue(self::verifyEncryptionOptions())
                     ->thenInvalid('The configuration options for encryption are invalid.')
                     ->end()
                     ->children()
@@ -61,7 +71,16 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
 
-        return $treeBuilder;
+    private static function verifyEncryptionOptions()
+    {
+        return function ($value) {
+            if (false === $value['enabled']) {
+                return false;
+            }
+
+            return empty($value['encryption_key']) || empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
+        };
     }
 }

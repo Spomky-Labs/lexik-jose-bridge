@@ -28,7 +28,8 @@
         "behat/mink-extension": "^2.1",
         "behat/mink-browserkit-driver": "*",
         "behat/symfony2-extension":  "^2.1",
-        "symfony/monolog-bundle": "~2.4"
+        "symfony/monolog-bundle": "~2.4",
+        "matthiasnoback/symfony-config-test": "^2.0"
     },
     "autoload": {
         "psr-4": {
