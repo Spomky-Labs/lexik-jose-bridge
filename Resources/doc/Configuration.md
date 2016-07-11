@@ -60,6 +60,8 @@ lexik_jose:
         content_encryption_algorithm: 'A256GCM'
 ```
 
+**Note: we highly recommend you to enable the encryption support as the token may contain very sensitive information**
+
 # Lexik JWT Authentication Bundle Configuration
 
 Now you just have to set the `lexik_jose_bridge.encoder` as encoder service for the Lexik JWT Authentication Bundle:
