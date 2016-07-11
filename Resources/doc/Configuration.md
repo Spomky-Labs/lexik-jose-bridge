@@ -69,3 +69,5 @@ lexik_jwt_authentication:
     encoder:
         service: "lexik_jose_bridge.encoder"
 ```
+
+*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/master/Tests/app/config/config.yml#L31-61).*
