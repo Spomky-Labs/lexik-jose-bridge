@@ -4,15 +4,10 @@ How to configure this bundle?
 # Pre-requisite
 
 This bundle needs services created by the JoseBundle. They are namely:
-* A signature key for token signing. This key can be a private key (if symmetric) or a shared key (if asymmetric).
+* A signature key for token signing.
+* An optional encryption key for token encryption.
 
-If you want to encrypt the tokens, you will need the following additional services:
-* An encryption key for token encryption. This key can be a private key (if symmetric) or a shared key (if asymmetric).
-
-If private keys are provided, public keys are automatically computed.
-
-*Reminder: the Spomky-Labs/JoseBundle creates services according to the ID you set in the configuration*
-*A key with the ID `lexik_signature_key` will be available through the `jose.key.lexik_signature_key` service.*
+These keys can be a private key (if symmetric) or a shared key (if asymmetric). When private keys are used, associated public keys are automatically computed.
 
 Example With Encryption Support
 -------------------------------
@@ -20,15 +15,15 @@ Example With Encryption Support
 ```yml
 jose:
     keys:
-        lexik_signature_key: # We load a private key from a file for the signature
+        lexik_signature_key: # This is the key ID. We load a private key from a file for the signature
             file:
                 path: "%kernel.root_dir%/keys/private.key"
-                password: "tests"
+                password: "Optional password if the key is encrypted"
                 additional_values: # Not mandatory but highly recommended
                     kid: "KEY1"
                     alg: "RS512"
                     use: "sig"
-        lexik_encryption_key: # The encryption key is a symmetric key
+        lexik_encryption_key: # This is the key ID. The encryption key is a symmetric key
             values:
                 values:
                     kty: "oct"
@@ -38,9 +33,12 @@ jose:
                     k: "qC57l_uxcm7Nm3K-ct4GFjx8tM1U8CZ0NLBvdQstiS8"
 ```
 
+*Reminder: the Spomky-Labs/JoseBundle creates services according to the key ID you set in the configuration: `jose.key.keyID`*
+*The keys loaded above will be available through the services `jose.key.lexik_signature_key` and `jose.key.lexik_encryption_key`.*
+
 # The Bundle Configuration
 
-Now that all your services are available, we can configure the bundle.
+Now that all your keys are available through services, we can configure the bundle.
 
 ## Without Encryption
 
