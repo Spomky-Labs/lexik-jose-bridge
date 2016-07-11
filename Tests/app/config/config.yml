@@ -28,34 +28,34 @@ twig:
     debug:            true
     strict_variables: true
 
-jose:
-    keys:
-        lexik_encryption_key:
-            oct:
-                size: 256
-                storage_path: '%kernel.cache_dir%/encryption.key'
-                ttl: 10
+jose: 
+    keys: # We need keys loaded by the Spomky-Labs/JoseBundle
+        lexik_encryption_key: # The key ID. The associated service to retrieve the key will be `jose.key.lexik_encryption_key`
+            oct: # The key is a symmetric octet key
+                size: 256 # The key size is 256 bits
+                storage_path: '%kernel.cache_dir%/encryption.key' # We store it in that file
+                ttl: 10 # The key will expire every 10 sec (not recommended, just for the tests)
                 additional_values:
-                    use: "enc"
-                    alg: "A256GCMKW"
-        signature_key:
-            rsa:
-                size: 4096
-                storage_path: '%kernel.cache_dir%/signature.key'
-                ttl: 10
+                    use: "enc" # We indicate the key is for encryption operation only
+                    alg: "A256GCMKW" # We indicate the key is for A256GCMKW key encryption algorithm only
+        lexik_signature_key: # The key ID. The associated service to retrieve the key will be `jose.key.lexik_signature_key`
+            rsa: # The key is an asymmetric RSA key
+                size: 4096 # The key size is 4096 bits
+                storage_path: '%kernel.cache_dir%/signature.key' # We store it in that file
+                ttl: 10 # The key will expire every 10 sec (not recommended, just for the tests)
                 additional_values:
-                    use: "sig"
-                    alg: "RS512"
+                    use: "sig" # We indicate the key is for signature operation only
+                    alg: "RS512" # We indicate the key is for RS512 signature algorithm only
 
 lexik_jwt_authentication:
     encoder:
-        service: "lexik_jose_bridge.encoder"
+        service: "lexik_jose_bridge.encoder" # We change the encoder of the LexikJWTAuthenticationBundle in favor of that bundle
 
 lexik_jose:
-    signature_algorithm: "RS512"
-    signature_key: "jose.key.signature_key"
+    signature_algorithm: "RS512" # The signature algorithm we want to use
+    signature_key: "jose.key.lexik_signature_key" # The name of the service to retrieve the signature key
     encryption:
-        enabled: true
-        encryption_key: 'jose.key.lexik_encryption_key'
-        key_encryption_algorithm: 'A256GCMKW'
-        content_encryption_algorithm: 'A256GCM'
+        enabled: true # We enable the encryption support
+        encryption_key: 'jose.key.lexik_encryption_key' # The name of the service to retrieve the encryption key
+        key_encryption_algorithm: 'A256GCMKW' # The key encryption algorithm
+        content_encryption_algorithm: 'A256GCM' # The content encryption algorithm
