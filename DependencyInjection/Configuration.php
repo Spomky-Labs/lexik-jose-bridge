@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('server_name')->isRequired()->end()
                 ->scalarNode('signature_key')->isRequired()->end()
                 ->scalarNode('signature_algorithm')->isRequired()->end()
             ->end();
