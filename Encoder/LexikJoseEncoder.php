@@ -127,20 +127,9 @@ class LexikJoseEncoder implements JWTEncoderInterface
     {
         $payload = array_merge(
             $payload,
-            [
-                'jti' => Base64Url::encode(random_bytes(64)),
-                'nbf' => time(),
-                'iat' => time(),
-                'iss' => $this->issuer,
-                'aud' => $this->issuer,
-            ]
+            $this->getAdditionalPayload()
         );
-        $headers = [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->signature_algorithm,
-            'crit' => ['exp', 'nbf', 'iat', 'iss', 'aud'],
-        ];
+        $headers = $this->getSignatureHeaders();
         if ($this->signature_key->has('kid')) {
             $headers['kid'] = $this->signature_key->get('kid');
         }
@@ -155,12 +144,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
      */
     public function encrypt($jwt)
     {
-        $headers = [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->key_encryption_algorithm,
-            'enc'  => $this->content_encryption_algorithm,
-        ];
+        $headers = $this->getEncryptionHeaders();
         if ($this->encryption_key->has('kid')) {
             $headers['kid'] = $this->encryption_key->get('kid');
         }
@@ -181,5 +165,45 @@ class LexikJoseEncoder implements JWTEncoderInterface
         } catch (\InvalidArgumentException $e) {
             throw new JWTDecodeFailureException('Invalid JWT Token', $e);
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getAdditionalPayload()
+    {
+        return [
+            'jti' => Base64Url::encode(random_bytes(64)),
+            'nbf' => time(),
+            'iat' => time(),
+            'iss' => $this->issuer,
+            'aud' => $this->issuer,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSignatureHeaders()
+    {
+        return [
+            'typ'  => 'JWT',
+            'cty'  => 'JWT',
+            'alg'  => $this->signature_algorithm,
+            'crit' => ['exp', 'nbf', 'iat', 'iss', 'aud'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getEncryptionHeaders()
+    {
+        return [
+            'typ'  => 'JWT',
+            'cty'  => 'JWT',
+            'alg'  => $this->key_encryption_algorithm,
+            'enc'  => $this->content_encryption_algorithm,
+        ];
     }
 }
