@@ -52,6 +52,7 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
         $container->setAlias('lexik_jose_bridge.encoder.jwt_loader', sprintf('jose.jwt_loader.%s', $this->getAlias()));
         $container->setAlias('lexik_jose_bridge.encoder.signature_key', $config['signature_key']);
         $container->setAlias('lexik_jose_bridge.encoder.keyset', sprintf('jose.key_set.%s', $this->getAlias()));
+        $container->setParameter('lexik_jose_bridge.encoder.issuer', $config['server_name']);
         $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
 
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
@@ -205,7 +206,7 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
             $jose_config['checkers'],
             [
                 $this->getAlias() => [
-                    'claims'  => ['exp', 'iat', 'nbf'],
+                    'claims'  => ['exp', 'iat', 'nbf', 'lexik_iss', 'lexik_aud'],
                     'headers' => ['crit'],
                 ],
             ]

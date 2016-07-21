@@ -11,6 +11,17 @@
             <argument type="service" id="lexik_jose_bridge.encoder.signature_key"/>
             <argument type="service" id="lexik_jose_bridge.encoder.keyset"/>
             <argument>%lexik_jose_bridge.encoder.signature_algorithm%</argument>
+            <argument>%lexik_jose_bridge.encoder.issuer%</argument>
+        </service>
+
+        <service id="lexik_jose_bridge.claim_checker.issuer" class="SpomkyLabs\LexikJoseBundle\Checker\IssuerChecker" public="false">
+            <argument>%lexik_jose_bridge.encoder.issuer%</argument>
+            <tag name="jose.checker.claim" alias="lexik_iss" />
+        </service>
+
+        <service id="lexik_jose_bridge.claim_checker.audience" class="SpomkyLabs\LexikJoseBundle\Checker\AudienceChecker" public="false">
+            <argument>%lexik_jose_bridge.encoder.issuer%</argument>
+            <tag name="jose.checker.claim" alias="lexik_aud" />
         </service>
     </services>
 </container>

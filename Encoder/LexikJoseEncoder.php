@@ -19,6 +19,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\JWTEncodeFai
 class LexikJoseEncoder implements JWTEncoderInterface
 {
     /**
+     * @var string
+     */
+    private $issuer;
+
+    /**
      * @var \Jose\JWTCreator
      */
     private $jwt_creator;
@@ -66,18 +71,21 @@ class LexikJoseEncoder implements JWTEncoderInterface
      * @param \Jose\Object\JWKInterface    $signature_key
      * @param \Jose\Object\JWKSetInterface $keyset
      * @param string                       $signature_algorithm
+     * @param string                       $issuer
      */
     public function __construct(JWTCreator $jwt_creator,
                                 JWTLoader $jwt_loader,
                                 JWKInterface $signature_key,
                                 JWKSetInterface $keyset,
-                                $signature_algorithm
+                                $signature_algorithm,
+                                $issuer
     ) {
         $this->jwt_creator = $jwt_creator;
         $this->jwt_loader = $jwt_loader;
         $this->signature_key = $signature_key;
         $this->keyset = $keyset;
         $this->signature_algorithm = $signature_algorithm;
+        $this->issuer = $issuer;
     }
 
     /**
@@ -119,18 +127,9 @@ class LexikJoseEncoder implements JWTEncoderInterface
     {
         $payload = array_merge(
             $payload,
-            [
-                'jti' => Base64Url::encode(random_bytes(64)),
-                'nbf' => time(),
-                'iat' => time(),
-            ]
+            $this->getAdditionalPayload()
         );
-        $headers = [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->signature_algorithm,
-            'crit' => ['exp', 'nbf', 'iat'],
-        ];
+        $headers = $this->getSignatureHeaders();
         if ($this->signature_key->has('kid')) {
             $headers['kid'] = $this->signature_key->get('kid');
         }
@@ -145,12 +144,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
      */
     public function encrypt($jwt)
     {
-        $headers = [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->key_encryption_algorithm,
-            'enc'  => $this->content_encryption_algorithm,
-        ];
+        $headers = $this->getEncryptionHeaders();
         if ($this->encryption_key->has('kid')) {
             $headers['kid'] = $this->encryption_key->get('kid');
         }
@@ -171,5 +165,45 @@ class LexikJoseEncoder implements JWTEncoderInterface
         } catch (\Exception $e) {
             throw new JWTDecodeFailureException('Invalid JWT Token', $e);
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getAdditionalPayload()
+    {
+        return [
+            'jti' => Base64Url::encode(random_bytes(64)),
+            'nbf' => time(),
+            'iat' => time(),
+            'iss' => $this->issuer,
+            'aud' => $this->issuer,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSignatureHeaders()
+    {
+        return [
+            'typ'  => 'JWT',
+            'cty'  => 'JWT',
+            'alg'  => $this->signature_algorithm,
+            'crit' => ['exp', 'nbf', 'iat', 'iss', 'aud'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getEncryptionHeaders()
+    {
+        return [
+            'typ'  => 'JWT',
+            'cty'  => 'JWT',
+            'alg'  => $this->key_encryption_algorithm,
+            'enc'  => $this->content_encryption_algorithm,
+        ];
     }
 }
