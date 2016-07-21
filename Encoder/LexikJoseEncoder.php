@@ -114,7 +114,6 @@ class LexikJoseEncoder implements JWTEncoderInterface
 
             return $jwt;
         } catch (\Exception $e) {
-            throw new JWTEncodeFailureException('An error occurred while trying to encode the JWT token.', $e);
         }
     }
 
@@ -163,7 +162,6 @@ class LexikJoseEncoder implements JWTEncoderInterface
 
             return $jws->getPayload();
         } catch (\Exception $e) {
-            throw new JWTDecodeFailureException('Invalid JWT Token', $e);
         }
     }
 

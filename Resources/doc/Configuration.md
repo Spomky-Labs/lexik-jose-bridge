@@ -44,6 +44,7 @@ Now that all your keys are available through services, we can configure the bund
 
 ```yml
 lexik_jose:
+    server_name: "https://my.super.service/"
     signature_algorithm: "RS512"
     signature_key: "jose.key.lexik_signature_key"
 ```
