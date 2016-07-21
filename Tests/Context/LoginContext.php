@@ -79,9 +79,9 @@ trait LoginContext
         $payload = array_merge(
             $this->getBasicPayload(),
             [
-                'exp' => time()-1,
-                'nbf' => time()-100,
-                'iat' => time()-100,
+                'exp' => time() - 1,
+                'nbf' => time() - 100,
+                'iat' => time() - 100,
             ]
         );
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
@@ -177,12 +177,12 @@ trait LoginContext
     {
         return [
             'username' => 'user1',
-            'exp' => time()+100,
-            'iat' => time()-100,
-            'nbf' => time()-100,
-            'jti' => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
-            'iss' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
-            'aud' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
+            'exp'      => time() + 100,
+            'iat'      => time() - 100,
+            'nbf'      => time() - 100,
+            'jti'      => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
+            'iss'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
+            'aud'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
         ];
     }
 
