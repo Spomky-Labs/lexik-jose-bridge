@@ -50,15 +50,7 @@ trait LoginContext
     public function iHaveAValidSignedToken()
     {
         $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
-        $payload = array_merge(
-            $this->getBasicPayload(),
-            [
-                "exp" => time()+100,
-                "username" => "user1",
-                "nbf" => time()-100,
-                "iat" => time()-100,
-            ]
-        );
+        $payload = $this->getBasicPayload();
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $this->token = $jwt;
@@ -70,15 +62,7 @@ trait LoginContext
     public function iHaveAValidSignedAndEncryptedToken()
     {
         $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
-        $payload = array_merge(
-            $this->getBasicPayload(),
-            [
-                "exp" => time()+100,
-                "username" => "user1",
-                "nbf" => time()-100,
-                "iat" => time()-100,
-            ]
-        );
+        $payload = $this->getBasicPayload();
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
         $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
@@ -95,9 +79,9 @@ trait LoginContext
         $payload = array_merge(
             $this->getBasicPayload(),
             [
-                "exp" => time()-1,
-                "nbf" => time()-100,
-                "iat" => time()-100,
+                'exp' => time()-1,
+                'nbf' => time()-100,
+                'iat' => time()-100,
             ]
         );
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
@@ -116,7 +100,7 @@ trait LoginContext
         $payload = array_merge(
             $this->getBasicPayload(),
             [
-                "iss" => "BAD ISSUER",
+                'iss' => 'BAD ISSUER',
             ]
         );
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
@@ -135,7 +119,7 @@ trait LoginContext
         $payload = array_merge(
             $this->getBasicPayload(),
             [
-                "aud" => "BAD AUDIENCE",
+                'aud' => 'BAD AUDIENCE',
             ]
         );
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
@@ -192,13 +176,13 @@ trait LoginContext
     private function getBasicPayload()
     {
         return [
-            "username" => "user1",
-            "exp" => time()+100,
-            "iat" => time()-100,
-            "nbf" => time()-100,
-            "jti" => "w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA",
-            "iss" => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
-            "aud" => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
+            'username' => 'user1',
+            'exp' => time()+100,
+            'iat' => time()-100,
+            'nbf' => time()-100,
+            'jti' => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
+            'iss' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
+            'aud' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
         ];
     }
 
