@@ -18,8 +18,7 @@ security:
             pattern:  ^/api
             stateless: true
             anonymous: true
-            lexik_jwt:
-                throw_exceptions: true
+            lexik_jwt: ~
         login:
             pattern:  ^/
             stateless: true

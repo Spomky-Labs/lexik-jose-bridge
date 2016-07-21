@@ -14,11 +14,23 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         return new Configuration();
     }
 
-    public function testSignatureKeyIsNotProvided()
+    public function testServerNameIsNotProvided()
     {
         $this->assertConfigurationIsInvalid(
             [
                 [],
+            ],
+            'The child node "server_name" at path "lexik_jose" must be configured.'
+        );
+    }
+
+    public function testSignatureKeyIsNotProvided()
+    {
+        $this->assertConfigurationIsInvalid(
+            [
+                [
+                    'server_name' => 'foo_bar',
+                ],
             ],
             'The child node "signature_key" at path "lexik_jose" must be configured.'
         );
@@ -29,6 +41,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
+                    'server_name'   => 'foo_bar',
                     'signature_key' => 'foo_key',
                 ],
             ],
@@ -41,6 +54,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsValid(
             [
                 [
+                    'server_name'         => 'foo_bar',
                     'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
                 ],
@@ -53,6 +67,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
+                    'server_name'         => 'foo_bar',
                     'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
                     'encryption'          => [
@@ -69,6 +84,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
+                    'server_name'         => 'foo_bar',
                     'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
                     'encryption'          => [
@@ -86,6 +102,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
+                    'server_name'         => 'foo_bar',
                     'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
                     'encryption'          => [
@@ -104,6 +121,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsValid(
             [
                 [
+                    'server_name'         => 'foo_bar',
                     'signature_key'       => 'foo_key',
                     'signature_algorithm' => 'foo_algorithm',
                     'encryption'          => [
