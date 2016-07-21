@@ -14,7 +14,7 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 [![License](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 
-This Symfony Bundle provides a JWT Encoder that uses the [Spomky-Labs/JoseBundle](https://github.com/Spomky-Labs/JoseBundle) as JWT Creator/Loader.
+This Symfony Bundle provides a JWT Encoder for the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) that uses the [Spomky-Labs/JoseBundle](https://github.com/Spomky-Labs/JoseBundle) as JWT Creator/Loader.
 
 # The Release Process
 
