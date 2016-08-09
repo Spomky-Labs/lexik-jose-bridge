@@ -34,7 +34,6 @@ jose:
             oct: # The key is a symmetric octet key
                 size: 256 # The key size is 256 bits
                 storage_path: '%kernel.cache_dir%/encryption.key' # We store it in that file
-                ttl: 10 # The key will expire every 10 sec (not recommended, just for the tests)
                 additional_values:
                     use: "enc" # We indicate the key is for encryption operation only
                     alg: "A256GCMKW" # We indicate the key is for A256GCMKW key encryption algorithm only
@@ -42,7 +41,6 @@ jose:
             rsa: # The key is an asymmetric RSA key
                 size: 4096 # The key size is 4096 bits
                 storage_path: '%kernel.cache_dir%/signature.key' # We store it in that file
-                ttl: 10 # The key will expire every 10 sec (not recommended, just for the tests)
                 additional_values:
                     use: "sig" # We indicate the key is for signature operation only
                     alg: "RS512" # We indicate the key is for RS512 signature algorithm only
