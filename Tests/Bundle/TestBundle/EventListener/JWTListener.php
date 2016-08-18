@@ -37,7 +37,7 @@ class JWTListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $payload       = $event->getData();
+        $payload = $event->getData();
         $payload['ip'] = $request->getClientIp();
 
         $event->setData($payload);
