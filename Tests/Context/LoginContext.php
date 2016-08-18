@@ -11,6 +11,7 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
+use Assert\Assertion;
 use Base64Url\Base64Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,6 +55,35 @@ trait LoginContext
         $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $this->token = $jwt;
+    }
+
+    /**
+     * @Given the token must contain the claim :claim with value :value
+     */
+    public function theTokenMustContainTheClaimWithValue($claim, $value)
+    {
+        $this->theTokenMustContainTheClaim($claim);
+        /**
+         * @var $encoder \Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface
+         */
+        $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
+        $token_decoded = $encoder->decode($this->getToken());
+
+        Assertion::eq($value, $token_decoded[$claim]);
+    }
+
+    /**
+     * @Given the token must contain the claim :claim
+     */
+    public function theTokenMustContainTheClaim($claim)
+    {
+        /**
+         * @var $encoder \Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface
+         */
+        $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
+
+        $token_decoded = $encoder->decode($this->getToken());
+        Assertion::keyExists($token_decoded, $claim);
     }
 
     /**

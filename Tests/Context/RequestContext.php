@@ -134,9 +134,7 @@ trait RequestContext
      */
     public function iTheRequestTo($method, $uri)
     {
-        if (!$this->getSession()->getDriver() instanceof BrowserKitDriver) {
-            throw new \RuntimeException('Unsupported driver.');
-        }
+        Assertion::isInstanceOf($this->getSession()->getDriver(), BrowserKitDriver::class, 'Unsupported driver.');
 
         $client = $this->getSession()->getDriver()->getClient();
         $client->followRedirects(false);
@@ -180,12 +178,7 @@ trait RequestContext
      */
     public function iShouldReceiveAnException($message)
     {
-        if (!$this->getException() instanceof \Exception) {
-            throw new \Exception('No exception caught');
-        }
-
-        if ($message !== $this->getException()->getMessage()) {
-            throw new \Exception(sprintf('The exception has not the expected message: "%s"', $message));
-        }
+        Assertion::isInstanceOf($this->getException(), \Exception::class, 'No exception caught');
+        Assertion::eq($message, $this->getException()->getMessage(), sprintf('The exception has not the expected message: "%s". Message is "".', $message, $this->getException()->getMessage()));
     }
 }
