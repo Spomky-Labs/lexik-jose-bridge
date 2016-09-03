@@ -13,6 +13,8 @@ namespace SpomkyLabs\TestBundle\EventListener;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class JWTListener
@@ -21,6 +23,16 @@ class JWTListener
      * @var RequestStack
      */
     private $requestStack;
+
+    /**
+     * @var \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent[]
+     */
+    private $expired_token_events = [];
+
+    /**
+     * @var \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent[]
+     */
+    private $invalid_token_events = [];
 
     /**
      * @param RequestStack $requestStack
@@ -55,5 +67,43 @@ class JWTListener
         if (!array_key_exists('ip', $payload) || $payload['ip'] !== $request->getClientIp()) {
             $event->markAsInvalid();
         }
+    }
+
+    /**
+     * @param \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent $event
+     */
+    public function onJWTExpired(JWTExpiredEvent $event)
+    {
+        $this->expired_token_events[] = $event;
+    }
+
+    /**
+     * @return \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent[]
+     */
+    public function getExpiredTokenEvents()
+    {
+        $result = $this->expired_token_events;
+        $this->expired_token_events = [];
+
+        return $result;
+    }
+
+    /**
+     * @param \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent $event
+     */
+    public function onJWTInvalid(JWTInvalidEvent $event)
+    {
+        $this->invalid_token_events[] = $event;
+    }
+
+    /**
+     * @return \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent[]
+     */
+    public function getInvalidTokenEvents()
+    {
+        $result = $this->invalid_token_events;
+        $this->invalid_token_events = [];
+
+        return $result;
     }
 }

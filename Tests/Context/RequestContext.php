@@ -181,4 +181,22 @@ trait RequestContext
         Assertion::isInstanceOf($this->getException(), \Exception::class, 'No exception caught');
         Assertion::eq($message, $this->getException()->getMessage(), sprintf('The exception has not the expected message: "%s". Message is "".', $message, $this->getException()->getMessage()));
     }
+
+    /**
+     * @Then the error listener should receive an expired token event
+     */
+    public function theErrorListenerShouldReceiveAnExpiredTokenEvent()
+    {
+        $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getExpiredTokenEvents();
+        Assertion::eq(1, count($events));
+    }
+
+    /**
+     * @Then the error listener should receive an invalid token event
+     */
+    public function theErrorListenerShouldReceiveAnInvalidTokenEvent()
+    {
+        $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
+        Assertion::eq(1, count($events));
+    }
 }

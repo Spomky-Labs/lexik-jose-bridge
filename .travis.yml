@@ -23,5 +23,5 @@ before_script:
     - if [[ !$deps ]]; then composer install --no-interaction ; fi
 
 script:
-    - vendor/bin/phpunit
-    - vendor/bin/behat
+    - composer bundle-test
+    - composer unit-test

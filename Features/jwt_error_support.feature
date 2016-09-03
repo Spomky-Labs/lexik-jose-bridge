@@ -6,8 +6,10 @@ Feature: The firewall must be able to detect bad tokens
     Given I have an expired, signed and encrypted token
     Given I add the token in the authorization header
     When I am on the page "https://www.example.test/api/hello"
+    Then print last response
     Then the response status code should be 401
-    And the response should contain "The JWT has expired."
+    And the response should contain "Expired JWT Token"
+    And the error listener should receive an expired token event
 
   Scenario: The token is signed but not encrypted
     Given I have a valid signed token
@@ -15,6 +17,7 @@ Feature: The firewall must be able to detect bad tokens
     When I am on the page "https://www.example.test/api/hello"
     Then the response status code should be 401
     And the response should contain "The assertion must be encrypted."
+    And the error listener should receive an invalid token event
 
   Scenario: The token has a wrong issuer
     Given I have a signed and encrypted token but with wrong issuer
@@ -22,6 +25,7 @@ Feature: The firewall must be able to detect bad tokens
     When I am on the page "https://www.example.test/api/hello"
     Then the response status code should be 401
     And the response should contain "The issuer \u0022BAD ISSUER\u0022 is not allowed."
+    And the error listener should receive an invalid token event
 
   Scenario: The token has a wrong audience
     Given I have a signed and encrypted token but with wrong audience
@@ -29,6 +33,7 @@ Feature: The firewall must be able to detect bad tokens
     When I am on the page "https://www.example.test/api/hello"
     Then the response status code should be 401
     And the response should contain "The audience \u0022BAD AUDIENCE\u0022 is not known."
+    And the error listener should receive an invalid token event
 
   Scenario: The token algorithm is not supported
     Given I have a token with an unsupported algorithm
@@ -36,6 +41,7 @@ Feature: The firewall must be able to detect bad tokens
     When I am on the page "https://www.example.test/api/hello"
     Then the response status code should be 401
     And the response should contain "The signature algorithm \u0022none\u0022 is not supported or not allowed."
+    And the error listener should receive an invalid token event
 
   Scenario: The token signature is not valid (body modified)
     Given I have a modified token
@@ -43,3 +49,4 @@ Feature: The firewall must be able to detect bad tokens
     When I am on the page "https://www.example.test/api/hello"
     Then the response status code should be 401
     And the response should contain "Unable to verify the JWS."
+    And the error listener should receive an invalid token event

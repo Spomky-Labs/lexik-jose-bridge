@@ -114,7 +114,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
 
             return $jwt;
         } catch (\Exception $e) {
-            throw new JWTEncodeFailureException('An error occurred while trying to encode the JWT token: '.$e->getMessage(), $e);
+            throw new JWTEncodeFailureException('encoding_error', 'An error occurred while trying to encode the JWT token: '.$e->getMessage(), $e);
         }
     }
 
@@ -163,8 +163,35 @@ class LexikJoseEncoder implements JWTEncoderInterface
 
             return $jws->getPayload();
         } catch (\Exception $e) {
-            throw new JWTDecodeFailureException('Invalid JWT Token: '.$e->getMessage(), $e);
+            $reason = $this->getDecodeErrorReason($e->getMessage());
+            throw new JWTDecodeFailureException($reason, 'Invalid JWT Token: '.$e->getMessage(), $e);
         }
+    }
+
+    /**
+     * @param string $error
+     *
+     * @return array
+     */
+    private function getDecodeErrorReason($error)
+    {
+        $maps = $this->getDecodeErrorMapping();
+        if (array_key_exists($error, $maps)) {
+            return $maps[$error];
+        }
+
+        return JWTDecodeFailureException::INVALID_TOKEN;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDecodeErrorMapping()
+    {
+        return [
+            'The JWT has expired.' => JWTDecodeFailureException::EXPIRED_TOKEN,
+            'Unable to verify the JWS.' => JWTDecodeFailureException::UNVERIFIED_TOKEN,
+        ];
     }
 
     /**

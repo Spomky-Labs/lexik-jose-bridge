@@ -17,7 +17,7 @@
     ],
     "require": {
         "spomky-labs/jose-bundle": "^1.0.3",
-        "lexik/jwt-authentication-bundle": "2.*@dev"
+        "lexik/jwt-authentication-bundle": "dev-guard_jwt_authenticator"
     },
     "require-dev": {
         "symfony/yaml": "^2.8|^3.0",
@@ -42,6 +42,10 @@
         "psr-4": {
             "SpomkyLabs\\LexikJoseBundle\\": ""
         }
+    },
+    "scripts":{
+        "bundle-test": "behat",
+        "unit-test": "phpunit"
     },
     "autoload-dev": {
         "psr-4": {
