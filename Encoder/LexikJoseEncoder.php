@@ -171,7 +171,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @param string $error
      *
-     * @return array
+     * @return string
      */
     private function getDecodeErrorReason($error)
     {
