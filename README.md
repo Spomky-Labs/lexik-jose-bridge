@@ -30,9 +30,9 @@ This library needs at least:
 
 It has been successfully tested using `PHP 5.6`, `PHP 7` and `HHVM` on Symfony `2.8`, `3.0` and `3.1`.
 
-We also track bugs and code quality using [Scrutinizer-CI]() and [Sensio Insight]().
+We also track bugs and code quality using [Scrutinizer-CI](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge) and [Sensio Insight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2).
 
-Coding Standards are verified by [StyleCI]().
+Coding Standards are verified by [StyleCI](https://styleci.io/repos/61054893).
 
 Code coverage is not performed, but `Behavior driven development` (BDD) is used to test this bundle. 
 
@@ -73,11 +73,11 @@ This bundle needs to be configured. Please [see this page](Resources/doc/Configu
 
 # How to use
 
-Have a look at [this page](Resources/doc/Use.md) to know hot to use this bundle.
+Have a look at [this page](Resources/doc/Use.md) to know how to use this bundle.
 
 # Contributing
 
-Requests for new features, bug fixed and all other ideas to make this library useful are welcome. [Please follow these best practices](Resources/doc/Contributing.md).
+Requests for new features, bug fixes and all other ideas to make this library useful are welcome. [Please follow these best practices](Resources/doc/Contributing.md).
 
 # Licence
 
