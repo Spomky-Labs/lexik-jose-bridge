@@ -189,7 +189,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
     private function getDecodeErrorMapping()
     {
         return [
-            'The JWT has expired.' => JWTDecodeFailureException::EXPIRED_TOKEN,
+            'The JWT has expired.'      => JWTDecodeFailureException::EXPIRED_TOKEN,
             'Unable to verify the JWS.' => JWTDecodeFailureException::UNVERIFIED_TOKEN,
         ];
     }

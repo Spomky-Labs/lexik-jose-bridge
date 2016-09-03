@@ -63,7 +63,7 @@ trait LoginContext
     public function theTokenMustContainTheClaimWithValue($claim, $value)
     {
         $this->theTokenMustContainTheClaim($claim);
-        /**
+        /*
          * @var \Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface
          */
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
@@ -77,7 +77,7 @@ trait LoginContext
      */
     public function theTokenMustContainTheClaim($claim)
     {
-        /**
+        /*
          * @var \Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface
          */
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
