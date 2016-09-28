@@ -32,7 +32,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     'server_name' => 'foo_bar',
                 ],
             ],
-            'The child node "signature_key" at path "lexik_jose" must be configured.'
+            'The child node "key_storage_folder" at path "lexik_jose" must be configured.'
         );
     }
 
@@ -41,11 +41,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'server_name'   => 'foo_bar',
-                    'signature_key' => 'foo_key',
+                    'server_name'        => 'foo_bar',
+                    'key_storage_folder' => '/tmp',
                 ],
             ],
-            'The child node "signature_algorithm" at path "lexik_jose" must be configured.'
+            'The child node "signature_key_configuration" at path "lexik_jose" must be configured.'
         );
     }
 
@@ -54,9 +54,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsValid(
             [
                 [
-                    'server_name'         => 'foo_bar',
-                    'signature_key'       => 'foo_key',
-                    'signature_algorithm' => 'foo_algorithm',
+                    'server_name'                 => 'foo_bar',
+                    'key_storage_folder'          => '/tmp',
+                    'signature_key_configuration' => ['foo_config'],
                 ],
             ]
         );
@@ -67,15 +67,15 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'server_name'         => 'foo_bar',
-                    'signature_key'       => 'foo_key',
-                    'signature_algorithm' => 'foo_algorithm',
+                    'server_name'                 => 'foo_bar',
+                    'key_storage_folder'          => '/tmp',
+                    'signature_key_configuration' => ['foo_config'],
                     'encryption'          => [
                         'enabled' => true,
                     ],
                 ],
             ],
-            'Invalid configuration for path "lexik_jose.encryption": The configuration options for encryption are invalid.'
+            'The child node "encryption_key_configuration" at path "lexik_jose.encryption" must be configured.'
         );
     }
 
@@ -84,12 +84,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'server_name'         => 'foo_bar',
-                    'signature_key'       => 'foo_key',
-                    'signature_algorithm' => 'foo_algorithm',
+                    'server_name'                 => 'foo_bar',
+                    'key_storage_folder'          => '/tmp',
+                    'signature_key_configuration' => ['foo_config'],
                     'encryption'          => [
-                        'enabled'        => true,
-                        'encryption_key' => 'foo_key',
+                        'enabled'                      => true,
+                        'encryption_key_configuration' => ['foo_config'],
                     ],
                 ],
             ],
@@ -102,13 +102,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsInvalid(
             [
                 [
-                    'server_name'         => 'foo_bar',
-                    'signature_key'       => 'foo_key',
-                    'signature_algorithm' => 'foo_algorithm',
+                    'server_name'                 => 'foo_bar',
+                    'key_storage_folder'          => '/tmp',
+                    'signature_key_configuration' => ['foo_config'],
                     'encryption'          => [
-                        'enabled'                  => true,
-                        'encryption_key'           => 'foo_key',
-                        'key_encryption_algorithm' => 'foo_key_encryption_algorithm',
+                        'enabled'                      => true,
+                        'encryption_key_configuration' => ['foo_config'],
+                        'key_encryption_algorithm'     => 'foo_key_encryption_algorithm',
                     ],
                 ],
             ],
@@ -121,12 +121,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertConfigurationIsValid(
             [
                 [
-                    'server_name'         => 'foo_bar',
-                    'signature_key'       => 'foo_key',
-                    'signature_algorithm' => 'foo_algorithm',
+                    'server_name'                 => 'foo_bar',
+                    'key_storage_folder'          => '/tmp',
+                    'signature_key_configuration' => ['foo_config'],
                     'encryption'          => [
                         'enabled'                      => true,
-                        'encryption_key'               => 'foo_key',
+                        'encryption_key_configuration' => ['foo_config'],
                         'key_encryption_algorithm'     => 'foo_key_encryption_algorithm',
                         'content_encryption_algorithm' => 'foo_content_encryption_algorithm',
                     ],

@@ -44,10 +44,6 @@
             "SpomkyLabs\\LexikJoseBundle\\": ""
         }
     },
-    "scripts":{
-        "bundle-test": "behat",
-        "unit-test": "phpunit"
-    },
     "autoload-dev": {
         "psr-4": {
             "SpomkyLabs\\TestBundle\\": "Tests/Bundle/TestBundle",
