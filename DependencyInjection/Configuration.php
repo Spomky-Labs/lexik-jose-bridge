@@ -27,10 +27,19 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->addDefaultsIfNotSet()
+            ->validate()
+                ->ifTrue(self::verifyDirectoryExistsAndIsWritable())
+                ->thenInvalid('The key storage folder does not exist or is not writable.')
+            ->end()
             ->children()
                 ->scalarNode('server_name')->isRequired()->end()
-                ->scalarNode('signature_key')->isRequired()->end()
-                ->scalarNode('signature_algorithm')->isRequired()->end()
+                ->scalarNode('key_storage_folder')->isRequired()->end()
+                ->scalarNode('signature_algorithm')->defaultValue('RS512')->end()
+                ->arrayNode('signature_key_configuration')
+                    ->isRequired()
+                    ->useAttributeAsKey('key')
+                    ->prototype('variable')->end()
+                ->end()
             ->end();
 
         $this->addEncryptionSection($rootNode);
@@ -54,12 +63,23 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->children()
                         ->booleanNode('enabled')->defaultFalse()->end()
-                        ->scalarNode('encryption_key')->defaultNull()->end()
-                        ->scalarNode('key_encryption_algorithm')->defaultNull()->end()
-                        ->scalarNode('content_encryption_algorithm')->defaultNull()->end()
+                        ->arrayNode('encryption_key_configuration')
+                            ->isRequired()
+                            ->useAttributeAsKey('key')
+                            ->prototype('variable')->end()
+                        ->end()
+                        ->scalarNode('key_encryption_algorithm')->defaultValue('RSA-OAEP-256')->end()
+                        ->scalarNode('content_encryption_algorithm')->defaultValue('')->end()
                     ->end()
                 ->end()
             ->end();
+    }
+
+    private static function verifyDirectoryExistsAndIsWritable()
+    {
+        return function ($value) {
+            return !(is_dir($value['key_storage_folder']) && is_writable($value['key_storage_folder']));
+        };
     }
 
     private static function verifyEncryptionOptions()
@@ -69,7 +89,7 @@ class Configuration implements ConfigurationInterface
                 return false;
             }
 
-            return empty($value['encryption_key']) || empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
+            return empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
         };
     }
 }

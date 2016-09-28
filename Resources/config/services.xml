@@ -8,8 +8,7 @@
         <service id="lexik_jose_bridge.encoder" class="SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder" public="false">
             <argument type="service" id="lexik_jose_bridge.encoder.jwt_creator"/>
             <argument type="service" id="lexik_jose_bridge.encoder.jwt_loader"/>
-            <argument type="service" id="lexik_jose_bridge.encoder.signature_key"/>
-            <argument type="service" id="lexik_jose_bridge.encoder.keyset"/>
+            <argument type="service" id="jose.key_set.lexik_jose_signature_keyset"/>
             <argument>%lexik_jose_bridge.encoder.signature_algorithm%</argument>
             <argument>%lexik_jose_bridge.encoder.issuer%</argument>
         </service>

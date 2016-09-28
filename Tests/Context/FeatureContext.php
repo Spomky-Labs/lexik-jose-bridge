@@ -24,4 +24,5 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     use ResponseContext;
     use LoginContext;
     use RequestContext;
+    use ApplicationContext;
 }

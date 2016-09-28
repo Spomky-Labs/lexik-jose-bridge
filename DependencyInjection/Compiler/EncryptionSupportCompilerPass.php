@@ -22,18 +22,14 @@ final class EncryptionSupportCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (
-            false === $container->hasDefinition('lexik_jose_bridge.encoder') ||
-            false === $container->hasParameter('lexik_jose_bridge.encoder.encryption.enabled') ||
-            false === $container->getParameter('lexik_jose_bridge.encoder.encryption.enabled')
-        ) {
+        if (false === $container->hasDefinition('lexik_jose_bridge.encoder') || false === $container->getParameter('lexik_jose_bridge.encoder.encryption.enabled')) {
             return;
         }
 
         $definition = $container->getDefinition('lexik_jose_bridge.encoder');
 
         $definition->addMethodCall('enableEncryptionSupport', [
-            new Reference($container->getAlias('lexik_jose_bridge.encoder.encryption.encryption_key')),
+            new Reference('jose.key_set.lexik_jose_encryption_keyset'),
             $container->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
             $container->getParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm'),
         ]);

@@ -11,7 +11,6 @@
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
-use Assert\Assertion;
 use SpomkyLabs\JoseBundle\Helper\ConfigurationHelper;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -44,6 +43,9 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
         return $this->alias;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -51,14 +53,14 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
 
         $container->setAlias('lexik_jose_bridge.encoder.jwt_creator', sprintf('jose.jwt_creator.%s', $this->getAlias()));
         $container->setAlias('lexik_jose_bridge.encoder.jwt_loader', sprintf('jose.jwt_loader.%s', $this->getAlias()));
-        $container->setAlias('lexik_jose_bridge.encoder.signature_key', $config['signature_key']);
-        $container->setAlias('lexik_jose_bridge.encoder.keyset', sprintf('jose.key_set.%s', $this->getAlias()));
+        $container->setParameter('lexik_jose_bridge.encoder.key_storage_folder', $config['key_storage_folder']);
+        $container->setParameter('lexik_jose_bridge.encoder.signature_key_configuration', $config['signature_key_configuration']);
         $container->setParameter('lexik_jose_bridge.encoder.issuer', $config['server_name']);
         $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
 
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
         if (true === $config['encryption']['enabled']) {
-            $container->setAlias('lexik_jose_bridge.encoder.encryption.encryption_key', $config['encryption']['encryption_key']);
+            $container->setParameter('lexik_jose_bridge.encoder.encryption.encryption_key_configuration', $config['encryption']['encryption_key_configuration']);
             $container->setParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm', $config['encryption']['key_encryption_algorithm']);
             $container->setParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm', $config['encryption']['content_encryption_algorithm']);
         }
@@ -67,181 +69,52 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
         $loader->load('services.xml');
     }
 
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     */
     public function prepend(ContainerBuilder $container)
     {
-        $bundles = $container->getParameter('kernel.bundles');
-        Assertion::keyExists($bundles, 'SpomkyLabsJoseBundle', 'The "Spomky-Labs/JoseBundle" must be enabled.');
-
-        $jose_config = current($container->getExtensionConfig('jose'));
         $bundle_config = current($container->getExtensionConfig($this->getAlias()));
 
-        $jose_config = $this->updateJoseBundleConfigurationForSigner($jose_config, $bundle_config);
-        $jose_config = $this->updateJoseBundleConfigurationForEncrypter($jose_config, $bundle_config);
-        $jose_config = $this->updateJoseBundleConfigurationForJWTCreator($jose_config, $bundle_config);
-        $jose_config = $this->updateJoseBundleConfigurationForVerifier($jose_config, $bundle_config);
-        $jose_config = $this->updateJoseBundleConfigurationForDecrypter($jose_config, $bundle_config);
-        $jose_config = $this->updateJoseBundleConfigurationForChecker($jose_config);
-        $jose_config = $this->updateJoseBundleConfigurationForKeySet($jose_config, $bundle_config);
-        $jose_config = $this->updateJoseBundleConfigurationForJWTLoader($jose_config, $bundle_config);
+        $this->addJWKSets($container, $bundle_config);
+        ConfigurationHelper::addSigner($container, $this->getAlias(), [$bundle_config['signature_algorithm']], false, false);
+        ConfigurationHelper::addVerifier($container, $this->getAlias(), [$bundle_config['signature_algorithm']], false);
 
-        $container->prependExtensionConfig('jose', $jose_config);
-    }
-
-    /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForSigner($jose_config, $bundle_config)
-    {
-        $config = ConfigurationHelper::getSignerConfiguration($this->getAlias(), [$bundle_config['signature_algorithm']]);
-        $jose_config['signers'] = array_merge(
-            $jose_config['signers'],
-            $config['jose']['signers']
-        );
-
-        return $jose_config;
-    }
-
-    /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForEncrypter($jose_config, $bundle_config)
-    {
-        $config = ConfigurationHelper::getEncrypterConfiguration($this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']]);
         if (true === $bundle_config['encryption']['enabled']) {
-            $jose_config['encrypters'] = array_merge(
-                $jose_config['encrypters'],
-                $config['jose']['encrypters']
-            );
-        }
-
-        return $jose_config;
-    }
-
-    /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForJWTCreator($jose_config, $bundle_config)
-    {
-        $encrypter = null;
-        if (true === $bundle_config['encryption']['enabled']) {
+            ConfigurationHelper::addEncrypter($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], false, false);
+            ConfigurationHelper::addDecrypter($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], false);
             $encrypter = sprintf('jose.encrypter.%s', $this->getAlias());
-        }
-        $config = ConfigurationHelper::getJWTCreatorConfiguration($this->getAlias(), sprintf('jose.signer.%s', $this->getAlias()), $encrypter);
-        $jose_config['jwt_creators'] = array_merge(
-            $jose_config['jwt_creators'],
-            $config['jose']['jwt_creators']
-
-        );
-
-        return $jose_config;
-    }
-
-    /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForVerifier($jose_config, $bundle_config)
-    {
-        $config = ConfigurationHelper::getVerifierConfiguration($this->getAlias(), [$bundle_config['signature_algorithm']]);
-        $jose_config['verifiers'] = array_merge(
-            $jose_config['verifiers'],
-            $config['jose']['verifiers']
-        );
-
-        return $jose_config;
-    }
-
-    /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForDecrypter($jose_config, $bundle_config)
-    {
-        $config = ConfigurationHelper::getDecrypterConfiguration($this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']]);
-        if (true === $bundle_config['encryption']['enabled']) {
-            $jose_config['decrypters'] = array_merge(
-                $jose_config['decrypters'],
-                $config['jose']['decrypters']
-            );
-        }
-
-        return $jose_config;
-    }
-
-    /**
-     * @param $jose_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForChecker($jose_config)
-    {
-        $config = ConfigurationHelper::getCheckerConfiguration($this->getAlias(), ['crit'], ['exp', 'iat', 'nbf', 'lexik_iss', 'lexik_aud']);
-        $jose_config['checkers'] = array_merge(
-            $jose_config['checkers'],
-            $config['jose']['checkers']
-        );
-
-        return $jose_config;
-    }
-
-    /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
-     */
-    private function updateJoseBundleConfigurationForJWTLoader($jose_config, $bundle_config)
-    {
-        $decrypter = null;
-        if (true === $bundle_config['encryption']['enabled']) {
             $decrypter = sprintf('jose.decrypter.%s', $this->getAlias());
+        } else {
+            $encrypter = null;
+            $decrypter = null;
         }
-        $config = ConfigurationHelper::getJWTLoaderConfiguration($this->getAlias(), sprintf('jose.verifier.%s', $this->getAlias()), sprintf('jose.checker.%s', $this->getAlias()), $decrypter);
-        $jose_config['jwt_loaders'] = array_merge(
-            $jose_config['jwt_loaders'],
-            $config['jose']['jwt_loaders']
-        );
-
-        return $jose_config;
+        ConfigurationHelper::addChecker($container, $this->getAlias(), ['crit'], ['exp', 'iat', 'nbf', 'lexik_iss', 'lexik_aud'], false);
+        ConfigurationHelper::addJWTCreator($container, $this->getAlias(), sprintf('jose.signer.%s', $this->getAlias()), $encrypter);
+        ConfigurationHelper::addJWTLoader($container, $this->getAlias(), sprintf('jose.verifier.%s', $this->getAlias()), sprintf('jose.checker.%s', $this->getAlias()), $decrypter, false);
     }
 
     /**
-     * @param $jose_config
-     * @param $bundle_config
-     *
-     * @return array
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param array                                                   $bundle_config
      */
-    private function updateJoseBundleConfigurationForKeySet($jose_config, $bundle_config)
+    private function addJWKSets(ContainerBuilder $container, array $bundle_config)
     {
-        $jose_config['key_sets'] = array_merge(
-            $jose_config['key_sets'],
-            [
-                $this->getAlias() => [
-                    'keys' => [
-                        'id' => [
-                            $bundle_config['signature_key'],
-                        ],
-                    ],
-                ],
-            ]
-        );
-        if (true === $bundle_config['encryption']['enabled']) {
-            $jose_config['key_sets'][$this->getAlias()]['keys']['id'][] = $bundle_config['encryption']['encryption_key'];
-        }
+        $signature_key_configuration = $bundle_config['signature_key_configuration'];
+        $signature_key_configuration['use'] = 'sig';
+        $signature_key_configuration['alg'] = $bundle_config['signature_algorithm'];
+        $signature_storage_path = sprintf('%s/signature.jwkset', $bundle_config['key_storage_folder']);
 
-        return $jose_config;
+        ConfigurationHelper::addRandomJWKSet($container, sprintf('%s_signature_keyset', $this->getAlias()), $signature_storage_path, 3, $signature_key_configuration, true, true);
+
+        if (true === $bundle_config['encryption']['enabled']) {
+            $encryption_key_configuration = $bundle_config['encryption']['encryption_key_configuration'];
+            $encryption_key_configuration['use'] = 'enc';
+            $encryption_key_configuration['alg'] = $bundle_config['encryption']['key_encryption_algorithm'];
+
+            $encryption_storage_path = sprintf('%s/encryption.jwkset', $bundle_config['key_storage_folder']);
+
+            ConfigurationHelper::addRandomJWKSet($container, sprintf('%s_encryption_keyset', $this->getAlias()), $encryption_storage_path, 3, $encryption_key_configuration, true, true);
+        }
     }
 }

@@ -52,7 +52,7 @@ trait LoginContext
     {
         $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
         $payload = $this->getBasicPayload();
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
+        $signature_key = $this->getSignatureKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $this->token = $jwt;
     }
@@ -93,8 +93,8 @@ trait LoginContext
     {
         $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
         $payload = $this->getBasicPayload();
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $signature_key = $this->getSignatureKey();
+        $encryption_key = $this->getEncryptionKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
         $this->token = $jwt;
@@ -114,8 +114,8 @@ trait LoginContext
                 'iat' => time() - 100,
             ]
         );
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $signature_key = $this->getSignatureKey();
+        $encryption_key = $this->getEncryptionKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
         $this->token = $jwt;
@@ -133,8 +133,8 @@ trait LoginContext
                 'iss' => 'BAD ISSUER',
             ]
         );
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $signature_key = $this->getSignatureKey();
+        $encryption_key = $this->getEncryptionKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
         $this->token = $jwt;
@@ -152,8 +152,8 @@ trait LoginContext
                 'aud' => 'BAD AUDIENCE',
             ]
         );
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $signature_key = $this->getSignatureKey();
+        $encryption_key = $this->getEncryptionKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
         $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
         $this->token = $jwt;
@@ -166,8 +166,8 @@ trait LoginContext
     {
         $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
         $payload = $this->getBasicPayload();
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $signature_key = $this->getSignatureKey();
+        $encryption_key = $this->getEncryptionKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
 
         $parts = explode('.', $jwt);
@@ -187,8 +187,8 @@ trait LoginContext
     {
         $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
         $payload = $this->getBasicPayload();
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $signature_key = $this->getSignatureKey();
+        $encryption_key = $this->getEncryptionKey();
         $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
 
         $parts = explode('.', $jwt);
@@ -227,7 +227,7 @@ trait LoginContext
             'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.signature_algorithm'),
             'crit' => ['exp', 'nbf', 'iat', 'iss', 'aud'],
         ];
-        $signature_key = $this->getContainer()->get('lexik_jose_bridge.encoder.signature_key');
+        $signature_key = $this->getSignatureKey();
         if ($signature_key->has('kid')) {
             $headers['kid'] = $signature_key->get('kid');
         }
@@ -246,7 +246,7 @@ trait LoginContext
             'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
             'enc'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm'),
         ];
-        $encryption_key = $this->getContainer()->get('lexik_jose_bridge.encoder.encryption.encryption_key');
+        $encryption_key = $this->getEncryptionKey();
         if ($encryption_key->has('kid')) {
             $headers['kid'] = $encryption_key->get('kid');
         }
@@ -262,5 +262,21 @@ trait LoginContext
         $content = json_decode($this->getSession()->getPage()->getContent(), true);
 
         $this->token = $content['token'];
+    }
+
+    /**
+     * @return \Jose\Object\JWKInterface
+     */
+    private function getSignatureKey()
+    {
+        return $this->getContainer()->get('jose.key_set.lexik_jose_signature_keyset')[0];
+    }
+
+    /**
+     * @return \Jose\Object\JWKInterface
+     */
+    private function getEncryptionKey()
+    {
+        return $this->getContainer()->get('jose.key_set.lexik_jose_encryption_keyset')[0];
     }
 }
