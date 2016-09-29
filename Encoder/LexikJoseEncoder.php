@@ -155,7 +155,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
             $jws = $this->jwt_loader->load($token, $this->encryption_jwkset, null !== $this->encryption_jwkset);
             $this->jwt_loader->verify($jws, $this->signature_jwkset);
 
-            return $jws->getPayload();
+            return $jws->getClaims();
         } catch (\Exception $e) {
             $reason = $this->getDecodeErrorReason($e->getMessage());
             throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token: %s',$e->getMessage()), $e);
