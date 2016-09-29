@@ -12,6 +12,8 @@
 namespace SpomkyLabs\LexikJoseBundle\Command;
 
 use Jose\Object\StorableInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class RegenCommand extends AbstractCommand
 {
@@ -34,7 +36,7 @@ EOT
     /**
      * {@inheritdoc}
      */
-    protected function executeCommand(RotatableInterface $jwkset)
+    protected function executeCommand(InputInterface $input, OutputInterface $output, RotatableInterface $jwkset)
     {
         $jwkset->regen();
 
