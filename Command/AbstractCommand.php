@@ -11,7 +11,6 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Command;
 
-use Jose\Object\JWKSetInterface;
 use Jose\Object\RotatableInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
