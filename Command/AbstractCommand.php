@@ -62,16 +62,10 @@ abstract class AbstractCommand extends ContainerAwareCommand
             return 1;
         }
         $service = $this->getContainer()->get($service);
-        if (!$service instanceof JWKSetInterface) {
-            $output->writeln(sprintf('<error>The service "%s" is not a key set.</error>', $service));
+        if (!$service instanceof RotatableInterface) {
+            $output->writeln(sprintf('<error>The service "%s" is not a key set or a storable key set.</error>', $service));
 
             return 2;
-        }
-
-        if (!$service instanceof RotatableInterface) {
-            $output->writeln(sprintf('<error>The service "%s" is not a storable key set.</error>', $service));
-
-            return 3;
         }
 
         return $this->executeCommand($input, $output, $service);
