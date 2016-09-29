@@ -20,9 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractCommand extends ContainerAwareCommand
 {
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface  $input
-     * @param \Symfony\Component\Console\Input\OutputInterface $output
-     * @param \Jose\Object\RotatableInterface                  $jwkset
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Jose\Object\RotatableInterface                   $jwkset
      */
     abstract protected function executeCommand(InputInterface $input, OutputInterface $output, RotatableInterface $jwkset);
 
@@ -48,7 +48,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\InputInterface  $input
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param string                                            $service
      *
