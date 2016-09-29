@@ -22,7 +22,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
     /**
      * @param \Jose\Object\RotatableInterface $jwkset
      */
-    abstract protected function executeCommand(RotatableInterface $jwkset);
+    abstract protected function executeCommand(InputInterface $input, OutputInterface $output, RotatableInterface $jwkset);
 
     /**
      * {@inheritdoc}
@@ -71,6 +71,6 @@ abstract class AbstractCommand extends ContainerAwareCommand
             return 3;
         }
 
-        return $this->executeCommand($service);
+        return $this->executeCommand($input, $output, $service);
     }
 }
