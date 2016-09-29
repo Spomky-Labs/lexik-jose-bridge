@@ -37,7 +37,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         }
 
         foreach ($services as $service) {
-            $result = $this->processKeySet($output, $service);
+            $result = $this->processKeySet($input, $output, $service);
             if (0 !== $result) {
                 return $result;
             }
@@ -48,12 +48,13 @@ abstract class AbstractCommand extends ContainerAwareCommand
     }
 
     /**
+     * @param \Symfony\Component\Console\Output\InputInterface  $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param string                                            $service
      *
      * @return int
      */
-    private function processKeySet(OutputInterface $output, $service)
+    private function processKeySet(InputInterface $input, OutputInterface $output, $service)
     {
         if (!$this->getContainer()->has($service)) {
             $output->writeln(sprintf('<error>The service "%s" does not exist.</error>', $service));
