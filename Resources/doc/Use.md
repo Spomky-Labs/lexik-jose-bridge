@@ -2,8 +2,15 @@ How to use this bundle?
 =======================
 
 Almost everything is done for you by the bundle.
+The only thing you have to do is to generate your keys.
 
-# Console Commands
+When the bundle is configured and ready to be used, then execute the following command:
+
+```sh
+bin/console spomky-labs:lexik_jose:regen
+```
+
+# Other Console Commands
 
 ## Delete and Generate New Keys
 
@@ -22,7 +29,7 @@ bin/console spomky-labs:lexik_jose:regen
 
 **Use with caution**
 
-*We recommend you to use these commands only if you think they are compromised.*
+*We recommend you to use these commands only if you changed the signature/encryption algorithms or if you think they are compromised.*
 *All tokens issued with the previous keys will not be verified and then rejected, even if they are not expired.*
 
 ## Rotate Keys
