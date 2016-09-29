@@ -51,7 +51,7 @@ EOT
         $date = $date->sub($interval);
         $mtime = $jwkset->getLastModificationTime();
         if (null === $mtime) {
-            $service->regen();
+            $jwkset->regen();
         } elseif ($mtime <= $date->getTimestamp()) {
             $jwkset->rotate();
         }
