@@ -16,8 +16,7 @@
         }
     ],
     "require": {
-        "spomky-labs/jose": "^6.0@dev",
-        "spomky-labs/jose-bundle": "dev-master",
+        "spomky-labs/jose-bundle": "^2.0",
         "lexik/jwt-authentication-bundle": "2.*@dev"
     },
     "require-dev": {
