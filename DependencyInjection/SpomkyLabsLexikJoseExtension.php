@@ -65,8 +65,21 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
             $container->setParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm', $config['encryption']['content_encryption_algorithm']);
         }
 
+        $this->loadServices($container);
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     */
+    public function loadServices(ContainerBuilder $container)
+    {
+        $files = ['services', 'warmup'];
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+
+        foreach ($files as $file) {
+            $filename = sprintf('%s.xml', $file);
+            $loader->load($filename);
+        }
     }
 
     /**

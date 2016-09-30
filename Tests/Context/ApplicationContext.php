@@ -14,6 +14,7 @@ namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 use Assert\Assertion;
 use Behat\Gherkin\Node\PyStringNode;
 use SpomkyLabs\LexikJoseBundle\Command;
+use Symfony\Bundle\FrameworkBundle\Command\CacheWarmupCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -132,6 +133,7 @@ trait ApplicationContext
             $this->application->add(new Command\RegenCommand());
             $this->application->add(new Command\RotateCommand());
             $this->application->add(new Command\DeleteCommand());
+            $this->application->add(new CacheWarmupCommand());
         }
 
         return $this->application;
@@ -190,6 +192,7 @@ trait ApplicationContext
     public function iShouldSee(PyStringNode $result)
     {
         $output = $this->getCommandOutput();
+        var_dump($output);
         Assertion::eq($output, $result->getRaw(), sprintf('The output of the command is not the same as expected. I got "%".', $output));
     }
 
@@ -267,5 +270,33 @@ trait ApplicationContext
             $this->getCommandParameters(),
             ['command' => $command]
         );
+    }
+
+    /**
+     * @When the file :filename should not exist
+     */
+    public function theFileShouldNotExist($filename)
+    {
+        $filename = $this->getRealFilename($filename);
+        Assertion::false(file_exists($filename), sprintf('The file "%s" exists.', $filename));
+    }
+
+    /**
+     * @Then the file :filename should exist
+     */
+    public function theFileShouldExist($filename)
+    {
+        $filename = $this->getRealFilename($filename);
+        Assertion::true(file_exists($filename), sprintf('The file "%s" does not exist.', $filename));
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function getRealFilename($filename)
+    {
+        return str_replace('%kernel.cache_dir%', $this->getContainer()->getParameter('kernel.cache_dir'), $filename);
     }
 }

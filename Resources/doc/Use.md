@@ -2,17 +2,16 @@ How to use this bundle?
 =======================
 
 Almost everything is done for you by the bundle.
-The only thing you have to do is to generate your keys.
 
-When the bundle is configured and ready to be used, then execute the following command:
+The key sets are automatically generated at first use.
+However, as the key generation may be long, this bundle provide a service that will generate them during the cache warmup.
 
+When the bundle is correctly configured, then execute the following command:
 ```sh
-bin/console spomky-labs:lexik_jose:regen
+bin/console cache:warmup
 ```
 
-# Other Console Commands
-
-## Delete and Generate New Keys
+# Delete and Generate New Keys
 
 Signature and (optional) encryption keys are automatically created.
 If you want to delete or generate new keys, then you can use the following commands:
@@ -32,7 +31,7 @@ bin/console spomky-labs:lexik_jose:regen
 *We recommend you to use these commands only if you changed the signature/encryption algorithms or if you think they are compromised.*
 *All tokens issued with the previous keys will not be verified and then rejected, even if they are not expired.*
 
-## Rotate Keys
+# Rotate Keys
 
 For security purpose, you are encouraged to rotate your keys.
 A console command is also available to ease your work:
