@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "spomky-labs/jose-bundle": "^2.0",
+        "spomky-labs/jose-bundle": "^2.0.1",
         "lexik/jwt-authentication-bundle": "2.*@dev"
     },
     "require-dev": {
@@ -29,7 +29,7 @@
         "symfony/twig-bundle": "^2.8|^3.0",
         "symfony/expression-language": "^2.8|^3.0",
         "symfony/dependency-injection": "^2.8|^3.0",
-        "sensio/framework-extra-bundle": "^3.0",
+        "sensio/framework-extra-bundle": "^2.8|^3.0",
         "behat/behat": "^3.0",
         "behat/mink": "*",
         "behat/mink-extension": "^2.1",
