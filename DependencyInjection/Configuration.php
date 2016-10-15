@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
             ->validate()->ifTrue(self::verifyDirectoryExistsAndIsWritable())->thenInvalid('The key storage folder does not exist or is not writable.')->end()
             ->children()
                 ->scalarNode('server_name')->isRequired()->end()
+                ->integerNode('ttl')->min(0)->defaultValue(3600)->end()
                 ->scalarNode('key_storage_folder')->isRequired()->end()
                 ->scalarNode('signature_algorithm')->defaultValue('RS512')->end()
                 ->arrayNode('signature_key_configuration')->isRequired()->useAttributeAsKey('key')->prototype('variable')->end()->end()

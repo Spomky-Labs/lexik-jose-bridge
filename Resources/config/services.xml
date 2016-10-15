@@ -11,6 +11,7 @@
             <argument type="service" id="jose.key_set.lexik_jose_signature_keyset"/>
             <argument>%lexik_jose_bridge.encoder.signature_algorithm%</argument>
             <argument>%lexik_jose_bridge.encoder.issuer%</argument>
+            <argument>%lexik_jose_bridge.encoder.ttl%</argument>
         </service>
 
         <service id="lexik_jose_bridge.claim_checker.issuer" class="SpomkyLabs\LexikJoseBundle\Checker\IssuerChecker" public="false">

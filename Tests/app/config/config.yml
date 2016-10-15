@@ -33,6 +33,7 @@ lexik_jwt_authentication:
         service: "lexik_jose_bridge.encoder" # We change the encoder of the LexikJWTAuthenticationBundle in favor of that bundle
 
 lexik_jose:
+    ttl: 1000
     server_name: 'https://my.super-service.org/'
     key_storage_folder: '%kernel.cache_dir%/'
     signature_algorithm: "RS512" # The signature algorithm we want to use
