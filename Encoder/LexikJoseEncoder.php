@@ -203,7 +203,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
     {
         return [
             'jti' => Base64Url::encode(random_bytes(64)),
-            'exp' => time()+ $this->ttl,
+            'exp' => time() + $this->ttl,
             'nbf' => time(),
             'iat' => time(),
             'iss' => $this->issuer,
