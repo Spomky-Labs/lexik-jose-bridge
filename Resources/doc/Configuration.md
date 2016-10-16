@@ -16,7 +16,7 @@ lexik_jose:
 
 For all signature algorithms available, please refer to the [spomky-labs/jose documentation](https://github.com/Spomky-Labs/jose#supported-signature-algorithms).
 
-For key configuration, please refer to the [Random JWKSet documentation](https://github.com/Spomky-Labs/jose/blob/master/doc/object/jwkset.md#create-a-key-set-with-random-keys])
+For key configuration, please refer to the [Random JWKSet documentation](https://github.com/Spomky-Labs/jose/blob/master/doc/object/jwkset.md#create-a-key-set-with-random-keys)
 
 ## With Encryption
 
@@ -34,7 +34,7 @@ lexik_jose:
 
 For all key and content encryption algorithms available, please refer to the [spomky-labs/jose documentation](https://github.com/Spomky-Labs/jose#supported-key-encryption-algorithms).
 
-For key configuration, please refer to the [Random JWKSet documentation](https://github.com/Spomky-Labs/jose/blob/master/doc/object/jwkset.md#create-a-key-set-with-random-keys])
+For key configuration, please refer to the [Random JWKSet documentation](https://github.com/Spomky-Labs/jose/blob/master/doc/object/jwkset.md#create-a-key-set-with-random-keys)
 
 **Note: we highly recommend you to enable the encryption support as the token may contain very sensitive information**
 
