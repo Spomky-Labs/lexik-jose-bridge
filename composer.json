@@ -17,7 +17,7 @@
     ],
     "require": {
         "spomky-labs/jose-bundle": "^2.0.1",
-        "lexik/jwt-authentication-bundle": "2.*@dev"
+        "lexik/jwt-authentication-bundle": "^2.0"
     },
     "require-dev": {
         "symfony/yaml": "^2.8|^3.0",
