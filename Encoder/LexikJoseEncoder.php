@@ -58,6 +58,11 @@ class LexikJoseEncoder implements JWTEncoderInterface
     private $content_encryption_algorithm;
 
     /**
+     * @var int
+     */
+    private $ttl;
+
+    /**
      * LexikJoseEncoder constructor.
      *
      * @param \Jose\JWTCreator             $jwt_creator
@@ -65,18 +70,21 @@ class LexikJoseEncoder implements JWTEncoderInterface
      * @param \Jose\Object\JWKSetInterface $signature_jwkset
      * @param string                       $signature_algorithm
      * @param string                       $issuer
+     * @param int                          $ttl
      */
     public function __construct(JWTCreator $jwt_creator,
                                 JWTLoader $jwt_loader,
                                 JWKSetInterface $signature_jwkset,
                                 $signature_algorithm,
-                                $issuer
+                                $issuer,
+                                $ttl
     ) {
         $this->jwt_creator = $jwt_creator;
         $this->jwt_loader = $jwt_loader;
         $this->signature_jwkset = $signature_jwkset;
         $this->signature_algorithm = $signature_algorithm;
         $this->issuer = $issuer;
+        $this->ttl = $ttl;
     }
 
     /**
@@ -195,6 +203,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
     {
         return [
             'jti' => Base64Url::encode(random_bytes(64)),
+            'exp' => time() + $this->ttl,
             'nbf' => time(),
             'iat' => time(),
             'iss' => $this->issuer,

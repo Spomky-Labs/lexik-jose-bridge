@@ -5,6 +5,7 @@ How to configure this bundle?
 
 ```yml
 lexik_jose:
+    ttl: 3600                                 // The TTL of each token issued by the bundle
     server_name: 'https://my.super.service/'  // This value is used to verify the issuer/audience of the tokens
     key_storage_folder: '%kernel.cache_dir%/' // The folder where keys are stored. Must be writable
     signature_algorithm: "RS512"              // The signature algorithm (default is RS512).
@@ -47,4 +48,4 @@ lexik_jwt_authentication:
         service: "lexik_jose_bridge.encoder"
 ```
 
-*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/master/Tests/app/config/config.yml#L31-L48).*
+*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/master/Tests/app/config/config.yml#L31-L49).*
