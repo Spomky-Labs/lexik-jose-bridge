@@ -47,4 +47,4 @@ bin/console spomky-labs:lexik_jose:rotate "2 days"
 ```
 
 The argument can be anything understood by [\DateInterval::createFromDateString()](https://secure.php.net/manual/en/dateinterval.createfromdatestring.php).
-We recommend you to set at least the lifetime of the token (see the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) configuration).
+We recommend you to set at least the lifetime of the token (see the `ttl` option in the configuration).
