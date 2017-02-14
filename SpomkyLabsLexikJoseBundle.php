@@ -32,7 +32,7 @@ final class SpomkyLabsLexikJoseBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-
+        $this->checkRequirements(['SpomkyLabsJoseBundle', 'LexikJWTAuthenticationBundle'], $container);
         $container->addCompilerPass(new EncryptionSupportCompilerPass());
     }
 }
