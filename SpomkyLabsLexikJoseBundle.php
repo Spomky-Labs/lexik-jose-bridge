@@ -35,4 +35,21 @@ final class SpomkyLabsLexikJoseBundle extends Bundle
         $this->checkRequirements(['SpomkyLabsJoseBundle', 'LexikJWTAuthenticationBundle'], $container);
         $container->addCompilerPass(new EncryptionSupportCompilerPass());
     }
+    
+    /**
+     * @param string[]         $requiredBundles
+     * @param ContainerBuilder $container
+     * 
+     * @throws \LogicException
+     */
+    private function checkRequirements(array $requiredBundles, ContainerBuilder $container)
+    {
+        $enabledBundles = $container->getParameter('kernel.bundles');
+
+        foreach ($requiredBundles as $requiredBundle) {
+            if (!array_key_exists($requiredBundle, $enabledBundles)) {
+                throw new \LogicException(sprintf('In order to use bundle "%s" you also need to enable "%s"', $this->getName(),$requiredBundle));
+            }
+        }
+    }
 }
