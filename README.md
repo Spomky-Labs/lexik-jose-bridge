@@ -44,7 +44,7 @@ The preferred way to install this bundle is to rely on Composer:
 composer require spomky-labs/lexik-jose-bridge
 ```
 
-Then, add the bundle and the Spomky-Labs/JoseBundle into your kernel:
+Then, add this bundle and the Spomky-Labs/JoseBundle into your kernel:
 
 ```php
 <?php
