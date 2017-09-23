@@ -192,7 +192,6 @@ trait ApplicationContext
     public function iShouldSee(PyStringNode $result)
     {
         $output = $this->getCommandOutput();
-        var_dump($output);
         Assertion::eq($output, $result->getRaw(), sprintf('The output of the command is not the same as expected. I got "%".', $output));
     }
 

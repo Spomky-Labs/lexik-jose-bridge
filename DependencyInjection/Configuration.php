@@ -65,6 +65,9 @@ class Configuration implements ConfigurationInterface
     private static function verifyDirectoryExistsAndIsWritable()
     {
         return function ($value) {
+            if (!is_dir($value['key_storage_folder'])) {
+                mkdir($value['key_storage_folder'], 0777, true);
+            }
             return !(is_dir($value['key_storage_folder']) && is_writable($value['key_storage_folder']));
         };
     }

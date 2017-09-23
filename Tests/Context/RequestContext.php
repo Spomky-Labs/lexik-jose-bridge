@@ -199,14 +199,4 @@ trait RequestContext
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
         Assertion::eq(1, count($events));
     }
-
-    /**
-     * @Given I show partial response
-     */
-    public function iShowPartialResponse()
-    {
-        $content = $this->getSession()->getPage()->getContent();
-
-        dump(substr($content, 0, 5000));
-    }
 }
