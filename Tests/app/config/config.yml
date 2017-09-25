@@ -19,7 +19,6 @@ framework:
         engines: ['twig']
     assets:
     trusted_hosts:   ~
-    trusted_proxies: ~
     fragments:       ~
     http_method_override: true
 
