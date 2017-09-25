@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
@@ -27,13 +27,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->addDefaultsIfNotSet()
-            ->validate()->ifTrue(self::verifyDirectoryExistsAndIsWritable())->thenInvalid('The key storage folder does not exist or is not writable.')->end()
             ->children()
                 ->scalarNode('server_name')->isRequired()->end()
                 ->integerNode('ttl')->min(0)->defaultValue(3600)->end()
-                ->scalarNode('key_storage_folder')->isRequired()->end()
-                ->scalarNode('signature_algorithm')->defaultValue('RS512')->end()
-                ->arrayNode('signature_key_configuration')->isRequired()->useAttributeAsKey('key')->prototype('variable')->end()->end()
+                ->scalarNode('key_set')->isRequired()->end()
+                ->integerNode('key_index')->isRequired()->end()
+                ->scalarNode('signature_algorithm')->isRequired()->end()
             ->end();
 
         $this->addEncryptionSection($rootNode);
@@ -54,22 +53,13 @@ class Configuration implements ConfigurationInterface
                     ->validate()->ifTrue(self::verifyEncryptionOptions())->thenInvalid('The configuration options for encryption are invalid.')->end()
                     ->children()
                         ->booleanNode('enabled')->defaultFalse()->end()
-                        ->arrayNode('encryption_key_configuration')->isRequired()->useAttributeAsKey('key')->prototype('variable')->end()->end()
-                        ->scalarNode('key_encryption_algorithm')->defaultValue('RSA-OAEP-256')->end()
-                        ->scalarNode('content_encryption_algorithm')->defaultValue('')->end()
+                        ->scalarNode('key_set')->end()
+                        ->integerNode('key_index')->defaultNull()->end()
+                        ->scalarNode('key_encryption_algorithm')->end()
+                        ->scalarNode('content_encryption_algorithm')->end()
                     ->end()
                 ->end()
             ->end();
-    }
-
-    private static function verifyDirectoryExistsAndIsWritable()
-    {
-        return function ($value) {
-            if (!is_dir($value['key_storage_folder'])) {
-                mkdir($value['key_storage_folder'], 0777, true);
-            }
-            return !(is_dir($value['key_storage_folder']) && is_writable($value['key_storage_folder']));
-        };
     }
 
     private static function verifyEncryptionOptions()
@@ -79,7 +69,11 @@ class Configuration implements ConfigurationInterface
                 return false;
             }
 
-            return empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
+            return empty($value['key_encryption_algorithm'])
+                || empty($value['content_encryption_algorithm'])
+                || empty($value['key_set'])
+                || null === $value['key_index']
+            ;
         };
     }
 }

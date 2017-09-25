@@ -17,7 +17,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class JWTListener
+final class JWTListener
 {
     /**
      * @var RequestStack

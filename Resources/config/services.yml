@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder:
+        arguments:
+            - '@jose.jws_builder.lexik_jose'
+            - '@jose.jws_loader.lexik_jose'
+            - '@jose.claim_checker.lexik_jose'
+            - '@jose.key_set.lexik_jose_bridge.signature'
+            - '%lexik_jose_bridge.encoder.key_index%'
+            - '%lexik_jose_bridge.encoder.signature_algorithm%'
+            - '%lexik_jose_bridge.encoder.issuer%'
+            - '%lexik_jose_bridge.encoder.ttl%'
+
+    SpomkyLabs\LexikJoseBundle\Checker\AudienceChecker:
+        arguments:
+            - '%lexik_jose_bridge.encoder.issuer%'
+        tags:
+            - { name: 'jose.checker.claim', alias: 'lexik_jose_audience' }
+
+    SpomkyLabs\LexikJoseBundle\Checker\IssuerChecker:
+        arguments:
+            - '%lexik_jose_bridge.encoder.issuer%'
+        tags:
+            - { name: 'jose.checker.claim', alias: 'lexik_jose_issuer' }

@@ -23,12 +23,12 @@ The release process [is described here](Resources/doc/Release.md).
 # Prerequisites
 
 This library needs at least:
-* ![PHP 5.6+](https://img.shields.io/badge/PHP-5.6%2B-ff69b4.svg)
-* Symfony 2.8+ or Symfony 3.0+
+* ![PHP 7.1+](https://img.shields.io/badge/PHP-7.1%2B-ff69b4.svg)
+* Symfony 3.3+
 
 # Continuous Integration
 
-It has been successfully tested using `PHP 5.6`, `PHP 7` and `HHVM` on Symfony `2.8`, `3.0` and `3.1`.
+It has been successfully tested using `PHP 7.1` and `PHP 7.2`.
 
 We also track bugs and code quality using [Scrutinizer-CI](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge) and [Sensio Insight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2).
 
@@ -38,13 +38,24 @@ Code coverage is not performed, but `Behavior driven development` (BDD) is used 
 
 # Installation
 
-The preferred way to install this bundle is to rely on Composer:
+
+## Symfony Flex
+
+The preferred way to install this bundle is to rely on Symfony Flex:
+
+```sh
+composer req "spomky-labs/lexik-jose-bridge:^2.0"
+```
+
+## Manual Installation
+
+If you do not use Symfony Flex, then use Composer and install the bundle manually.
 
 ```sh
 composer require spomky-labs/lexik-jose-bridge
 ```
 
-Then, add this bundle and the Spomky-Labs/JoseBundle into your kernel:
+Then, add this bundle and the `spomky-labs/jose` bundles into your kernel:
 
 ```php
 <?php
@@ -58,7 +69,10 @@ class AppKernel extends Kernel
     {
         $bundles = [
             ...
-            new SpomkyLabs\JoseBundle\SpomkyLabsJoseBundle(),
+            new Jose\Bundle\JoseFramework\JoseFrameworkBundle(), // Required
+            new Jose\Bundle\Signature\SignatureBundle(),         // Required
+            new Jose\Bundle\Encryption\EncryptionBundle(),       // Required if encryption is enabled
+            new Jose\Bundle\Checker\CheckerBundle(),             // Required
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
 
@@ -73,7 +87,7 @@ This bundle needs to be configured. Please [see this page](Resources/doc/Configu
 
 # How to use
 
-Have a look at [this page](Resources/doc/Use.md) to know how to use this bundle.
+There is nothing to do. Just use your application as usual.
 
 # Contributing
 

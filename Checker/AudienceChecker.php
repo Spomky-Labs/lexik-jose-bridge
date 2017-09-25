@@ -10,11 +10,11 @@
  */
 
 namespace SpomkyLabs\LexikJoseBundle\Checker;
+use Jose\Component\Checker\ClaimCheckerInterface;
 
-use Assert\Assertion;
-use Jose\Checker\ClaimCheckerInterface;
-use Jose\Object\JWTInterface;
-
+/**
+ * Class AudienceChecker.
+ */
 final class AudienceChecker implements ClaimCheckerInterface
 {
     /**
@@ -27,7 +27,7 @@ final class AudienceChecker implements ClaimCheckerInterface
      *
      * @param string $audience
      */
-    public function __construct($audience)
+    public function __construct(string $audience)
     {
         $this->audience = $audience;
     }
@@ -35,21 +35,26 @@ final class AudienceChecker implements ClaimCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function supportedClaim(): string
     {
-        if (!$jwt->hasClaim('aud')) {
-            return [];
-        }
+        return 'aud';
+    }
 
-        $audience = $jwt->getClaim('aud');
+    /**
+     * {@inheritdoc}
+     */
+    public function checkClaim($audience)
+    {
         if (is_string($audience)) {
-            Assertion::eq($audience, $this->audience, sprintf('The audience "%s" is not known.', $audience));
+            if ($audience !== $this->audience) {
+                throw new \Exception(sprintf('The audience "%s" is not known.', $audience));
+            }
         } elseif (is_array($audience)) {
-            Assertion::inArray($this->audience, $audience, sprintf('The audience "%s" is not known.', $audience));
+            if (!in_array($this->audience, $audience)) {
+                throw new \Exception(sprintf('The audience "%s" is not known.', $audience));
+            }
         } else {
             throw new \InvalidArgumentException('The claim "aud" has a bad format');
         }
-
-        return ['aud'];
     }
 }

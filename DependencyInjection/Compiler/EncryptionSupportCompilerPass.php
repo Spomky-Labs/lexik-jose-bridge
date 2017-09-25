@@ -14,7 +14,11 @@ namespace SpomkyLabs\LexikJoseBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 
+/**
+ * Class EncryptionSupportCompilerPass.
+ */
 final class EncryptionSupportCompilerPass implements CompilerPassInterface
 {
     /**
@@ -22,14 +26,17 @@ final class EncryptionSupportCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('lexik_jose_bridge.encoder') || false === $container->getParameter('lexik_jose_bridge.encoder.encryption.enabled')) {
+        if (false === $container->hasDefinition(LexikJoseEncoder::class) || false === $container->getParameter('lexik_jose_bridge.encoder.encryption.enabled')) {
             return;
         }
 
-        $definition = $container->getDefinition('lexik_jose_bridge.encoder');
+        $definition = $container->getDefinition(LexikJoseEncoder::class);
 
         $definition->addMethodCall('enableEncryptionSupport', [
-            new Reference('jose.key_set.lexik_jose_encryption_keyset'),
+            new Reference('jose.jwe_builder.lexik_jose'),
+            new Reference('jose.jwe_loader.lexik_jose'),
+            new Reference('jose.key_set.lexik_jose_bridge.encryption'),
+            $container->getParameter('lexik_jose_bridge.encoder.encryption.key_index'),
             $container->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
             $container->getParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm'),
         ]);

@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 /**
  * @Route("/api")
  */
-class ApiController extends Controller
+final class ApiController extends Controller
 {
     /**
      * @Route("/anonymous")
