@@ -72,7 +72,6 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         ConfigurationHelper::addClaimChecker($container, $this->getAlias(), ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer'], false);
         ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bundle_config['key_set'], 'is_public' => true/*false*/]);
 
-
         if (true === $bundle_config['encryption']['enabled']) {
             ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], true/*false*/);
             ConfigurationHelper::addJWELoader($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], [], ['jwe_compact'], false);

@@ -16,9 +16,9 @@ use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Encryption\JWEBuilder;
 use Jose\Component\Encryption\JWELoader;
+use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\JWSLoader;
-use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
 use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerializer;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
@@ -104,14 +104,14 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * LexikJoseEncoder constructor.
      *
-     * @param JWSBuilder $jwsBuilder
-     * @param JWSLoader $jwsLoader
+     * @param JWSBuilder          $jwsBuilder
+     * @param JWSLoader           $jwsLoader
      * @param ClaimCheckerManager $claimCheckerManager
-     * @param JWKSet $signatureKeyset
-     * @param int $signatureKeyIndex
-     * @param string $signatureAlgorithm
-     * @param string $issuer
-     * @param int $ttl
+     * @param JWKSet              $signatureKeyset
+     * @param int                 $signatureKeyIndex
+     * @param string              $signatureAlgorithm
+     * @param string              $issuer
+     * @param int                 $ttl
      */
     public function __construct(JWSBuilder $jwsBuilder,
                                 JWSLoader $jwsLoader,
@@ -132,14 +132,13 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->ttl = $ttl;
     }
 
-
     /**
      * @param JWEBuilder $jweBuilder
-     * @param JWELoader $jweLoader
-     * @param JWKSet $encryptionKeyset
-     * @param int $encryptionKeyIndex
-     * @param string $keyEncryptionAlgorithm
-     * @param string $contentEncryptionAlgorithm
+     * @param JWELoader  $jweLoader
+     * @param JWKSet     $encryptionKeyset
+     * @param int        $encryptionKeyIndex
+     * @param string     $keyEncryptionAlgorithm
+     * @param string     $contentEncryptionAlgorithm
      */
     public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWELoader $jweLoader, JWKSet $encryptionKeyset, int $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
     {
@@ -263,6 +262,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             return $this->verify($token);
         } catch (\Exception $e) {
             $reason = $this->getDecodeErrorReason($e->getMessage());
+
             throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
         }
     }
