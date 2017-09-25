@@ -72,8 +72,7 @@ final class Configuration implements ConfigurationInterface
             return empty($value['key_encryption_algorithm'])
                 || empty($value['content_encryption_algorithm'])
                 || empty($value['key_set'])
-                || null === $value['key_index']
-            ;
+                || null === $value['key_index'];
         };
     }
 }

@@ -77,7 +77,7 @@ trait LoginContext
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
         $token_decoded = $encoder->decode($this->getToken());
 
-        if ($value !==$token_decoded[$claim] ) {
+        if ($value !== $token_decoded[$claim]) {
             throw new \Exception();
         }
     }

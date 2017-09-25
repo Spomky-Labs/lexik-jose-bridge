@@ -11,10 +11,10 @@
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection\Compiler;
 
+use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 
 /**
  * Class EncryptionSupportCompilerPass.

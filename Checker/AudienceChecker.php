@@ -10,6 +10,7 @@
  */
 
 namespace SpomkyLabs\LexikJoseBundle\Checker;
+
 use Jose\Component\Checker\ClaimCheckerInterface;
 
 /**
