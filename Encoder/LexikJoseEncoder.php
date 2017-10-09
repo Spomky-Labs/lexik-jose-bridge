@@ -13,6 +13,7 @@ namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
 use Base64Url\Base64Url;
 use Jose\Component\Checker\ClaimCheckerManager;
+use Jose\Component\Core\Converter\StandardJsonConverter;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Encryption\JWEBuilder;
 use Jose\Component\Encryption\JWELoader;
@@ -191,7 +192,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             ->addSignature($signatureKey, $headers)
             ->build();
 
-        $serializer = new JWSCompactSerializer();
+        $serializer = new JWSCompactSerializer(new StandardJsonConverter());
 
         return $serializer->serialize($jws, 0);
     }
@@ -217,7 +218,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serializer = new JWECompactSerializer();
+        $serializer = new JWECompactSerializer(new StandardJsonConverter());
 
         return $serializer->serialize($jwe, 0);
     }

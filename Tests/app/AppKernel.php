@@ -31,6 +31,7 @@ final class AppKernel extends Kernel
             new Jose\Bundle\Signature\SignatureBundle(),
             new Jose\Bundle\Encryption\EncryptionBundle(),
             new Jose\Bundle\Checker\CheckerBundle(),
+            new Jose\Bundle\KeyManagement\KeyManagementBundle(),
             new SpomkyLabs\TestBundle\SpomkyLabsTestBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
