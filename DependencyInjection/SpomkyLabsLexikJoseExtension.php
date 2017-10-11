@@ -65,17 +65,18 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
      */
     public function prepend(ContainerBuilder $container)
     {
+        $isDebug = $container->getParameter('kernel.debug');
         $bundle_config = current($container->getExtensionConfig($this->getAlias()));
 
-        ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bundle_config['signature_algorithm']], true/*false*/);
+        ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bundle_config['signature_algorithm']], $isDebug);
         ConfigurationHelper::addJWSLoader($container, $this->getAlias(), [$bundle_config['signature_algorithm']], [], ['jws_compact'], false);
         ConfigurationHelper::addClaimChecker($container, $this->getAlias(), ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer'], false);
-        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bundle_config['key_set'], 'is_public' => true/*false*/]);
+        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bundle_config['key_set'], 'is_public' => $isDebug]);
 
         if (true === $bundle_config['encryption']['enabled']) {
-            ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], true/*false*/);
+            ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
             ConfigurationHelper::addJWELoader($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer'], ['jwe_compact'], false);
-            ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', ['value' => $bundle_config['encryption']['key_set'], 'is_public' => true/*false*/]);
+            ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', ['value' => $bundle_config['encryption']['key_set'], 'is_public' => $isDebug]);
         }
     }
 }
