@@ -27,10 +27,6 @@ twig:
     debug:            true
     strict_variables: true
 
-lexik_jwt_authentication:
-    encoder:
-        service: 'SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder' # We change the encoder of the LexikJWTAuthenticationBundle in favor of that bundle
-
 lexik_jose:
     ttl: 1000
     server_name: 'https://my.super-service.org/'
