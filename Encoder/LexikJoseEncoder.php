@@ -331,6 +331,12 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             'cty'  => 'JWT',
             'alg'  => $this->keyEncryptionAlgorithm,
             'enc'  => $this->contentEncryptionAlgorithm,
+            'exp' => time() + $this->ttl,
+            'nbf' => time(),
+            'iat' => time(),
+            'iss' => $this->issuer,
+            'aud' => $this->issuer,
+            'crit' => ['exp', 'iat', 'nbf', 'iss', 'aud'],
         ];
     }
 }

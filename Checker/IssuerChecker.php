@@ -12,8 +12,9 @@
 namespace SpomkyLabs\LexikJoseBundle\Checker;
 
 use Jose\Component\Checker\ClaimCheckerInterface;
+use Jose\Component\Checker\HeaderCheckerInterface;
 
-final class IssuerChecker implements ClaimCheckerInterface
+final class IssuerChecker implements ClaimCheckerInterface, HeaderCheckerInterface
 {
     /**
      * @var string
@@ -46,5 +47,29 @@ final class IssuerChecker implements ClaimCheckerInterface
         if ($this->issuer !== $issuer) {
             throw new \Exception(sprintf('The issuer "%s" is not allowed.', $issuer));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkHeader($value)
+    {
+        $this->checkClaim($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportedHeader(): string
+    {
+        return 'iss';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function protectedHeaderOnly(): bool
+    {
+        return true;
     }
 }

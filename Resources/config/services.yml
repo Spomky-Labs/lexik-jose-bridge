@@ -20,9 +20,11 @@ services:
             - '%lexik_jose_bridge.encoder.issuer%'
         tags:
             - { name: 'jose.checker.claim', alias: 'lexik_jose_audience' }
+            - { name: 'jose.checker.header', alias: 'lexik_jose_audience' }
 
     SpomkyLabs\LexikJoseBundle\Checker\IssuerChecker:
         arguments:
             - '%lexik_jose_bridge.encoder.issuer%'
         tags:
             - { name: 'jose.checker.claim', alias: 'lexik_jose_issuer' }
+            - { name: 'jose.checker.header', alias: 'lexik_jose_issuer' }

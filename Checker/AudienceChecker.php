@@ -12,11 +12,12 @@
 namespace SpomkyLabs\LexikJoseBundle\Checker;
 
 use Jose\Component\Checker\ClaimCheckerInterface;
+use Jose\Component\Checker\HeaderCheckerInterface;
 
 /**
  * Class AudienceChecker.
  */
-final class AudienceChecker implements ClaimCheckerInterface
+final class AudienceChecker implements ClaimCheckerInterface, HeaderCheckerInterface
 {
     /**
      * @var string
@@ -57,5 +58,29 @@ final class AudienceChecker implements ClaimCheckerInterface
         } else {
             throw new \InvalidArgumentException('The claim "aud" has a bad format');
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkHeader($value)
+    {
+        $this->checkClaim($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportedHeader(): string
+    {
+        return 'aud';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function protectedHeaderOnly(): bool
+    {
+        return true;
     }
 }
