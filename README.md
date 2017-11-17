@@ -70,6 +70,7 @@ class AppKernel extends Kernel
             new Jose\Bundle\Signature\SignatureBundle(),         // Required
             new Jose\Bundle\Encryption\EncryptionBundle(),       // Required if encryption is enabled
             new Jose\Bundle\Checker\CheckerBundle(),             // Required
+            new Jose\Bundle\KeyManagement\KeyManagementBundle(), // Required
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
 
