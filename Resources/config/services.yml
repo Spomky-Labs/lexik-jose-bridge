@@ -7,8 +7,9 @@ services:
     SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder:
         arguments:
             - '@jose.jws_builder.lexik_jose'
-            - '@jose.jws_loader.lexik_jose'
+            - '@jose.jws_verifier.lexik_jose'
             - '@jose.claim_checker.lexik_jose'
+            - '@jose.header_checker.lexik_jose'
             - '@jose.key_set.lexik_jose_bridge.signature'
             - '%lexik_jose_bridge.encoder.key_index%'
             - '%lexik_jose_bridge.encoder.signature_algorithm%'

@@ -11,10 +11,10 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Checker;
 
-use Jose\Component\Checker\ClaimCheckerInterface;
-use Jose\Component\Checker\HeaderCheckerInterface;
+use Jose\Component\Checker\ClaimChecker;
+use Jose\Component\Checker\HeaderChecker;
 
-final class IssuerChecker implements ClaimCheckerInterface, HeaderCheckerInterface
+final class IssuerChecker implements ClaimChecker, HeaderChecker
 {
     /**
      * @var string

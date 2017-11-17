@@ -34,7 +34,7 @@ final class EncryptionSupportCompilerPass implements CompilerPassInterface
 
         $definition->addMethodCall('enableEncryptionSupport', [
             new Reference('jose.jwe_builder.lexik_jose'),
-            new Reference('jose.jwe_loader.lexik_jose'),
+            new Reference('jose.jwe_decrypter.lexik_jose'),
             new Reference('jose.key_set.lexik_jose_bridge.encryption'),
             $container->getParameter('lexik_jose_bridge.encoder.encryption.key_index'),
             $container->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),

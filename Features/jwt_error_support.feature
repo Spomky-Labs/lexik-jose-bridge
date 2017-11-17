@@ -8,8 +8,8 @@ Feature: The firewall must be able to detect bad tokens
     When I am on the page "https://www.example.test/api/hello"
     Then the response status code should be 401
     And print last response
-    And the response should contain "Invalid JWT token"
-    And the error listener should receive an invalid token event
+    And the response should contain "Expired JWT Token"
+    And the error listener should receive an expired token event
 
   Scenario: The token is signed but not encrypted
     Given I have a valid signed token

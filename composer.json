@@ -16,16 +16,10 @@
         }
     ],
     "require": {
-        "web-token/jwt-bundle": "^1.0@dev",
-        "web-token/jwt-core": "^1.0@dev",
-        "web-token/jwt-checker": "^1.0@dev",
-        "web-token/jwt-checker-bundle": "^1.0@dev",
-        "web-token/jwt-key-mgmt": "^1.0@dev",
-        "web-token/jwt-key-mgmt-bundle": "^1.0@dev",
-        "web-token/jwt-encryption": "^1.0@dev",
-        "web-token/jwt-encryption-bundle": "^1.0@dev",
-        "web-token/jwt-signature": "^1.0@dev",
-        "web-token/jwt-signature-bundle": "^1.0@dev",
+        "web-token/jwt-key-mgmt-bundle": "^0.3",
+        "web-token/jwt-encryption-bundle": "^0.3",
+        "web-token/jwt-signature-bundle": "^0.3",
+        "web-token/jwt-checker-bundle": "^0.3",
         "lexik/jwt-authentication-bundle": "^2.0"
     },
     "require-dev": {

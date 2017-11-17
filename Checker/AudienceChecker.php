@@ -11,13 +11,13 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Checker;
 
-use Jose\Component\Checker\ClaimCheckerInterface;
-use Jose\Component\Checker\HeaderCheckerInterface;
+use Jose\Component\Checker\ClaimChecker;
+use Jose\Component\Checker\HeaderChecker;
 
 /**
  * Class AudienceChecker.
  */
-final class AudienceChecker implements ClaimCheckerInterface, HeaderCheckerInterface
+final class AudienceChecker implements ClaimChecker, HeaderChecker
 {
     /**
      * @var string
