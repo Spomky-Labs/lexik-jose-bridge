@@ -87,7 +87,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
             ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer']
         );
         ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
-        ConfigurationHelper::addJWSVerifier($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']],$isDebug);
+        ConfigurationHelper::addJWSVerifier($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
         ConfigurationHelper::addClaimChecker($container, $this->getAlias(), $claim_aliases, $isDebug);
         ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_signature', ['lexik_jose_signature_algorithm']);
         ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
@@ -100,7 +100,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         }
 
         $lexikConfig = ['encoder' => [
-            'service' => LexikJoseEncoder::class
+            'service' => LexikJoseEncoder::class,
         ]];
         $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
     }
