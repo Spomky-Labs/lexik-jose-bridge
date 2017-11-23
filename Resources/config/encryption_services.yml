@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    spomkylabs_lexik_jose_checker_key_encryption_algorithm:
+        class: 'SpomkyLabs\LexikJoseBundle\Checker\AlgHeaderChecker'
+        arguments:
+            - '%lexik_jose_bridge.encoder.encryption.key_encryption_algorithm%'
+        tags:
+            - { name: 'jose.checker.header', alias: 'lexik_jose_key_encryption_algorithm' }
+
+    spomkylabs_lexik_jose_checker_content_encryption_algorithm:
+        class: 'SpomkyLabs\LexikJoseBundle\Checker\EncHeaderChecker'
+        arguments:
+            - '%lexik_jose_bridge.encoder.encryption.content_encryption_algorithm%'
+        tags:
+            - { name: 'jose.checker.header', alias: 'lexik_jose_content_encryption_algorithm' }

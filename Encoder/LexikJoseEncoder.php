@@ -58,7 +58,12 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @var HeaderCheckerManager
      */
-    private $headerCheckerManager;
+    private $signatureHeaderCheckerManager;
+
+    /**
+     * @var HeaderCheckerManager
+     */
+    private $encryptionHeaderCheckerManager;
 
     /**
      * @var JWKSet
@@ -116,7 +121,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param JWSBuilder           $jwsBuilder
      * @param JWSVerifier          $jwsLoader
      * @param ClaimCheckerManager  $claimCheckerManager
-     * @param HeaderCheckerManager $headerCheckerManager
+     * @param HeaderCheckerManager $signatureHeaderCheckerManager
      * @param JWKSet               $signatureKeyset
      * @param int                  $signatureKeyIndex
      * @param string               $signatureAlgorithm
@@ -126,7 +131,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     public function __construct(JWSBuilder $jwsBuilder,
                                 JWSVerifier $jwsLoader,
                                 ClaimCheckerManager $claimCheckerManager,
-                                HeaderCheckerManager $headerCheckerManager,
+                                HeaderCheckerManager $signatureHeaderCheckerManager,
                                 JWKSet $signatureKeyset,
                                 int $signatureKeyIndex,
                                 string $signatureAlgorithm,
@@ -136,7 +141,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->jwsBuilder = $jwsBuilder;
         $this->jwsLoader = $jwsLoader;
         $this->claimCheckerManager = $claimCheckerManager;
-        $this->headerCheckerManager = $headerCheckerManager;
+        $this->signatureHeaderCheckerManager = $signatureHeaderCheckerManager;
         $this->signatureKeyset = $signatureKeyset;
         $this->signatureKeyIndex = $signatureKeyIndex;
         $this->signatureAlgorithm = $signatureAlgorithm;
@@ -145,14 +150,15 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     }
 
     /**
-     * @param JWEBuilder $jweBuilder
-     * @param JWEDecrypter  $jweLoader
-     * @param JWKSet     $encryptionKeyset
-     * @param int        $encryptionKeyIndex
-     * @param string     $keyEncryptionAlgorithm
-     * @param string     $contentEncryptionAlgorithm
+     * @param JWEBuilder           $jweBuilder
+     * @param JWEDecrypter         $jweLoader
+     * @param HeaderCheckerManager $encryptionHeaderCheckerManager
+     * @param JWKSet               $encryptionKeyset
+     * @param int                  $encryptionKeyIndex
+     * @param string               $keyEncryptionAlgorithm
+     * @param string               $contentEncryptionAlgorithm
      */
-    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, JWKSet $encryptionKeyset, int $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
+    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, int $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
     {
         $this->jweBuilder = $jweBuilder;
         $this->jweLoader = $jweLoader;
@@ -160,6 +166,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->encryptionKeyIndex = $encryptionKeyIndex;
         $this->keyEncryptionAlgorithm = $keyEncryptionAlgorithm;
         $this->contentEncryptionAlgorithm = $contentEncryptionAlgorithm;
+        $this->encryptionHeaderCheckerManager = $encryptionHeaderCheckerManager;
     }
 
     /**
@@ -244,7 +251,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     {
         $serializer = new JWECompactSerializer(new StandardConverter());
         $jwe = $serializer->unserialize($token);
-        $this->headerCheckerManager->check($jwe, 0);
+        $this->encryptionHeaderCheckerManager->check($jwe, 0);
         $jwe = $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset);
 
         return $jwe->getPayload();
@@ -260,6 +267,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $jsonConverter = new StandardConverter();
         $serializer = new JWSCompactSerializer($jsonConverter);
         $jws = $serializer->unserialize($token);
+        $this->signatureHeaderCheckerManager->check($jws, 0);
         $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset);
         $payload = $jsonConverter->decode($jws->getPayload());
         $this->claimCheckerManager->check($payload);
@@ -319,6 +327,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             'typ'  => 'JWT',
             'cty'  => 'JWT',
             'alg'  => $this->signatureAlgorithm,
+            'crit' => ['alg'],
         ];
     }
 
@@ -334,7 +343,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             'enc'  => $this->contentEncryptionAlgorithm,
             'iss' => $this->issuer,
             'aud' => $this->issuer,
-            'crit' => ['iss', 'aud'],
+            'crit' => ['iss', 'aud', 'alg', 'enc'],
         ];
     }
 }

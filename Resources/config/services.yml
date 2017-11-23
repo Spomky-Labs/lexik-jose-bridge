@@ -9,23 +9,31 @@ services:
             - '@jose.jws_builder.lexik_jose'
             - '@jose.jws_verifier.lexik_jose'
             - '@jose.claim_checker.lexik_jose'
-            - '@jose.header_checker.lexik_jose'
+            - '@jose.header_checker.lexik_jose_signature'
             - '@jose.key_set.lexik_jose_bridge.signature'
             - '%lexik_jose_bridge.encoder.key_index%'
             - '%lexik_jose_bridge.encoder.signature_algorithm%'
             - '%lexik_jose_bridge.encoder.issuer%'
             - '%lexik_jose_bridge.encoder.ttl%'
 
-    SpomkyLabs\LexikJoseBundle\Checker\AudienceChecker:
+    Jose\Component\Checker\AudienceChecker:
         arguments:
             - '%lexik_jose_bridge.encoder.issuer%'
         tags:
             - { name: 'jose.checker.claim', alias: 'lexik_jose_audience' }
             - { name: 'jose.checker.header', alias: 'lexik_jose_audience' }
 
-    SpomkyLabs\LexikJoseBundle\Checker\IssuerChecker:
+    spomkylabs_lexik_jose_checker_issuer:
+        class: 'SpomkyLabs\LexikJoseBundle\Checker\IssuerChecker'
         arguments:
             - '%lexik_jose_bridge.encoder.issuer%'
         tags:
             - { name: 'jose.checker.claim', alias: 'lexik_jose_issuer' }
             - { name: 'jose.checker.header', alias: 'lexik_jose_issuer' }
+
+    spomkylabs_lexik_jose_checker_signature_algorithm:
+        class: 'SpomkyLabs\LexikJoseBundle\Checker\AlgHeaderChecker'
+        arguments:
+            - '%lexik_jose_bridge.encoder.signature_algorithm%'
+        tags:
+            - { name: 'jose.checker.header', alias: 'lexik_jose_signature_algorithm' }
