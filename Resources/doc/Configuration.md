@@ -10,6 +10,8 @@ lexik_jose:
     key_set: '%env(LEXIK_JOSE_SIGNATURE_KEYSET)%' // The signature key set (loaded through an env variable
     key_index: 0                                  // The index of the signature key in the key set
     signature_algorithm: "RS512"                  // The signature algorithm (default is RS512).
+    claim_checked:                                // A list of claim checker aliases.
+        - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com for more information
 ```
 
 For all signature algorithms available, please refer to the [spomky-labs/jose documentation](https://github.com/Spomky-Labs/jose#supported-signature-algorithms).
