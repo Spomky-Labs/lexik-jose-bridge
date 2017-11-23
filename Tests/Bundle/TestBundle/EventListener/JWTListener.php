@@ -25,12 +25,12 @@ final class JWTListener
     private $requestStack;
 
     /**
-     * @var \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent[]
+     * @var JWTExpiredEvent[]
      */
     private $expired_token_events = [];
 
     /**
-     * @var \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent[]
+     * @var JWTInvalidEvent[]
      */
     private $invalid_token_events = [];
 
@@ -43,7 +43,7 @@ final class JWTListener
     }
 
     /**
-     * @param \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent $event
+     * @param JWTCreatedEvent $event
      */
     public function onJWTCreated(JWTCreatedEvent $event)
     {
@@ -56,7 +56,7 @@ final class JWTListener
     }
 
     /**
-     * @param \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent $event
+     * @param JWTDecodedEvent $event
      */
     public function onJWTDecoded(JWTDecodedEvent $event)
     {
@@ -70,7 +70,7 @@ final class JWTListener
     }
 
     /**
-     * @param \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent $event
+     * @param JWTExpiredEvent $event
      */
     public function onJWTExpired(JWTExpiredEvent $event)
     {
@@ -78,7 +78,7 @@ final class JWTListener
     }
 
     /**
-     * @return \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent[]
+     * @return JWTExpiredEvent[]
      */
     public function getExpiredTokenEvents()
     {
@@ -89,7 +89,7 @@ final class JWTListener
     }
 
     /**
-     * @param \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent $event
+     * @param JWTInvalidEvent $event
      */
     public function onJWTInvalid(JWTInvalidEvent $event)
     {
@@ -97,7 +97,7 @@ final class JWTListener
     }
 
     /**
-     * @return \Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent[]
+     * @return JWTInvalidEvent[]
      */
     public function getInvalidTokenEvents()
     {

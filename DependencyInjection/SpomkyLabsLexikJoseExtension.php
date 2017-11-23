@@ -41,6 +41,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
         $container->setParameter('lexik_jose_bridge.encoder.issuer', $config['server_name']);
         $container->setParameter('lexik_jose_bridge.encoder.ttl', $config['ttl']);
+        $container->setParameter('lexik_jose_bridge.encoder.claim_checked', $config['claim_checked']);
 
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
         if (true === $config['encryption']['enabled']) {
@@ -78,10 +79,16 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     {
         $isDebug = $container->getParameter('kernel.debug');
         $bridgeConfig = current($container->getExtensionConfig($this->getAlias()));
-
+        if (!array_key_exists('claim_checked', $bridgeConfig)) {
+            $bridgeConfig['claim_checked'] = [];
+        }
+        $claim_aliases = array_merge(
+            $bridgeConfig['claim_checked'],
+            ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer']
+        );
         ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
         ConfigurationHelper::addJWSVerifier($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']],$isDebug);
-        ConfigurationHelper::addClaimChecker($container, $this->getAlias(), ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer'], $isDebug);
+        ConfigurationHelper::addClaimChecker($container, $this->getAlias(), $claim_aliases, $isDebug);
         ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_signature', ['lexik_jose_signature_algorithm']);
         ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
 

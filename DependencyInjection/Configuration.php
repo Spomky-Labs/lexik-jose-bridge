@@ -49,6 +49,13 @@ final class Configuration implements ConfigurationInterface
                     ->info('Signature algorithm used to sign the tokens.')
                     ->isRequired()
                 ->end()
+                ->arrayNode('claim_checked')
+                    ->info('List of aliases to claim checkers.')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                    ->treatNullLike([])
+                    ->treatFalseLike([])
+                ->end()
             ->end();
 
         $this->addEncryptionSection($rootNode);
