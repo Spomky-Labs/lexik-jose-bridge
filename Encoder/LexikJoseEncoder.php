@@ -199,7 +199,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             $payload,
             $this->getAdditionalPayload()
         );
-        $headers = $this->getSignatureHeaders();
+        $headers = $this->getSignatureHeader();
         $signatureKey = $this->signatureKeyset->get($this->signatureKeyIndex);
         if ($signatureKey->has('kid')) {
             $headers['kid'] = $signatureKey->get('kid');
@@ -223,7 +223,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      */
     public function encrypt(string $jws): string
     {
-        $headers = $this->getEncryptionHeaders();
+        $headers = $this->getEncryptionHeader();
         $encryptionKey = $this->encryptionKeyset->get($this->encryptionKeyIndex);
 
         if ($encryptionKey->has('kid')) {
@@ -233,7 +233,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $jwe = $this->jweBuilder
             ->create()
             ->withPayload($jws)
-            ->withSharedProtectedHeaders($headers)
+            ->withSharedProtectedHeader($headers)
             ->addRecipient($encryptionKey)
             ->build();
 
@@ -244,23 +244,25 @@ final class LexikJoseEncoder implements JWTEncoderInterface
 
     /**
      * @param string $token
-     *
      * @return string
+     * @throws JWTDecodeFailureException
      */
     private function decrypt(string $token): string
     {
         $serializer = new JWECompactSerializer(new StandardConverter());
         $jwe = $serializer->unserialize($token);
         $this->encryptionHeaderCheckerManager->check($jwe, 0);
-        $jwe = $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset);
+        if (false === $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset, 0)) {
+            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to decrypt the JWT token.');
+        };
 
         return $jwe->getPayload();
     }
 
     /**
      * @param string $token
-     *
      * @return array
+     * @throws JWTDecodeFailureException
      */
     private function verify(string $token): array
     {
@@ -268,7 +270,9 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $serializer = new JWSCompactSerializer($jsonConverter);
         $jws = $serializer->unserialize($token);
         $this->signatureHeaderCheckerManager->check($jws, 0);
-        $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset);
+        if (false === $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset, 0)) {
+            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
+        };
         $payload = $jsonConverter->decode($jws->getPayload());
         $this->claimCheckerManager->check($payload);
 
@@ -321,7 +325,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @return array
      */
-    private function getSignatureHeaders()
+    private function getSignatureHeader()
     {
         return [
             'typ'  => 'JWT',
@@ -334,7 +338,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @return array
      */
-    private function getEncryptionHeaders()
+    private function getEncryptionHeader()
     {
         return [
             'typ'  => 'JWT',

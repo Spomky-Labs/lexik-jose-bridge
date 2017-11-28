@@ -16,10 +16,7 @@
         }
     ],
     "require": {
-        "web-token/jwt-key-mgmt-bundle": "^0.4",
-        "web-token/jwt-encryption-bundle": "^0.4",
-        "web-token/jwt-signature-bundle": "^0.4",
-        "web-token/jwt-checker-bundle": "^0.4",
+        "web-token/jwt-framework": "^0.5@dev",
         "lexik/jwt-authentication-bundle": "^2.0"
     },
     "require-dev": {

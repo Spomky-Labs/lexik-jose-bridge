@@ -128,7 +128,7 @@ trait LoginContext
         $jwe = $jweBuilder
             ->create()
             ->withPayload($jws)
-            ->withSharedProtectedHeaders($this->getEncryptionHeader())
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
             ->build();
 
@@ -167,7 +167,7 @@ trait LoginContext
         $jwe = $jweBuilder
             ->create()
             ->withPayload($jws)
-            ->withSharedProtectedHeaders($this->getEncryptionHeader())
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
             ->build();
 
@@ -204,7 +204,7 @@ trait LoginContext
         $jwe = $jweBuilder
             ->create()
             ->withPayload($jws)
-            ->withSharedProtectedHeaders($this->getEncryptionHeader())
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
             ->build();
 
@@ -241,7 +241,7 @@ trait LoginContext
         $jwe = $jweBuilder
             ->create()
             ->withPayload($jws)
-            ->withSharedProtectedHeaders($this->getEncryptionHeader())
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
             ->build();
 
@@ -271,17 +271,17 @@ trait LoginContext
      */
     private function getSignatureHeader()
     {
-        $headers = [
+        $header = [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
             'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.signature_algorithm'),
         ];
         $signatureKey = $this->getSignatureKey();
         if ($signatureKey->has('kid')) {
-            $headers['kid'] = $signatureKey->get('kid');
+            $header['kid'] = $signatureKey->get('kid');
         }
 
-        return $headers;
+        return $header;
     }
 
     /**
@@ -289,7 +289,7 @@ trait LoginContext
      */
     private function getEncryptionHeader()
     {
-        $headers = [
+        $header = [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
             'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
@@ -297,10 +297,10 @@ trait LoginContext
         ];
         $encryption_key = $this->getEncryptionKey();
         if ($encryption_key->has('kid')) {
-            $headers['kid'] = $encryption_key->get('kid');
+            $header['kid'] = $encryption_key->get('kid');
         }
 
-        return $headers;
+        return $header;
     }
 
     /**
