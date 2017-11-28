@@ -1,7 +1,7 @@
 {
     "name": "spomky-labs/lexik-jose-bridge",
     "type": "symfony-bundle",
-    "description": "Bridge to allow the use of the Spomky-Labs Jose Bundle with the Lexik JWT Authentication Bundle",
+    "description": "Bridge to allow the use of web-token/jwt-framework with the Lexik JWT Authentication Bundle",
     "keywords": ["Jose", "Bundle", "Symfony"],
     "homepage": "https://github.com/Spomky-Labs/lexik-jose-bridge",
     "license": "MIT",

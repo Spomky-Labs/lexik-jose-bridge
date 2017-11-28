@@ -31,7 +31,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 /**
  * Json Web Token encoder/decoder.
  *
- * This encoder uses the spomky-labs/jose components to create and load the assertions
+ * This encoder uses web-token/jwt-framework to create and load the assertions
  */
 final class LexikJoseEncoder implements JWTEncoderInterface
 {
