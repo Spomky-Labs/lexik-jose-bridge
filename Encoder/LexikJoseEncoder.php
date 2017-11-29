@@ -244,8 +244,10 @@ final class LexikJoseEncoder implements JWTEncoderInterface
 
     /**
      * @param string $token
-     * @return string
+     *
      * @throws JWTDecodeFailureException
+     *
+     * @return string
      */
     private function decrypt(string $token): string
     {
@@ -254,15 +256,17 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->encryptionHeaderCheckerManager->check($jwe, 0);
         if (false === $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset, 0)) {
             throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to decrypt the JWT token.');
-        };
+        }
 
         return $jwe->getPayload();
     }
 
     /**
      * @param string $token
-     * @return array
+     *
      * @throws JWTDecodeFailureException
+     *
+     * @return array
      */
     private function verify(string $token): array
     {
@@ -272,7 +276,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->signatureHeaderCheckerManager->check($jws, 0);
         if (false === $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset, 0)) {
             throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
-        };
+        }
         $payload = $jsonConverter->decode($jws->getPayload());
         $this->claimCheckerManager->check($payload);
 
