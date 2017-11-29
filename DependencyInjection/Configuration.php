@@ -68,6 +68,7 @@ class Configuration implements ConfigurationInterface
             if (!is_dir($value['key_storage_folder'])) {
                 mkdir($value['key_storage_folder'], 0777, true);
             }
+
             return !(is_dir($value['key_storage_folder']) && is_writable($value['key_storage_folder']));
         };
     }

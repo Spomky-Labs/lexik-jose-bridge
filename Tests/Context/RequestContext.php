@@ -140,6 +140,7 @@ trait RequestContext
         $client->followRedirects(false);
 
         $this->getRequestBuilder()->setUri($this->locatePath($uri));
+
         try {
             $client->request(
                 $method,
