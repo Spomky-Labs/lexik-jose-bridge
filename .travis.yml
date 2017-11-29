@@ -27,4 +27,3 @@ before_script:
 
 script:
     - vendor/bin/behat
-    - vendor/bin/phpunit
