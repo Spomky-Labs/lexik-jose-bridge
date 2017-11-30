@@ -13,8 +13,8 @@ namespace SpomkyLabs\TestBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/api")
@@ -23,36 +23,39 @@ final class ApiController extends Controller
 {
     /**
      * @Route("/anonymous")
-     * @Template()
      */
     public function anonymousAction()
     {
-        return [
-            'user' => $this->getUser(),
-        ];
+        $user = $this->getUser();
+        if (null === $user) {
+            $message = 'Hello anonymous!';
+        } else {
+            $message = "Hello {$user->getUsername()}!";
+        }
+        return new Response($message);
     }
 
     /**
      * @Route("/hello")
      * @Security("is_granted('ROLE_USER')")
-     * @Template()
      */
     public function helloAction()
     {
-        return [
-            'user' => $this->getUser(),
-        ];
+        $user = $this->getUser();
+        $message = "Hello {$user->getUsername()}!";
+
+        return new Response($message);
     }
 
     /**
      * @Route("/admin")
      * @Security("is_granted('ROLE_ADMIN')")
-     * @Template()
      */
     public function adminAction()
     {
-        return [
-            'user' => $this->getUser(),
-        ];
+        $user = $this->getUser();
+        $message = "Hello {$user->getUsername()}!";
+
+        return new Response($message);
     }
 }

@@ -8,8 +8,6 @@ framework:
     default_locale:  'en'
     form: ~
     csrf_protection: ~
-    validation:
-        enable_annotations: true
     session:
         storage_id: session.storage.mock_file
     router:
@@ -17,7 +15,6 @@ framework:
         strict_requirements: ~
     templating:
         engines: ['twig']
-    assets:
     trusted_hosts:   ~
     fragments:       ~
     http_method_override: true
