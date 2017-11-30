@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     acme_api.event.jwt_created_listener:
         class: 'SpomkyLabs\TestBundle\EventListener\JWTListener'
         arguments: [ '@request_stack' ]

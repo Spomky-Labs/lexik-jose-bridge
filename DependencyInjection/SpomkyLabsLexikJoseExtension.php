@@ -93,15 +93,23 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
 
         if (true === $bridgeConfig['encryption']['enabled']) {
-            ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
-            ConfigurationHelper::addJWEDecrypter($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], false);
-            ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_encryption', ['lexik_jose_audience', 'lexik_jose_issuer', 'lexik_jose_key_encryption_algorithm', 'lexik_jose_content_encryption_algorithm']);
-            ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', ['value' => $bridgeConfig['encryption']['key_set'], 'is_public' => $isDebug]);
+            $this->enableEncryptionSupport($container, $bridgeConfig, $isDebug);
         }
 
-        $lexikConfig = ['encoder' => [
-            'service' => LexikJoseEncoder::class,
-        ]];
+        $lexikConfig = ['encoder' => ['service' => LexikJoseEncoder::class]];
         $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $bridgeConfig
+     * @param bool             $isDebug
+     */
+    private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug)
+    {
+        ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
+        ConfigurationHelper::addJWEDecrypter($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
+        ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_encryption', ['lexik_jose_audience', 'lexik_jose_issuer', 'lexik_jose_key_encryption_algorithm', 'lexik_jose_content_encryption_algorithm']);
+        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', ['value' => $bridgeConfig['encryption']['key_set'], 'is_public' => $isDebug]);
     }
 }
