@@ -7,10 +7,10 @@ How to configure this bundle?
 lexik_jose:
     ttl: 3600                                     // The TTL of each token issued by the bundle
     server_name: 'https://my.super.service/'      // This value is used to verify the issuer/audience of the tokens
-    key_set: '%env(LEXIK_JOSE_SIGNATURE_KEYSET)%' // The signature key set (loaded through an env variable
+    key_set: '%env(LEXIK_JOSE_SIGNATURE_KEYSET)%' // The signature key set (loaded through an env variable)
     key_index: 0                                  // The index of the signature key in the key set
-    signature_algorithm: "RS512"                  // The signature algorithm (default is RS512).
-    claim_checked:                                // A list of claim checker aliases.
+    signature_algorithm: "RS512"                  // The signature algorithm.
+    claim_checked:                                // A list of additional claim checker aliases (optional).
         - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com for more information
 ```
 
@@ -25,7 +25,7 @@ lexik_jose:
     ...
     encryption:
         enabled: true                                  // We enable the encryption (highly recommended)
-        key_set: '%env(LEXIK_JOSE_ENCRYPTION_KEYSET)%' // The encryption key set (loaded through an env variable
+        key_set: '%env(LEXIK_JOSE_ENCRYPTION_KEYSET)%' // The encryption key set (loaded through an env variable)
         key_index: 0                                   // The index of the encryption key in the key set
         key_encryption_algorithm: 'A256GCMKW'          // The key encryption algorithm
         content_encryption_algorithm: 'A256GCM'        // The content encryption algorithm

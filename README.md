@@ -52,7 +52,7 @@ If you do not use Symfony Flex, then use Composer and install the bundle manuall
 composer require spomky-labs/lexik-jose-bridge
 ```
 
-Then, add this bundle and the `spomky-labs/jose` bundles into your kernel:
+Then, add this bundle and the `web-token/jwt-framework` bundles into your kernel:
 
 ```php
 <?php
@@ -66,11 +66,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             ...
-            new Jose\Bundle\JoseFramework\JoseFrameworkBundle(), // Required
-            new Jose\Bundle\Signature\SignatureBundle(),         // Required
-            new Jose\Bundle\Encryption\EncryptionBundle(),       // Required if encryption is enabled
-            new Jose\Bundle\Checker\CheckerBundle(),             // Required
-            new Jose\Bundle\KeyManagement\KeyManagementBundle(), // Required
+            new Jose\Bundle\JoseFramework\JoseFrameworkBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
 
