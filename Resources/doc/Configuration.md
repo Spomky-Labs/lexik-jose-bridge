@@ -45,4 +45,4 @@ lexik_jwt_authentication:
         service: "SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder"
 ```
 
-*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/master/Tests/app/config/config.yml).*
+*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/v2.0/Tests/app/config/config.yml#L27-L40).*
