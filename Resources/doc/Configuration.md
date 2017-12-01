@@ -16,9 +16,7 @@ lexik_jose:
         - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com for more information
 ```
 
-For all signature algorithms available, please refer to the [spomky-labs/jose documentation](https://github.com/Spomky-Labs/jose#supported-signature-algorithms).
-
-For key configuration, please refer to the [Random JWKSet documentation](https://github.com/Spomky-Labs/jose/blob/master/doc/object/jwkset.md#create-a-key-set-with-random-keys)
+For all available signature algorithms and key sets, please refer to the [web-token/jwt-framework documentation](https://web-token.spomky-labs.com/).
 
 ## With Encryption
 
