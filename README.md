@@ -11,7 +11,7 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 [![License](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 
-This Symfony Bundle provides a JWT Encoder for the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) that uses the [Spomky-Labs/JoseBundle](https://github.com/Spomky-Labs/JoseBundle) as JWT Creator/Loader.
+This Symfony Bundle provides a JWT Encoder for the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) that uses the [web-token/jwt-framework](https://github.com/web-token/jwt-framework) as JWT Creator/Loader.
 
 # The Release Process
 
@@ -21,11 +21,11 @@ The release process [is described here](Resources/doc/Release.md).
 
 This library needs at least:
 * ![PHP 7.1+](https://img.shields.io/badge/PHP-7.1%2B-ff69b4.svg)
-* Symfony 3.3+
+* Symfony 3.3+ or 4.0+.
 
 # Continuous Integration
 
-It has been successfully tested using `PHP 7.1` and `PHP 7.2`.
+It has been successfully tested using `PHP 7.1` and `PHP 7.2` and `nightly`.
 
 We also track bugs and code quality using [Scrutinizer-CI](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge) and [Sensio Insight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2).
 
