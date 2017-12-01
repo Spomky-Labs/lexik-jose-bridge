@@ -1,6 +1,8 @@
 How to configure this bundle?
 =============================
 
+*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/v2.0/Tests/app/config/config.yml#L27-L40).*
+
 ## Without Encryption
 
 ```yml
@@ -34,15 +36,3 @@ lexik_jose:
 The `key_set` parameters must contain valid key sets as per the [RFC7517](https://tools.ietf.org/html/rfc7517).
 
 **Note: we highly recommend you to enable the encryption support as the token may contain very sensitive information**
-
-# Lexik JWT Authentication Bundle Configuration
-
-Now you just have to set the `SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder` as encoder service for the Lexik JWT Authentication Bundle:
-
-```yml
-lexik_jwt_authentication:
-    encoder:
-        service: "SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder"
-```
-
-*Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/v2.0/Tests/app/config/config.yml#L27-L40).*
