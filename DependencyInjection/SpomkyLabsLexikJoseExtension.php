@@ -84,7 +84,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         }
         $claim_aliases = array_merge(
             $bridgeConfig['claim_checked'],
-            ['exp', 'iat', 'nbf', 'lexik_jose_audience', 'lexik_jose_issuer']
+            ['exp', 'iat', 'lexik_jose_audience', 'lexik_jose_issuer']
         );
         ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
         ConfigurationHelper::addJWSVerifier($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
