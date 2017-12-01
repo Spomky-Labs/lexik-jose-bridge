@@ -32,6 +32,7 @@ final class ApiController extends Controller
         } else {
             $message = "Hello {$user->getUsername()}!";
         }
+
         return new Response($message);
     }
 
