@@ -15,7 +15,6 @@ Feature: A user can authenticate against a website
   Scenario: The token must contain all claims and custom claims
     Given the token must contain the claim "exp"
     And the token must contain the claim "jti"
-    And the token must contain the claim "nbf"
     And the token must contain the claim "iat"
     And the token must contain the claim "username" with value "admin1"
     And the token must contain the claim "ip" with value "127.0.0.1"
