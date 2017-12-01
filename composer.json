@@ -12,7 +12,7 @@
         },
         {
           "name": "All contributors",
-          "homepage": "https://github.com/Spomky-Labs/oauth2-server-library/contributors"
+          "homepage": "https://github.com/Spomky-Labs/lexik-jose-bridge/contributors"
         }
     ],
     "require": {
