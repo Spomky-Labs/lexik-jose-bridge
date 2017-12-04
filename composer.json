@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "web-token/jwt-framework": "^0.5.1",
+        "web-token/jwt-framework": "^1.0",
         "lexik/jwt-authentication-bundle": "^2.0"
     },
     "require-dev": {
