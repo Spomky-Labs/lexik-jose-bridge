@@ -4,9 +4,6 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=master)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=master)
 
-[![HHVM Status](http://hhvm.h4cc.de/badge/spomky-labs/lexik-jose-bridge.png)](http://hhvm.h4cc.de/package/spomky-labs/lexik-jose-bridge)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/lexik-jose-bridge/badge.svg)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
-
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
 
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/stable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
@@ -14,7 +11,7 @@ Jose Bridge for the LexikJWTAuthenticationBundle
 [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 [![License](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
 
-This Symfony Bundle provides a JWT Encoder for the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) that uses the [Spomky-Labs/JoseBundle](https://github.com/Spomky-Labs/JoseBundle) as JWT Creator/Loader.
+This Symfony Bundle provides a JWT Encoder for the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) that uses the [web-token/jwt-framework](https://github.com/web-token/jwt-framework) as JWT Creator/Loader.
 
 # The Release Process
 
@@ -23,12 +20,12 @@ The release process [is described here](Resources/doc/Release.md).
 # Prerequisites
 
 This library needs at least:
-* ![PHP 5.6+](https://img.shields.io/badge/PHP-5.6%2B-ff69b4.svg)
-* Symfony 2.8+ or Symfony 3.0+
+* ![PHP 7.1+](https://img.shields.io/badge/PHP-7.1%2B-ff69b4.svg)
+* Symfony 3.3+ or 4.0+.
 
 # Continuous Integration
 
-It has been successfully tested using `PHP 5.6`, `PHP 7` and `HHVM` on Symfony `2.8`, `3.0` and `3.1`.
+It has been successfully tested using `PHP 7.1` and `PHP 7.2` and `nightly`.
 
 We also track bugs and code quality using [Scrutinizer-CI](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge) and [Sensio Insight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2).
 
@@ -38,13 +35,24 @@ Code coverage is not performed, but `Behavior driven development` (BDD) is used 
 
 # Installation
 
-The preferred way to install this bundle is to rely on Composer:
+
+## Symfony Flex
+
+The preferred way to install this bundle is to rely on Symfony Flex:
+
+```sh
+composer req "spomky-labs/lexik-jose-bridge:^2.0"
+```
+
+## Manual Installation
+
+If you do not use Symfony Flex, then use Composer and install the bundle manually.
 
 ```sh
 composer require spomky-labs/lexik-jose-bridge
 ```
 
-Then, add this bundle and the Spomky-Labs/JoseBundle into your kernel:
+Then, add this bundle and the `web-token/jwt-framework` bundles into your kernel:
 
 ```php
 <?php
@@ -58,7 +66,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             ...
-            new SpomkyLabs\JoseBundle\SpomkyLabsJoseBundle(),
+            new Jose\Bundle\JoseFramework\JoseFrameworkBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
 
@@ -73,7 +81,7 @@ This bundle needs to be configured. Please [see this page](Resources/doc/Configu
 
 # How to use
 
-Have a look at [this page](Resources/doc/Use.md) to know how to use this bundle.
+There is nothing to do. Just use your application as usual.
 
 # Contributing
 

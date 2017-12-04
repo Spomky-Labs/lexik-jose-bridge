@@ -11,11 +11,10 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Checker;
 
-use Assert\Assertion;
-use Jose\Checker\ClaimCheckerInterface;
-use Jose\Object\JWTInterface;
+use Jose\Component\Checker\ClaimChecker;
+use Jose\Component\Checker\HeaderChecker;
 
-class IssuerChecker implements ClaimCheckerInterface
+final class IssuerChecker implements ClaimChecker, HeaderChecker
 {
     /**
      * @var string
@@ -27,7 +26,7 @@ class IssuerChecker implements ClaimCheckerInterface
      *
      * @param string $issuer
      */
-    public function __construct($issuer)
+    public function __construct(string $issuer)
     {
         $this->issuer = $issuer;
     }
@@ -35,15 +34,42 @@ class IssuerChecker implements ClaimCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function supportedClaim(): string
     {
-        if (!$jwt->hasClaim('iss')) {
-            return [];
+        return 'iss';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkClaim($issuer)
+    {
+        if ($this->issuer !== $issuer) {
+            throw new \Exception(sprintf('The issuer "%s" is not allowed.', $issuer));
         }
+    }
 
-        $issuer = $jwt->getClaim('iss');
-        Assertion::eq($this->issuer, $issuer, sprintf('The issuer "%s" is not allowed.', $issuer));
+    /**
+     * {@inheritdoc}
+     */
+    public function checkHeader($value)
+    {
+        $this->checkClaim($value);
+    }
 
-        return ['iss'];
+    /**
+     * {@inheritdoc}
+     */
+    public function supportedHeader(): string
+    {
+        return 'iss';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function protectedHeaderOnly(): bool
+    {
+        return true;
     }
 }

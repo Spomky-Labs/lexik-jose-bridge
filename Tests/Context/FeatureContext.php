@@ -18,11 +18,10 @@ use Behat\Symfony2Extension\Context\KernelDictionary;
 /**
  * Behat context class.
  */
-class FeatureContext extends MinkContext implements SnippetAcceptingContext
+final class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
     use KernelDictionary;
     use ResponseContext;
     use LoginContext;
     use RequestContext;
-    use ApplicationContext;
 }

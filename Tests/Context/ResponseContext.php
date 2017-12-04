@@ -11,8 +11,6 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
-use Assert\Assertion;
-
 /**
  * Behat context class.
  */
@@ -32,8 +30,12 @@ trait ResponseContext
     {
         $header = $this->getSession()->getResponseHeaders();
 
-        Assertion::keyExists($header, 'content-type', 'The response header has no content-type.');
-        Assertion::inArray($content_type, $header['content-type'], sprintf('The response header content-type does not contain "%s".', $content_type));
+        if (!array_key_exists('content-type', $header)) {
+            throw new \Exception('The response header has no content-type.');
+        }
+        if (!in_array($content_type, $header['content-type'])) {
+            throw new \Exception(sprintf('The response header content-type does not contain "%s".', $content_type));
+        }
     }
 
     /**
@@ -43,7 +45,11 @@ trait ResponseContext
     {
         $content = json_decode($this->getSession()->getPage()->getContent(), true);
 
-        Assertion::notNull($content, 'The response is not a JSON object.');
-        Assertion::keyExists($content, 'token', 'The response does not contain a token.');
+        if (!is_array($content)) {
+            throw new \Exception('The response is not a JSON object.');
+        }
+        if (!array_key_exists('token', $content)) {
+            throw new \Exception('The response does not contain a token.');
+        }
     }
 }

@@ -12,7 +12,7 @@
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
-class AppKernel extends Kernel
+final class AppKernel extends Kernel
 {
     /**
      * {@inheritdoc}
@@ -23,12 +23,11 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            //new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
 
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
 
-            new SpomkyLabs\JoseBundle\SpomkyLabsJoseBundle(),
+            new Jose\Bundle\JoseFramework\JoseFrameworkBundle(),
             new SpomkyLabs\TestBundle\SpomkyLabsTestBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];

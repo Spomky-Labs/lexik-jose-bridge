@@ -11,36 +11,22 @@
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
-use SpomkyLabs\JoseBundle\Helper\ConfigurationHelper;
+use Jose\Bundle\JoseFramework\Helper\ConfigurationHelper;
+use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtensionInterface
+final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * @var string
-     */
-    private $alias;
-
-    /**
-     * SpomkyLabsLexikJoseExtension constructor.
-     *
-     * @param string $alias
-     */
-    public function __construct($alias)
-    {
-        $this->alias = $alias;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getAlias()
     {
-        return $this->alias;
+        return 'lexik_jose';
     }
 
     /**
@@ -51,84 +37,79 @@ class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setAlias('lexik_jose_bridge.encoder.jwt_creator', sprintf('jose.jwt_creator.%s', $this->getAlias()));
-        $container->setAlias('lexik_jose_bridge.encoder.jwt_loader', sprintf('jose.jwt_loader.%s', $this->getAlias()));
-        $container->setParameter('lexik_jose_bridge.encoder.key_storage_folder', $config['key_storage_folder']);
-        $container->setParameter('lexik_jose_bridge.encoder.signature_key_configuration', $config['signature_key_configuration']);
+        $container->setParameter('lexik_jose_bridge.encoder.key_index', $config['key_index']);
+        $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
         $container->setParameter('lexik_jose_bridge.encoder.issuer', $config['server_name']);
         $container->setParameter('lexik_jose_bridge.encoder.ttl', $config['ttl']);
-        $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
+        $container->setParameter('lexik_jose_bridge.encoder.claim_checked', $config['claim_checked']);
 
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
         if (true === $config['encryption']['enabled']) {
-            $container->setParameter('lexik_jose_bridge.encoder.encryption.encryption_key_configuration', $config['encryption']['encryption_key_configuration']);
+            $container->setParameter('lexik_jose_bridge.encoder.encryption.key_index', $config['key_index']);
             $container->setParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm', $config['encryption']['key_encryption_algorithm']);
             $container->setParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm', $config['encryption']['content_encryption_algorithm']);
+            $this->loadEncryptionServices($container);
         }
 
         $this->loadServices($container);
     }
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param ContainerBuilder $container
      */
     public function loadServices(ContainerBuilder $container)
     {
-        $files = ['services', 'warmup'];
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-
-        foreach ($files as $file) {
-            $filename = sprintf('%s.xml', $file);
-            $loader->load($filename);
-        }
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
     }
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param ContainerBuilder $container
+     */
+    public function loadEncryptionServices(ContainerBuilder $container)
+    {
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('encryption_services.yml');
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function prepend(ContainerBuilder $container)
     {
-        $bundle_config = current($container->getExtensionConfig($this->getAlias()));
-
-        $this->addJWKSets($container, $bundle_config);
-        ConfigurationHelper::addSigner($container, $this->getAlias(), [$bundle_config['signature_algorithm']], false, false);
-        ConfigurationHelper::addVerifier($container, $this->getAlias(), [$bundle_config['signature_algorithm']], false);
-
-        if (true === $bundle_config['encryption']['enabled']) {
-            ConfigurationHelper::addEncrypter($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], false, false);
-            ConfigurationHelper::addDecrypter($container, $this->getAlias(), [$bundle_config['encryption']['key_encryption_algorithm']], [$bundle_config['encryption']['content_encryption_algorithm']], ['DEF'], false);
-            $encrypter = sprintf('jose.encrypter.%s', $this->getAlias());
-            $decrypter = sprintf('jose.decrypter.%s', $this->getAlias());
-        } else {
-            $encrypter = null;
-            $decrypter = null;
+        $isDebug = $container->getParameter('kernel.debug');
+        $bridgeConfig = current($container->getExtensionConfig($this->getAlias()));
+        if (!array_key_exists('claim_checked', $bridgeConfig)) {
+            $bridgeConfig['claim_checked'] = [];
         }
-        ConfigurationHelper::addChecker($container, $this->getAlias(), ['crit'], ['exp', 'iat', 'nbf', 'lexik_iss', 'lexik_aud'], false);
-        ConfigurationHelper::addJWTCreator($container, $this->getAlias(), sprintf('jose.signer.%s', $this->getAlias()), $encrypter);
-        ConfigurationHelper::addJWTLoader($container, $this->getAlias(), sprintf('jose.verifier.%s', $this->getAlias()), sprintf('jose.checker.%s', $this->getAlias()), $decrypter, false);
+        $claim_aliases = array_merge(
+            $bridgeConfig['claim_checked'],
+            ['exp', 'iat', 'lexik_jose_audience', 'lexik_jose_issuer']
+        );
+        ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
+        ConfigurationHelper::addJWSVerifier($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
+        ConfigurationHelper::addClaimChecker($container, $this->getAlias(), $claim_aliases, $isDebug);
+        ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_signature', ['lexik_jose_signature_algorithm']);
+        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
+
+        if (true === $bridgeConfig['encryption']['enabled']) {
+            $this->enableEncryptionSupport($container, $bridgeConfig, $isDebug);
+        }
+
+        $lexikConfig = ['encoder' => ['service' => LexikJoseEncoder::class]];
+        $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
     }
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     * @param array                                                   $bundle_config
+     * @param ContainerBuilder $container
+     * @param array            $bridgeConfig
+     * @param bool             $isDebug
      */
-    private function addJWKSets(ContainerBuilder $container, array $bundle_config)
+    private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug)
     {
-        $signature_key_configuration = $bundle_config['signature_key_configuration'];
-        $signature_key_configuration['use'] = 'sig';
-        $signature_key_configuration['alg'] = $bundle_config['signature_algorithm'];
-        $signature_storage_path = sprintf('%s/signature.jwkset', $bundle_config['key_storage_folder']);
-
-        ConfigurationHelper::addRandomJWKSet($container, sprintf('%s_signature_keyset', $this->getAlias()), $signature_storage_path, 3, $signature_key_configuration, true, true);
-
-        if (true === $bundle_config['encryption']['enabled']) {
-            $encryption_key_configuration = $bundle_config['encryption']['encryption_key_configuration'];
-            $encryption_key_configuration['use'] = 'enc';
-            $encryption_key_configuration['alg'] = $bundle_config['encryption']['key_encryption_algorithm'];
-
-            $encryption_storage_path = sprintf('%s/encryption.jwkset', $bundle_config['key_storage_folder']);
-
-            ConfigurationHelper::addRandomJWKSet($container, sprintf('%s_encryption_keyset', $this->getAlias()), $encryption_storage_path, 3, $encryption_key_configuration, true, true);
-        }
+        ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
+        ConfigurationHelper::addJWEDecrypter($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
+        ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_encryption', ['lexik_jose_audience', 'lexik_jose_issuer', 'lexik_jose_key_encryption_algorithm', 'lexik_jose_content_encryption_algorithm']);
+        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', ['value' => $bridgeConfig['encryption']['key_set'], 'is_public' => $isDebug]);
     }
 }

@@ -12,9 +12,18 @@
 namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
 use Base64Url\Base64Url;
-use Jose\JWTCreator;
-use Jose\JWTLoader;
-use Jose\Object\JWKSetInterface;
+use Jose\Component\Checker\ClaimCheckerManager;
+use Jose\Component\Checker\HeaderCheckerManager;
+use Jose\Component\Checker\InvalidClaimException;
+use Jose\Component\Checker\InvalidHeaderException;
+use Jose\Component\Core\Converter\StandardConverter;
+use Jose\Component\Core\JWKSet;
+use Jose\Component\Encryption\JWEBuilder;
+use Jose\Component\Encryption\JWEDecrypter;
+use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
+use Jose\Component\Signature\JWSBuilder;
+use Jose\Component\Signature\JWSVerifier;
+use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerializer;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
@@ -22,9 +31,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 /**
  * Json Web Token encoder/decoder.
  *
- * This encoder uses the Spomky-Labs/JoseBundle to create and load the assertions
+ * This encoder uses web-token/jwt-framework to create and load the assertions
  */
-class LexikJoseEncoder implements JWTEncoderInterface
+final class LexikJoseEncoder implements JWTEncoderInterface
 {
     /**
      * @var string
@@ -32,39 +41,74 @@ class LexikJoseEncoder implements JWTEncoderInterface
     private $issuer;
 
     /**
-     * @var \Jose\JWTCreator
+     * @var JWSBuilder
      */
-    private $jwt_creator;
+    private $jwsBuilder;
 
     /**
-     * @var \Jose\JWTLoader
+     * @var JWSVerifier
      */
-    private $jwt_loader;
+    private $jwsLoader;
 
     /**
-     * @var \Jose\Object\JWKSetInterface
+     * @var ClaimCheckerManager
      */
-    private $signature_jwkset;
+    private $claimCheckerManager;
 
     /**
-     * @var \Jose\Object\JWKSetInterface
+     * @var HeaderCheckerManager
      */
-    private $encryption_jwkset;
+    private $signatureHeaderCheckerManager;
+
+    /**
+     * @var HeaderCheckerManager
+     */
+    private $encryptionHeaderCheckerManager;
+
+    /**
+     * @var JWKSet
+     */
+    private $signatureKeyset;
+
+    /**
+     * @var int
+     */
+    private $signatureKeyIndex;
 
     /**
      * @var string
      */
-    private $signature_algorithm;
+    private $signatureAlgorithm;
+
+    /**
+     * @var JWEBuilder
+     */
+    private $jweBuilder;
+
+    /**
+     * @var JWEDecrypter
+     */
+    private $jweLoader;
+
+    /**
+     * @var JWKSet
+     */
+    private $encryptionKeyset;
+
+    /**
+     * @var int
+     */
+    private $encryptionKeyIndex;
 
     /**
      * @var string|null
      */
-    private $key_encryption_algorithm;
+    private $keyEncryptionAlgorithm;
 
     /**
      * @var string|null
      */
-    private $content_encryption_algorithm;
+    private $contentEncryptionAlgorithm;
 
     /**
      * @var int
@@ -74,38 +118,55 @@ class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * LexikJoseEncoder constructor.
      *
-     * @param \Jose\JWTCreator             $jwt_creator
-     * @param \Jose\JWTLoader              $jwt_loader
-     * @param \Jose\Object\JWKSetInterface $signature_jwkset
-     * @param string                       $signature_algorithm
-     * @param string                       $issuer
-     * @param int                          $ttl
+     * @param JWSBuilder           $jwsBuilder
+     * @param JWSVerifier          $jwsLoader
+     * @param ClaimCheckerManager  $claimCheckerManager
+     * @param HeaderCheckerManager $signatureHeaderCheckerManager
+     * @param JWKSet               $signatureKeyset
+     * @param int                  $signatureKeyIndex
+     * @param string               $signatureAlgorithm
+     * @param string               $issuer
+     * @param int                  $ttl
      */
-    public function __construct(JWTCreator $jwt_creator,
-                                JWTLoader $jwt_loader,
-                                JWKSetInterface $signature_jwkset,
-                                $signature_algorithm,
-                                $issuer,
-                                $ttl
+    public function __construct(JWSBuilder $jwsBuilder,
+                                JWSVerifier $jwsLoader,
+                                ClaimCheckerManager $claimCheckerManager,
+                                HeaderCheckerManager $signatureHeaderCheckerManager,
+                                JWKSet $signatureKeyset,
+                                int $signatureKeyIndex,
+                                string $signatureAlgorithm,
+                                string $issuer,
+                                int $ttl
     ) {
-        $this->jwt_creator = $jwt_creator;
-        $this->jwt_loader = $jwt_loader;
-        $this->signature_jwkset = $signature_jwkset;
-        $this->signature_algorithm = $signature_algorithm;
+        $this->jwsBuilder = $jwsBuilder;
+        $this->jwsLoader = $jwsLoader;
+        $this->claimCheckerManager = $claimCheckerManager;
+        $this->signatureHeaderCheckerManager = $signatureHeaderCheckerManager;
+        $this->signatureKeyset = $signatureKeyset;
+        $this->signatureKeyIndex = $signatureKeyIndex;
+        $this->signatureAlgorithm = $signatureAlgorithm;
         $this->issuer = $issuer;
         $this->ttl = $ttl;
     }
 
     /**
-     * @param \Jose\Object\JWKSetInterface $encryption_jwkset
-     * @param string                       $key_encryption_algorithm
-     * @param string                       $content_encryption_algorithm
+     * @param JWEBuilder           $jweBuilder
+     * @param JWEDecrypter         $jweLoader
+     * @param HeaderCheckerManager $encryptionHeaderCheckerManager
+     * @param JWKSet               $encryptionKeyset
+     * @param int                  $encryptionKeyIndex
+     * @param string               $keyEncryptionAlgorithm
+     * @param string               $contentEncryptionAlgorithm
      */
-    public function enableEncryptionSupport(JWKSetInterface $encryption_jwkset, $key_encryption_algorithm, $content_encryption_algorithm)
+    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, int $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
     {
-        $this->encryption_jwkset = $encryption_jwkset;
-        $this->key_encryption_algorithm = $key_encryption_algorithm;
-        $this->content_encryption_algorithm = $content_encryption_algorithm;
+        $this->jweBuilder = $jweBuilder;
+        $this->jweLoader = $jweLoader;
+        $this->encryptionKeyset = $encryptionKeyset;
+        $this->encryptionKeyIndex = $encryptionKeyIndex;
+        $this->keyEncryptionAlgorithm = $keyEncryptionAlgorithm;
+        $this->contentEncryptionAlgorithm = $contentEncryptionAlgorithm;
+        $this->encryptionHeaderCheckerManager = $encryptionHeaderCheckerManager;
     }
 
     /**
@@ -116,7 +177,7 @@ class LexikJoseEncoder implements JWTEncoderInterface
         try {
             $jwt = $this->sign($payload);
 
-            if (null !== $this->encryption_jwkset) {
+            if (null !== $this->jweBuilder) {
                 $jwt = $this->encrypt($jwt);
             }
 
@@ -131,36 +192,95 @@ class LexikJoseEncoder implements JWTEncoderInterface
      *
      * @return string
      */
-    private function sign(array $payload)
+    private function sign(array $payload): string
     {
+        $jsonConverter = new StandardConverter();
         $payload = array_merge(
             $payload,
             $this->getAdditionalPayload()
         );
-        $headers = $this->getSignatureHeaders();
-        $signature_key = $this->signature_jwkset->getKey(0);
-        if ($signature_key->has('kid')) {
-            $headers['kid'] = $signature_key->get('kid');
+        $headers = $this->getSignatureHeader();
+        $signatureKey = $this->signatureKeyset->get($this->signatureKeyIndex);
+        if ($signatureKey->has('kid')) {
+            $headers['kid'] = $signatureKey->get('kid');
         }
 
-        return $this->jwt_creator->sign($payload, $headers, $signature_key);
+        $jws = $this->jwsBuilder
+            ->create()
+            ->withPayload($jsonConverter->encode($payload))
+            ->addSignature($signatureKey, $headers)
+            ->build();
+
+        $serializer = new JWSCompactSerializer($jsonConverter);
+
+        return $serializer->serialize($jws, 0);
     }
 
     /**
-     * @param string $jwt
+     * @param string $jws
      *
      * @return string
      */
-    public function encrypt($jwt)
+    public function encrypt(string $jws): string
     {
-        $headers = $this->getEncryptionHeaders();
-        $encryption_key = $this->encryption_jwkset[0];
+        $headers = $this->getEncryptionHeader();
+        $encryptionKey = $this->encryptionKeyset->get($this->encryptionKeyIndex);
 
-        if ($encryption_key->has('kid')) {
-            $headers['kid'] = $encryption_key->get('kid');
+        if ($encryptionKey->has('kid')) {
+            $headers['kid'] = $encryptionKey->get('kid');
         }
 
-        return $this->jwt_creator->encrypt($jwt, $headers, $encryption_key);
+        $jwe = $this->jweBuilder
+            ->create()
+            ->withPayload($jws)
+            ->withSharedProtectedHeader($headers)
+            ->addRecipient($encryptionKey)
+            ->build();
+
+        $serializer = new JWECompactSerializer(new StandardConverter());
+
+        return $serializer->serialize($jwe, 0);
+    }
+
+    /**
+     * @param string $token
+     *
+     * @throws JWTDecodeFailureException
+     *
+     * @return string
+     */
+    private function decrypt(string $token): string
+    {
+        $serializer = new JWECompactSerializer(new StandardConverter());
+        $jwe = $serializer->unserialize($token);
+        $this->encryptionHeaderCheckerManager->check($jwe, 0);
+        if (false === $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset, 0)) {
+            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to decrypt the JWT token.');
+        }
+
+        return $jwe->getPayload();
+    }
+
+    /**
+     * @param string $token
+     *
+     * @throws JWTDecodeFailureException
+     *
+     * @return array
+     */
+    private function verify(string $token): array
+    {
+        $jsonConverter = new StandardConverter();
+        $serializer = new JWSCompactSerializer($jsonConverter);
+        $jws = $serializer->unserialize($token);
+        $this->signatureHeaderCheckerManager->check($jws, 0);
+        if (false === $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset, 0)) {
+            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
+        }
+        $payload = $jsonConverter->decode($jws->getPayload());
+        $this->claimCheckerManager->check($payload);
+
+        return $payload;
     }
 
     /**
@@ -169,51 +289,36 @@ class LexikJoseEncoder implements JWTEncoderInterface
     public function decode($token)
     {
         try {
-            $jws = $this->jwt_loader->load($token, $this->encryption_jwkset, null !== $this->encryption_jwkset);
-            $this->jwt_loader->verify($jws, $this->signature_jwkset);
+            if (null !== $this->jweBuilder) {
+                $token = $this->decrypt($token);
+            }
 
-            return $jws->getClaims();
+            return $this->verify($token);
+        } catch (InvalidClaimException $e) {
+            switch ($e->getClaim()) {
+                case 'exp':
+                    $reason = JWTDecodeFailureException::EXPIRED_TOKEN;
+                    break;
+                default:
+                    $reason = JWTDecodeFailureException::INVALID_TOKEN;
+            }
+
+            throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token. The following claim was not verified: %s.', $e->getClaim()));
+        } catch (InvalidHeaderException $e) {
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token. The following header was not verified: %s.', $e->getHeader()));
         } catch (\Exception $e) {
-            $reason = $this->getDecodeErrorReason($e->getMessage());
-            throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
         }
-    }
-
-    /**
-     * @param string $error
-     *
-     * @return string
-     */
-    private function getDecodeErrorReason($error)
-    {
-        $maps = $this->getDecodeErrorMapping();
-        if (array_key_exists($error, $maps)) {
-            return $maps[$error];
-        }
-
-        return JWTDecodeFailureException::INVALID_TOKEN;
     }
 
     /**
      * @return array
      */
-    private function getDecodeErrorMapping()
-    {
-        return [
-            'The JWT has expired.'      => JWTDecodeFailureException::EXPIRED_TOKEN,
-            'Unable to verify the JWS.' => JWTDecodeFailureException::UNVERIFIED_TOKEN,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getAdditionalPayload()
+    private function getAdditionalPayload(): array
     {
         return [
             'jti' => Base64Url::encode(random_bytes(64)),
             'exp' => time() + $this->ttl,
-            'nbf' => time(),
             'iat' => time(),
             'iss' => $this->issuer,
             'aud' => $this->issuer,
@@ -223,26 +328,29 @@ class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @return array
      */
-    private function getSignatureHeaders()
+    private function getSignatureHeader()
     {
         return [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
-            'alg'  => $this->signature_algorithm,
-            'crit' => ['exp', 'nbf', 'iat', 'iss', 'aud'],
+            'alg'  => $this->signatureAlgorithm,
+            'crit' => ['alg'],
         ];
     }
 
     /**
      * @return array
      */
-    private function getEncryptionHeaders()
+    private function getEncryptionHeader()
     {
         return [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
-            'alg'  => $this->key_encryption_algorithm,
-            'enc'  => $this->content_encryption_algorithm,
+            'alg'  => $this->keyEncryptionAlgorithm,
+            'enc'  => $this->contentEncryptionAlgorithm,
+            'iss'  => $this->issuer,
+            'aud'  => $this->issuer,
+            'crit' => ['iss', 'aud', 'alg', 'enc'],
         ];
     }
 }

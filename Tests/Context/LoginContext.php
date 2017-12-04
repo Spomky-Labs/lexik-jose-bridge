@@ -11,8 +11,13 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
-use Assert\Assertion;
-use Base64Url\Base64Url;
+use Jose\Component\Core\Converter\StandardConverter;
+use Jose\Component\Core\JWK;
+use Jose\Component\Encryption\JWEBuilder;
+use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
+use Jose\Component\Signature\JWSBuilder;
+use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerializer;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,15 +51,29 @@ trait LoginContext
     }
 
     /**
+     * @return StandardConverter
+     */
+    private function getJsonConverter(): StandardConverter
+    {
+        return new StandardConverter();
+    }
+
+    /**
      * @Given I have a valid signed token
      */
     public function iHaveAValidSignedToken()
     {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
+        /** @var JWSBuilder $jwsBuilder */
+        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
         $payload = $this->getBasicPayload();
-        $signature_key = $this->getSignatureKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
-        $this->token = $jwt;
+        $signatureKey = $this->getSignatureKey();
+        $jwt = $jwsBuilder
+            ->create()
+            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->addSignature($signatureKey, $this->getSignatureHeader())
+            ->build();
+        $serialzer = new JWSCompactSerializer($this->getJsonConverter());
+        $this->token = $serialzer->serialize($jwt, 0);
     }
 
     /**
@@ -63,13 +82,13 @@ trait LoginContext
     public function theTokenMustContainTheClaimWithValue($claim, $value)
     {
         $this->theTokenMustContainTheClaim($claim);
-        /*
-         * @var \Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface
-         */
+        /** @var JWTEncoderInterface $encoder */
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
         $token_decoded = $encoder->decode($this->getToken());
 
-        Assertion::eq($value, $token_decoded[$claim]);
+        if ($value !== $token_decoded[$claim]) {
+            throw new \Exception();
+        }
     }
 
     /**
@@ -77,13 +96,13 @@ trait LoginContext
      */
     public function theTokenMustContainTheClaim($claim)
     {
-        /*
-         * @var \Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface
-         */
+        /** @var JWTEncoderInterface $encoder */
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
 
         $token_decoded = $encoder->decode($this->getToken());
-        Assertion::keyExists($token_decoded, $claim);
+        if (!array_key_exists($claim, $token_decoded)) {
+            throw new \Exception();
+        }
     }
 
     /**
@@ -91,13 +110,31 @@ trait LoginContext
      */
     public function iHaveAValidSignedAndEncryptedToken()
     {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
+        /** @var JWSBuilder $jwsBuilder */
+        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
         $payload = $this->getBasicPayload();
-        $signature_key = $this->getSignatureKey();
-        $encryption_key = $this->getEncryptionKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
-        $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
-        $this->token = $jwt;
+        $signatureKey = $this->getSignatureKey();
+        $jwt = $jwsBuilder
+            ->create()
+            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->addSignature($signatureKey, $this->getSignatureHeader())
+            ->build();
+        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $jws = $serialzer->serialize($jwt);
+
+        /** @var JWEBuilder $jweBuilder */
+        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $encryptionKey = $this->getEncryptionKey();
+        $jwe = $jweBuilder
+            ->create()
+            ->withPayload($jws)
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
+            ->addRecipient($encryptionKey)
+            ->build();
+
+        $serialzer = new JWECompactSerializer(new StandardConverter());
+
+        $this->token = $serialzer->serialize($jwe, 0);
     }
 
     /**
@@ -105,7 +142,8 @@ trait LoginContext
      */
     public function iHaveAnExpiredSignedAndEncryptedToken()
     {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
+        /** @var JWSBuilder $jwsBuilder */
+        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
         $payload = array_merge(
             $this->getBasicPayload(),
             [
@@ -114,11 +152,28 @@ trait LoginContext
                 'iat' => time() - 100,
             ]
         );
-        $signature_key = $this->getSignatureKey();
-        $encryption_key = $this->getEncryptionKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
-        $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
-        $this->token = $jwt;
+        $signatureKey = $this->getSignatureKey();
+        $jwt = $jwsBuilder
+            ->create()
+            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->addSignature($signatureKey, $this->getSignatureHeader())
+            ->build();
+        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $jws = $serialzer->serialize($jwt);
+
+        /** @var JWEBuilder $jweBuilder */
+        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $encryptionKey = $this->getEncryptionKey();
+        $jwe = $jweBuilder
+            ->create()
+            ->withPayload($jws)
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
+            ->addRecipient($encryptionKey)
+            ->build();
+
+        $serialzer = new JWECompactSerializer(new StandardConverter());
+
+        $this->token = $serialzer->serialize($jwe, 0);
     }
 
     /**
@@ -126,18 +181,36 @@ trait LoginContext
      */
     public function iHaveASignedAndEncryptedTokenButWithWrongIssuer()
     {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
+        /** @var JWSBuilder $jwsBuilder */
+        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
         $payload = array_merge(
             $this->getBasicPayload(),
             [
                 'iss' => 'BAD ISSUER',
             ]
         );
-        $signature_key = $this->getSignatureKey();
-        $encryption_key = $this->getEncryptionKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
-        $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
-        $this->token = $jwt;
+        $signatureKey = $this->getSignatureKey();
+        $jwt = $jwsBuilder
+            ->create()
+            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->addSignature($signatureKey, $this->getSignatureHeader())
+            ->build();
+        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $jws = $serialzer->serialize($jwt);
+
+        /** @var JWEBuilder $jweBuilder */
+        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $encryptionKey = $this->getEncryptionKey();
+        $jwe = $jweBuilder
+            ->create()
+            ->withPayload($jws)
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
+            ->addRecipient($encryptionKey)
+            ->build();
+
+        $serialzer = new JWECompactSerializer(new StandardConverter());
+
+        $this->token = $serialzer->serialize($jwe, 0);
     }
 
     /**
@@ -145,59 +218,36 @@ trait LoginContext
      */
     public function iHaveASignedAndEncryptedTokenButWithWrongAudience()
     {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
+        /** @var JWSBuilder $jwsBuilder */
+        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
         $payload = array_merge(
             $this->getBasicPayload(),
             [
                 'aud' => 'BAD AUDIENCE',
             ]
         );
-        $signature_key = $this->getSignatureKey();
-        $encryption_key = $this->getEncryptionKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
-        $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
-        $this->token = $jwt;
-    }
+        $signatureKey = $this->getSignatureKey();
+        $jwt = $jwsBuilder
+            ->create()
+            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->addSignature($signatureKey, $this->getSignatureHeader())
+            ->build();
+        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $jws = $serialzer->serialize($jwt);
 
-    /**
-     * @Given I have a token with an unsupported algorithm
-     */
-    public function iHaveATokenWithAnUnsupportedAlgorithm()
-    {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
-        $payload = $this->getBasicPayload();
-        $signature_key = $this->getSignatureKey();
-        $encryption_key = $this->getEncryptionKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
+        /** @var JWEBuilder $jweBuilder */
+        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $encryptionKey = $this->getEncryptionKey();
+        $jwe = $jweBuilder
+            ->create()
+            ->withPayload($jws)
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
+            ->addRecipient($encryptionKey)
+            ->build();
 
-        $parts = explode('.', $jwt);
-        $header = json_decode(Base64Url::decode($parts[0]), true);
-        $header['alg'] = 'none';
-        $parts[0] = Base64Url::encode(json_encode($header));
-        $parts[2] = '';
-        $jwt = implode('.', $parts);
-        $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
-        $this->token = $jwt;
-    }
+        $serialzer = new JWECompactSerializer(new StandardConverter());
 
-    /**
-     * @Given I have a modified token
-     */
-    public function iHaveAModifiedToken()
-    {
-        $jwt_creator = $this->getContainer()->get('jose.jwt_creator.lexik_jose');
-        $payload = $this->getBasicPayload();
-        $signature_key = $this->getSignatureKey();
-        $encryption_key = $this->getEncryptionKey();
-        $jwt = $jwt_creator->sign($payload, $this->getSignatureHeader(), $signature_key);
-
-        $parts = explode('.', $jwt);
-        $body = json_decode(Base64Url::decode($parts[1]), true);
-        $body['username'] = 'admin1';
-        $parts[1] = Base64Url::encode(json_encode($body));
-        $jwt = implode('.', $parts);
-        $jwt = $jwt_creator->encrypt($jwt, $this->getEncryptionHeader(), $encryption_key);
-        $this->token = $jwt;
+        $this->token = $serialzer->serialize($jwe, 0);
     }
 
     /**
@@ -221,18 +271,17 @@ trait LoginContext
      */
     private function getSignatureHeader()
     {
-        $headers = [
+        $header = [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
             'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.signature_algorithm'),
-            'crit' => ['exp', 'nbf', 'iat', 'iss', 'aud'],
         ];
-        $signature_key = $this->getSignatureKey();
-        if ($signature_key->has('kid')) {
-            $headers['kid'] = $signature_key->get('kid');
+        $signatureKey = $this->getSignatureKey();
+        if ($signatureKey->has('kid')) {
+            $header['kid'] = $signatureKey->get('kid');
         }
 
-        return $headers;
+        return $header;
     }
 
     /**
@@ -240,7 +289,7 @@ trait LoginContext
      */
     private function getEncryptionHeader()
     {
-        $headers = [
+        $header = [
             'typ'  => 'JWT',
             'cty'  => 'JWT',
             'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
@@ -248,10 +297,10 @@ trait LoginContext
         ];
         $encryption_key = $this->getEncryptionKey();
         if ($encryption_key->has('kid')) {
-            $headers['kid'] = $encryption_key->get('kid');
+            $header['kid'] = $encryption_key->get('kid');
         }
 
-        return $headers;
+        return $header;
     }
 
     /**
@@ -265,18 +314,18 @@ trait LoginContext
     }
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWK
      */
-    private function getSignatureKey()
+    private function getSignatureKey(): JWK
     {
-        return $this->getContainer()->get('jose.key_set.lexik_jose_signature_keyset')[0];
+        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.signature')->get(0);
     }
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWK
      */
-    private function getEncryptionKey()
+    private function getEncryptionKey(): JWK
     {
-        return $this->getContainer()->get('jose.key_set.lexik_jose_encryption_keyset')[0];
+        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.encryption')->get(0);
     }
 }

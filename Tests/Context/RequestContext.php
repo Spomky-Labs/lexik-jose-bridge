@@ -11,7 +11,6 @@
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
-use Assert\Assertion;
 use Behat\Mink\Driver\BrowserKitDriver;
 
 trait RequestContext
@@ -98,7 +97,9 @@ trait RequestContext
     public function iAddTheTokenInTheAuthorizationHeader()
     {
         $token = $this->getToken();
-        Assertion::notNull($token, 'The token is not available. Are you logged in?');
+        if (null === $token) {
+            throw new \Exception('The token is not available. Are you logged in?');
+        }
 
         $this->getRequestBuilder()->addHeader('Authorization', 'Bearer '.$token);
     }
@@ -134,12 +135,15 @@ trait RequestContext
      */
     public function iTheRequestTo($method, $uri)
     {
-        Assertion::isInstanceOf($this->getSession()->getDriver(), BrowserKitDriver::class, 'Unsupported driver.');
+        if (!$this->getSession()->getDriver() instanceof BrowserKitDriver) {
+            throw new \Exception('Unsupported driver.');
+        }
 
         $client = $this->getSession()->getDriver()->getClient();
         $client->followRedirects(false);
 
         $this->getRequestBuilder()->setUri($this->locatePath($uri));
+
         try {
             $client->request(
                 $method,
@@ -178,8 +182,12 @@ trait RequestContext
      */
     public function iShouldReceiveAnException($message)
     {
-        Assertion::isInstanceOf($this->getException(), \Exception::class, 'No exception caught');
-        Assertion::eq($message, $this->getException()->getMessage(), sprintf('The exception has not the expected message: "%s". Message is "".', $message, $this->getException()->getMessage()));
+        if (!$this->getException() instanceof \Exception) {
+            throw new \Exception('No exception caught.');
+        }
+        if ($message !== $this->getException()->getMessage()) {
+            throw new \Exception(sprintf('The exception has not the expected message: "%s". Message is "".', $message, $this->getException()->getMessage()));
+        }
     }
 
     /**
@@ -188,7 +196,9 @@ trait RequestContext
     public function theErrorListenerShouldReceiveAnExpiredTokenEvent()
     {
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getExpiredTokenEvents();
-        Assertion::eq(1, count($events));
+        if (1 !== count($events)) {
+            throw new \Exception();
+        }
     }
 
     /**
@@ -197,6 +207,8 @@ trait RequestContext
     public function theErrorListenerShouldReceiveAnInvalidTokenEvent()
     {
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
-        Assertion::eq(1, count($events));
+        if (1 !== count($events)) {
+            throw new \Exception();
+        }
     }
 }

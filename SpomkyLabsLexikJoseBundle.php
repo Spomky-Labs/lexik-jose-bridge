@@ -23,7 +23,7 @@ final class SpomkyLabsLexikJoseBundle extends Bundle
      */
     public function getContainerExtension()
     {
-        return new SpomkyLabsLexikJoseExtension('lexik_jose');
+        return new SpomkyLabsLexikJoseExtension();
     }
 
     /**
@@ -32,7 +32,7 @@ final class SpomkyLabsLexikJoseBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $this->checkRequirements(['SpomkyLabsJoseBundle', 'LexikJWTAuthenticationBundle'], $container);
+        $this->checkRequirements(['JoseFrameworkBundle', 'LexikJWTAuthenticationBundle'], $container);
         $container->addCompilerPass(new EncryptionSupportCompilerPass());
     }
 

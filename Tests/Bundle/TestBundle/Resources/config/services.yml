@@ -1,9 +1,17 @@
 services:
+    _defaults:
+        public: true
+
     acme_api.event.jwt_created_listener:
-        class: SpomkyLabs\TestBundle\EventListener\JWTListener
+        class: 'SpomkyLabs\TestBundle\EventListener\JWTListener'
         arguments: [ '@request_stack' ]
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
+
+    acme_api.checker.claim.ip:
+        class: 'SpomkyLabs\TestBundle\Checker\IpClaimChecker'
+        tags:
+            - { name: 'jose.checker.claim', alias: 'lexik_jose_checker_claim_ip' }

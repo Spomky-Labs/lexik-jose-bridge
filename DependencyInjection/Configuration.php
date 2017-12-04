@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
@@ -27,13 +27,35 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->addDefaultsIfNotSet()
-            ->validate()->ifTrue(self::verifyDirectoryExistsAndIsWritable())->thenInvalid('The key storage folder does not exist or is not writable.')->end()
             ->children()
-                ->scalarNode('server_name')->isRequired()->end()
-                ->integerNode('ttl')->min(0)->defaultValue(3600)->end()
-                ->scalarNode('key_storage_folder')->isRequired()->end()
-                ->scalarNode('signature_algorithm')->defaultValue('RS512')->end()
-                ->arrayNode('signature_key_configuration')->isRequired()->useAttributeAsKey('key')->prototype('variable')->end()->end()
+                ->scalarNode('server_name')
+                    ->info('The name of the server. The recommended value is the server URL.')
+                    ->isRequired()
+                ->end()
+                ->integerNode('ttl')
+                    ->info('The lifetime of a token (in second). For security reasons, a value below 1 hour (3600 sec) is recommended.')
+                    ->min(0)
+                    ->defaultValue(1800)
+                ->end()
+                ->scalarNode('key_set')
+                    ->info('Private/Shared keys used by this server to validate signed tokens. Must be a JWKSet object.')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('key_index')
+                    ->info('Index of the key in the key set used to sign the tokens. Could be an integer or the key ID.')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('signature_algorithm')
+                    ->info('Signature algorithm used to sign the tokens.')
+                    ->isRequired()
+                ->end()
+                ->arrayNode('claim_checked')
+                    ->info('List of aliases to claim checkers.')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                    ->treatNullLike([])
+                    ->treatFalseLike([])
+                ->end()
             ->end();
 
         $this->addEncryptionSection($rootNode);
@@ -42,7 +64,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     * @param ArrayNodeDefinition $node
      */
     private function addEncryptionSection(ArrayNodeDefinition $node)
     {
@@ -51,35 +73,26 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('encryption')
                     ->addDefaultsIfNotSet()
-                    ->validate()->ifTrue(self::verifyEncryptionOptions())->thenInvalid('The configuration options for encryption are invalid.')->end()
+                    ->canBeEnabled()
                     ->children()
-                        ->booleanNode('enabled')->defaultFalse()->end()
-                        ->arrayNode('encryption_key_configuration')->isRequired()->useAttributeAsKey('key')->prototype('variable')->end()->end()
-                        ->scalarNode('key_encryption_algorithm')->defaultValue('RSA-OAEP-256')->end()
-                        ->scalarNode('content_encryption_algorithm')->defaultValue('')->end()
+                        ->scalarNode('key_set')
+                            ->info('Private/ Shared keys used by this server to decrypt the tokens. Must be a JWKSet object.')
+                            ->isRequired()
+                        ->end()
+                        ->scalarNode('key_index')
+                            ->isRequired()
+                            ->info('Index of the key in the key set used to encrypt the tokens. Could be an integer or the key ID.')
+                        ->end()
+                        ->scalarNode('key_encryption_algorithm')
+                            ->isRequired()
+                            ->info('Key encryption algorithm used to encrypt the tokens.')
+                        ->end()
+                        ->scalarNode('content_encryption_algorithm')
+                            ->info('Content encryption algorithm used to encrypt the tokens.')
+                            ->isRequired()
+                        ->end()
                     ->end()
                 ->end()
             ->end();
-    }
-
-    private static function verifyDirectoryExistsAndIsWritable()
-    {
-        return function ($value) {
-            if (!is_dir($value['key_storage_folder'])) {
-                mkdir($value['key_storage_folder'], 0777, true);
-            }
-            return !(is_dir($value['key_storage_folder']) && is_writable($value['key_storage_folder']));
-        };
-    }
-
-    private static function verifyEncryptionOptions()
-    {
-        return function ($value) {
-            if (false === $value['enabled']) {
-                return false;
-            }
-
-            return empty($value['key_encryption_algorithm']) || empty($value['content_encryption_algorithm']);
-        };
     }
 }

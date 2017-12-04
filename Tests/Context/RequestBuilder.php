@@ -13,7 +13,7 @@ namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestBuilder
+final class RequestBuilder
 {
     /**
      * @var array
