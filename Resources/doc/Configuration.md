@@ -1,6 +1,9 @@
 How to configure this bundle?
 =============================
 
+If you installed this bundle using Symfony Flex, it comes with a default configuration.
+**It is very important to change the key sets otherwise you will have a security issue.**
+
 *Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/v2.0/Tests/app/config/config.yml#L27-L40).*
 
 ## Without Encryption
