@@ -3,7 +3,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2017 Spomky-Labs
+ * Copyright (c) 2014-2018 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -318,7 +318,9 @@ trait LoginContext
      */
     private function getSignatureKey(): JWK
     {
-        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.signature')->get(0);
+        $keyIndex = $this->getContainer()->getParameter('lexik_jose_bridge.encoder.key_index');
+
+        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.signature')->get($keyIndex);
     }
 
     /**
@@ -326,6 +328,8 @@ trait LoginContext
      */
     private function getEncryptionKey(): JWK
     {
-        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.encryption')->get(0);
+        $keyIndex = $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_index');
+
+        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.encryption')->get($keyIndex);
     }
 }

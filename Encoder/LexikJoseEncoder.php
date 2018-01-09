@@ -3,7 +3,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2017 Spomky-Labs
+ * Copyright (c) 2014-2018 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -123,7 +123,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param ClaimCheckerManager  $claimCheckerManager
      * @param HeaderCheckerManager $signatureHeaderCheckerManager
      * @param JWKSet               $signatureKeyset
-     * @param int                  $signatureKeyIndex
+     * @param int|string           $signatureKeyIndex
      * @param string               $signatureAlgorithm
      * @param string               $issuer
      * @param int                  $ttl
@@ -133,7 +133,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
                                 ClaimCheckerManager $claimCheckerManager,
                                 HeaderCheckerManager $signatureHeaderCheckerManager,
                                 JWKSet $signatureKeyset,
-                                int $signatureKeyIndex,
+                                $signatureKeyIndex,
                                 string $signatureAlgorithm,
                                 string $issuer,
                                 int $ttl
@@ -154,11 +154,11 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param JWEDecrypter         $jweLoader
      * @param HeaderCheckerManager $encryptionHeaderCheckerManager
      * @param JWKSet               $encryptionKeyset
-     * @param int                  $encryptionKeyIndex
+     * @param int|string           $encryptionKeyIndex
      * @param string               $keyEncryptionAlgorithm
      * @param string               $contentEncryptionAlgorithm
      */
-    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, int $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
+    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
     {
         $this->jweBuilder = $jweBuilder;
         $this->jweLoader = $jweLoader;
@@ -332,7 +332,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     {
         return [
             'typ'  => 'JWT',
-            'cty'  => 'JWT',
             'alg'  => $this->signatureAlgorithm,
             'crit' => ['alg'],
         ];
