@@ -14,12 +14,13 @@ services:
             - '%lexik_jose_bridge.encoder.key_index%'
             - '%lexik_jose_bridge.encoder.signature_algorithm%'
             - '%lexik_jose_bridge.encoder.issuer%'
+            - '%lexik_jose_bridge.encoder.audience%'
             - '%lexik_jose_bridge.encoder.ttl%'
 
     spomkylabs_lexik_jose_checker_audience:
         class: 'Jose\Component\Checker\AudienceChecker'
         arguments:
-            - '%lexik_jose_bridge.encoder.issuer%'
+            - '%lexik_jose_bridge.encoder.audience%'
             - true
         tags:
             - { name: 'jose.checker.claim', alias: 'lexik_jose_audience' }
