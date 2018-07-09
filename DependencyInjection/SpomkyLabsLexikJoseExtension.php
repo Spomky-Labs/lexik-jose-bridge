@@ -92,7 +92,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_signature', ['lexik_jose_signature_algorithm']);
         ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
 
-        if (true === $bridgeConfig['encryption']['enabled']) {
+        if (isset($bridgeConfig['encryption']['enabled']) && (true === $bridgeConfig['encryption']['enabled'])) {
             $this->enableEncryptionSupport($container, $bridgeConfig, $isDebug);
         }
 
