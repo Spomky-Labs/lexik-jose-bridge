@@ -6,6 +6,7 @@ framework:
     secret: test
     form: false
     assets: false
+    validation: false
     default_locale:  'en'
     session:
         storage_id: session.storage.mock_file
