@@ -12,7 +12,7 @@ If you installed this bundle using Symfony Flex, it comes with a default configu
 lexik_jose:
     ttl: 3600                                     // The TTL of each token issued by the bundle
     server_name: 'https://my.super.service/'      // This value is used to verify the issuer of the tokens
-    audience: 'MyProject'                         // This value is used to verify the audience of the tokens
+    audience: 'MyProject'                         // This value is used to verify the audience of the tokens. If not set `server_name` will be used.
     key_set: '%env(LEXIK_JOSE_SIGNATURE_KEYSET)%' // The signature key set (loaded through an env variable)
     key_index: 0                                  // The index of the signature key in the key set
     signature_algorithm: "RS512"                  // The signature algorithm.
