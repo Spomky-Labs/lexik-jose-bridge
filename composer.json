@@ -28,6 +28,7 @@
         "symfony/yaml": "^3.3|^4.0",
         "symfony/form": "^3.3|^4.0",
         "symfony/finder": "^3.3|^4.0",
+        "symfony/css-selector": "^3.3|^4.0",
         "symfony/twig-bundle": "^3.3|^4.0",
         "symfony/expression-language": "^3.3|^4.0",
         "symfony/dependency-injection": "^3.3|^4.0",
