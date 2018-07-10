@@ -19,4 +19,4 @@ Feature: A user can authenticate against a website
     And the token must contain the claim "username" with value "admin1"
     And the token must contain the claim "ip" with value "127.0.0.1"
     And the token must contain the claim "iss" with value "https://my.super-service.org/"
-    And the token must contain the claim "aud" with value "https://my.super-service.org/"
+    And the token must contain the claim "aud" with value "MyProject1"

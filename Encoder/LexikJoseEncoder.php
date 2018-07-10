@@ -41,6 +41,11 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private $issuer;
 
     /**
+     * @var string
+     */
+    private $audience;
+
+    /**
      * @var JWSBuilder
      */
     private $jwsBuilder;
@@ -136,6 +141,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
                                 $signatureKeyIndex,
                                 string $signatureAlgorithm,
                                 string $issuer,
+                                string $audience,
                                 int $ttl
     ) {
         $this->jwsBuilder = $jwsBuilder;
@@ -146,6 +152,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->signatureKeyIndex = $signatureKeyIndex;
         $this->signatureAlgorithm = $signatureAlgorithm;
         $this->issuer = $issuer;
+        $this->audience = $audience;
         $this->ttl = $ttl;
     }
 
@@ -321,7 +328,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             'exp' => time() + $this->ttl,
             'iat' => time(),
             'iss' => $this->issuer,
-            'aud' => $this->issuer,
+            'aud' => $this->audience,
         ];
     }
 
@@ -348,7 +355,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             'alg'  => $this->keyEncryptionAlgorithm,
             'enc'  => $this->contentEncryptionAlgorithm,
             'iss'  => $this->issuer,
-            'aud'  => $this->issuer,
+            'aud'  => $this->audience,
             'crit' => ['iss', 'aud', 'alg', 'enc'],
         ];
     }
