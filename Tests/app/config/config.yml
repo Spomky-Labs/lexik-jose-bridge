@@ -4,19 +4,13 @@ imports:
 framework:
     test: ~
     secret: test
-    translator: ~
     default_locale:  'en'
-    form: ~
-    csrf_protection: ~
     session:
         storage_id: session.storage.mock_file
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
-        strict_requirements: ~
     templating:
         engines: ['twig']
-    trusted_hosts:   ~
-    fragments:       ~
     http_method_override: true
 
 # Twig Configuration
