@@ -296,6 +296,7 @@ trait LoginContext
             'jti'      => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
             'iss'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
             'aud'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.audience'),
+            'ip'       => '127.0.0.1'
         ];
     }
 
