@@ -17,7 +17,7 @@ lexik_jose:
     key_index: 0                                  // The index of the signature key in the key set
     signature_algorithm: "RS512"                  // The signature algorithm.
     claim_checked:                                // A list of additional claim checker aliases (optional).
-        - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com for more information
+        - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com/components/claim-checker for more information
 ```
 
 For all available signature algorithms and key sets, please refer to the [web-token/jwt-framework documentation](https://web-token.spomky-labs.com/).
