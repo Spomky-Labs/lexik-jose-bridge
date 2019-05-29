@@ -47,6 +47,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $container->setParameter('lexik_jose_bridge.encoder.audience', $config['audience']);
         $container->setParameter('lexik_jose_bridge.encoder.ttl', $config['ttl']);
         $container->setParameter('lexik_jose_bridge.encoder.claim_checked', $config['claim_checked']);
+        $container->setParameter('lexik_jose_bridge.encoder.mandatory_claims', $config['mandatory_claims']);
 
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
         if (true === $config['encryption']['enabled']) {
