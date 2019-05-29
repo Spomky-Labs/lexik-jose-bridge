@@ -37,14 +37,13 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('lexik_jose_bridge.encoder.key_index', $config['key_index']);
-        $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
-        $container->setParameter('lexik_jose_bridge.encoder.issuer', $config['server_name']);
-
         if (!isset($config['audience'])) {
             $config['audience'] = $config['server_name'];
         }
 
+        $container->setParameter('lexik_jose_bridge.encoder.key_index', $config['key_index']);
+        $container->setParameter('lexik_jose_bridge.encoder.signature_algorithm', $config['signature_algorithm']);
+        $container->setParameter('lexik_jose_bridge.encoder.issuer', $config['server_name']);
         $container->setParameter('lexik_jose_bridge.encoder.audience', $config['audience']);
         $container->setParameter('lexik_jose_bridge.encoder.ttl', $config['ttl']);
         $container->setParameter('lexik_jose_bridge.encoder.claim_checked', $config['claim_checked']);
