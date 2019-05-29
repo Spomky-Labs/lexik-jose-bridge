@@ -16,6 +16,7 @@ services:
             - '%lexik_jose_bridge.encoder.issuer%'
             - '%lexik_jose_bridge.encoder.audience%'
             - '%lexik_jose_bridge.encoder.ttl%'
+            - '%lexik_jose_bridge.encoder.mandatory_claims%'
 
     spomkylabs_lexik_jose_checker_audience:
         class: 'Jose\Component\Checker\AudienceChecker'
