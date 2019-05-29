@@ -37,6 +37,12 @@ lexik_jose:
     signature_algorithm: 'RS512' # The signature algorithm we want to use
     claim_checked:
         - 'lexik_jose_checker_claim_ip'
+    mandatory_claims:
+        - 'exp'
+        - 'iat'
+        - 'jti'
+        - 'iss'
+        - 'aud'
     encryption:
         enabled: true # We enable the encryption support
         key_set: '{"keys":[{"kid":"KEY_ID_0","kty":"oct","k":"z4nNE2pBccJDVs8Qnk7Znt1hTL3sqXz2kF3dsJqN_xE"},{"kid":"KEY_ID_1","kty":"oct","k":"sT3DyQXDIOwe6ADQtqusXAMyC-IaJZ2qqVvyK_d6P00"},{"kid":"KEY_ID_2","kty":"oct","k":"YLSnh2cw6qVtv1bRjOdHBS3fkF7e3HGbe04nBcuRflM"}]}'
