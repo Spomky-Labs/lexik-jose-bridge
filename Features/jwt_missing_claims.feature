@@ -9,7 +9,7 @@ Feature: The firewall must be able to detect bad tokens
     Then the response status code should be 401
     And print last response
     And the response should contain "Invalid JWT Token"
-    And the error listener should receive an invalid token event
+    And the error listener should receive an invalid token event containing an exception with message "The following claims are mandatory: exp."
 
   Scenario: The token is missing the Issued At claim
     Given I have a signed and encrypted token but without the "iat" claim
@@ -18,7 +18,7 @@ Feature: The firewall must be able to detect bad tokens
     Then the response status code should be 401
     And print last response
     And the response should contain "Invalid JWT Token"
-    And the error listener should receive an invalid token event
+    And the error listener should receive an invalid token event containing an exception with message "The following claims are mandatory: iat."
 
   Scenario: The token is missing the JWT ID claim
     Given I have a signed and encrypted token but without the "jti" claim
@@ -27,7 +27,7 @@ Feature: The firewall must be able to detect bad tokens
     Then the response status code should be 401
     And print last response
     And the response should contain "Invalid JWT Token"
-    And the error listener should receive an invalid token event
+    And the error listener should receive an invalid token event containing an exception with message "The following claims are mandatory: jti."
 
   Scenario: The token is missing the Issuer claim
     Given I have a signed and encrypted token but without the "iss" claim
@@ -36,7 +36,7 @@ Feature: The firewall must be able to detect bad tokens
     Then the response status code should be 401
     And print last response
     And the response should contain "Invalid JWT Token"
-    And the error listener should receive an invalid token event
+    And the error listener should receive an invalid token event containing an exception with message "The following claims are mandatory: iss."
 
   Scenario: The token is missing the Audience claim
     Given I have a signed and encrypted token but without the "aud" claim
@@ -45,4 +45,4 @@ Feature: The firewall must be able to detect bad tokens
     Then the response status code should be 401
     And print last response
     And the response should contain "Invalid JWT Token"
-    And the error listener should receive an invalid token event
+    And the error listener should receive an invalid token event containing an exception with message "The following claims are mandatory: aud."
