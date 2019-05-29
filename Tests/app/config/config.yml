@@ -24,6 +24,10 @@ twig:
     debug:            true
     strict_variables: true
 
+lexik_jwt_authentication:
+    secret_key: '%kernel.root_dir%/keys/private.key'
+    public_key: '%kernel.root_dir%/keys/public.key'
+
 lexik_jose:
     ttl: 1000
     server_name: 'https://my.super-service.org/'
