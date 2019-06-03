@@ -1,0 +1,16 @@
+parameters:
+    level: 7
+    paths:
+        - ./
+    excludes_analyse:
+        - %currentWorkingDirectory%/Tests
+        - %currentWorkingDirectory%/var
+        - %currentWorkingDirectory%/vendor
+    ignoreErrors:
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::(.*)\(\)#'
+        - '#Call to function method_exists\(\) with Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder and (.*) will always evaluate to true\.#'
+        - '#Call to deprecated method root\(\) of class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder:\nsince Symfony 4.3, pass the root name to the constructor instead#'
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon

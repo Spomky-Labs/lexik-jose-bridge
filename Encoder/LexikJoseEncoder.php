@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -16,8 +18,8 @@ use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\HeaderCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\InvalidHeaderException;
-use Jose\Component\Core\Converter\StandardConverter;
 use Jose\Component\Core\JWKSet;
+use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Encryption\JWEBuilder;
 use Jose\Component\Encryption\JWEDecrypter;
 use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
@@ -27,6 +29,7 @@ use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerialize
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
+use function Safe\sprintf;
 
 /**
  * Json Web Token encoder/decoder.
@@ -76,7 +79,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private $signatureKeyset;
 
     /**
-     * @var int
+     * @var int|string
      */
     private $signatureKeyIndex;
 
@@ -101,7 +104,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private $encryptionKeyset;
 
     /**
-     * @var int
+     * @var int|string
      */
     private $encryptionKeyIndex;
 
@@ -173,7 +176,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param string               $keyEncryptionAlgorithm
      * @param string               $contentEncryptionAlgorithm
      */
-    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
+    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm): void
     {
         $this->jweBuilder = $jweBuilder;
         $this->jweLoader = $jweLoader;
@@ -209,7 +212,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      */
     private function sign(array $payload): string
     {
-        $jsonConverter = new StandardConverter();
         $payload = array_merge(
             $payload,
             $this->getAdditionalPayload()
@@ -222,11 +224,11 @@ final class LexikJoseEncoder implements JWTEncoderInterface
 
         $jws = $this->jwsBuilder
             ->create()
-            ->withPayload($jsonConverter->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $headers)
             ->build();
 
-        $serializer = new JWSCompactSerializer($jsonConverter);
+        $serializer = new JWSCompactSerializer();
 
         return $serializer->serialize($jws, 0);
     }
@@ -252,7 +254,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serializer = new JWECompactSerializer(new StandardConverter());
+        $serializer = new JWECompactSerializer();
 
         return $serializer->serialize($jwe, 0);
     }
@@ -266,7 +268,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      */
     private function decrypt(string $token): string
     {
-        $serializer = new JWECompactSerializer(new StandardConverter());
+        $serializer = new JWECompactSerializer();
         $jwe = $serializer->unserialize($token);
         $this->encryptionHeaderCheckerManager->check($jwe, 0);
         if (false === $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset, 0)) {
@@ -285,14 +287,18 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      */
     private function verify(string $token): array
     {
-        $jsonConverter = new StandardConverter();
-        $serializer = new JWSCompactSerializer($jsonConverter);
+        $serializer = new JWSCompactSerializer();
         $jws = $serializer->unserialize($token);
         $this->signatureHeaderCheckerManager->check($jws, 0);
         if (false === $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset, 0)) {
             throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
         }
-        $payload = $jsonConverter->decode($jws->getPayload());
+        $jwt = $jws->getPayload();
+        if (!\is_string($jwt)) {
+            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
+        }
+
+        $payload = JsonConverter::decode($jwt);
         $this->claimCheckerManager->check($payload, $this->mandatoryClaims);
 
         return $payload;
@@ -346,8 +352,8 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private function getSignatureHeader()
     {
         return [
-            'typ'  => 'JWT',
-            'alg'  => $this->signatureAlgorithm,
+            'typ' => 'JWT',
+            'alg' => $this->signatureAlgorithm,
             'crit' => ['alg'],
         ];
     }
@@ -358,12 +364,12 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private function getEncryptionHeader()
     {
         return [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->keyEncryptionAlgorithm,
-            'enc'  => $this->contentEncryptionAlgorithm,
-            'iss'  => $this->issuer,
-            'aud'  => $this->audience,
+            'typ' => 'JWT',
+            'cty' => 'JWT',
+            'alg' => $this->keyEncryptionAlgorithm,
+            'enc' => $this->contentEncryptionAlgorithm,
+            'iss' => $this->issuer,
+            'aud' => $this->audience,
             'crit' => ['iss', 'aud', 'alg', 'enc'],
         ];
     }

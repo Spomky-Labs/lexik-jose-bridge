@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -32,7 +34,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -63,7 +65,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     /**
      * @param ContainerBuilder $container
      */
-    public function loadServices(ContainerBuilder $container)
+    public function loadServices(ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
@@ -72,7 +74,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     /**
      * @param ContainerBuilder $container
      */
-    public function loadEncryptionServices(ContainerBuilder $container)
+    public function loadEncryptionServices(ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('encryption_services.yml');
@@ -81,11 +83,11 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     /**
      * {@inheritdoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $isDebug = $container->getParameter('kernel.debug');
         $bridgeConfig = current($container->getExtensionConfig($this->getAlias()));
-        if (!array_key_exists('claim_checked', $bridgeConfig)) {
+        if (!\array_key_exists('claim_checked', $bridgeConfig)) {
             $bridgeConfig['claim_checked'] = [];
         }
         $claim_aliases = array_merge(
@@ -111,7 +113,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
      * @param array            $bridgeConfig
      * @param bool             $isDebug
      */
-    private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug)
+    private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug): void
     {
         ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
         ConfigurationHelper::addJWEDecrypter($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);

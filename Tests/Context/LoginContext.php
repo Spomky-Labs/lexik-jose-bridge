@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -26,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 trait LoginContext
 {
     /**
-     * @var null|string
+     * @var string|null
      */
     private $token = null;
 
@@ -43,7 +45,7 @@ trait LoginContext
     abstract public function getContainer();
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getToken()
     {
@@ -100,7 +102,7 @@ trait LoginContext
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
 
         $token_decoded = $encoder->decode($this->getToken());
-        if (!array_key_exists($claim, $token_decoded)) {
+        if (!\array_key_exists($claim, $token_decoded)) {
             throw new \Exception();
         }
     }
@@ -290,13 +292,13 @@ trait LoginContext
     {
         return [
             'username' => 'user1',
-            'exp'      => time() + 100,
-            'iat'      => time() - 100,
-            'nbf'      => time() - 100,
-            'jti'      => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
-            'iss'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
-            'aud'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.audience'),
-            'ip'       => '127.0.0.1'
+            'exp' => time() + 100,
+            'iat' => time() - 100,
+            'nbf' => time() - 100,
+            'jti' => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
+            'iss' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
+            'aud' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.audience'),
+            'ip' => '127.0.0.1',
         ];
     }
 
@@ -306,9 +308,9 @@ trait LoginContext
     private function getSignatureHeader()
     {
         $header = [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.signature_algorithm'),
+            'typ' => 'JWT',
+            'cty' => 'JWT',
+            'alg' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.signature_algorithm'),
         ];
         $signatureKey = $this->getSignatureKey();
         if ($signatureKey->has('kid')) {
@@ -324,10 +326,10 @@ trait LoginContext
     private function getEncryptionHeader()
     {
         $header = [
-            'typ'  => 'JWT',
-            'cty'  => 'JWT',
-            'alg'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
-            'enc'  => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm'),
+            'typ' => 'JWT',
+            'cty' => 'JWT',
+            'alg' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
+            'enc' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm'),
         ];
         $encryption_key = $this->getEncryptionKey();
         if ($encryption_key->has('kid')) {

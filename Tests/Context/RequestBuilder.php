@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -41,7 +43,7 @@ final class RequestBuilder
     private $request_parameter = [];
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $content = null;
 
@@ -61,12 +63,12 @@ final class RequestBuilder
     public function getUri()
     {
         $parse_url = parse_url($this->uri);
-        $parse_url['query'] = array_merge(isset($parse_url['query']) ? $parse_url['query'] : [], $this->query);
-        $parse_url['fragment'] = array_merge(isset($parse_url['fragment']) ? $parse_url['fragment'] : [], $this->fragment);
-        if (count($parse_url['query']) === 0) {
+        $parse_url['query'] = array_merge($parse_url['query'] ?? [], $this->query);
+        $parse_url['fragment'] = array_merge($parse_url['fragment'] ?? [], $this->fragment);
+        if (0 === \count($parse_url['query'])) {
             unset($parse_url['query']);
         }
-        if (count($parse_url['fragment']) === 0) {
+        if (0 === \count($parse_url['fragment'])) {
             unset($parse_url['fragment']);
         }
 
@@ -286,14 +288,14 @@ final class RequestBuilder
     {
         $data = $this->server;
         foreach ($this->header as $key => $value) {
-            $data[strtoupper('HTTP_'.$key)] = $value;
+            $data[mb_strtoupper('HTTP_'.$key)] = $value;
         }
 
         return $data;
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getContent()
     {

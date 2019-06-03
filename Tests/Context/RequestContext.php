@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -19,7 +21,7 @@ trait RequestContext
     private $exception = null;
 
     /**
-     * @return null|string
+     * @return string|null
      */
     abstract public function getToken();
 
@@ -52,7 +54,7 @@ trait RequestContext
     }
 
     /**
-     * @return null|\Exception
+     * @return \Exception|null
      */
     public function getException()
     {
@@ -196,7 +198,7 @@ trait RequestContext
     public function theErrorListenerShouldReceiveAnExpiredTokenEvent()
     {
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getExpiredTokenEvents();
-        if (1 !== count($events)) {
+        if (1 !== \count($events)) {
             throw new \Exception();
         }
     }
@@ -207,7 +209,7 @@ trait RequestContext
     public function theErrorListenerShouldReceiveAnInvalidTokenEvent()
     {
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
-        if (1 !== count($events)) {
+        if (1 !== \count($events)) {
             throw new \Exception();
         }
     }
