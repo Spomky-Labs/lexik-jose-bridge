@@ -32,6 +32,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use function Safe\sprintf;
+use Throwable;
 
 /**
  * Json Web Token encoder/decoder.
@@ -333,7 +334,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token. The following claim was not verified: %s.', $e->getClaim()));
         } catch (InvalidHeaderException $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token. The following header was not verified: %s.', $e->getHeader()));
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
         }
     }
