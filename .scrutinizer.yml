@@ -28,3 +28,9 @@ build_failure_conditions:
     - 'issues.label("coding-style").new.exists'    # No new coding style issues allowed
     - 'issues.severity(>= MAJOR).new.exists'       # New issues of major or higher severity
     - 'project.metric("scrutinizer.quality", < 9)' # Code Quality Rating drops below 9
+build:
+    nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run

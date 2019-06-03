@@ -18,6 +18,8 @@ use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\HeaderCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\InvalidHeaderException;
+use Jose\Component\Checker\MissingMandatoryClaimException;
+use Jose\Component\Checker\MissingMandatoryHeaderParameterException;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Encryption\JWEBuilder;
@@ -281,7 +283,11 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @param string $token
      *
+     * @throws InvalidClaimException
+     * @throws InvalidHeaderException
      * @throws JWTDecodeFailureException
+     * @throws MissingMandatoryClaimException
+     * @throws MissingMandatoryHeaderParameterException
      *
      * @return array
      */
