@@ -1,8 +1,8 @@
 Jose Bridge for the LexikJWTAuthenticationBundle
 ================================================
 
-[![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=master)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=master)
+[![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=v2.2)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=v2.2)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=v2.2)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
 
