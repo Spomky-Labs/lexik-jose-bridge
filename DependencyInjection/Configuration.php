@@ -76,7 +76,10 @@ final class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addEncryptionSection(NodeDefinition $node): void
+    /**
+     * @return void
+     */
+    private function addEncryptionSection(NodeDefinition $node)
     {
         $node
             ->addDefaultsIfNotSet()

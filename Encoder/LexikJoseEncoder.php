@@ -178,8 +178,10 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param int|string           $encryptionKeyIndex
      * @param string               $keyEncryptionAlgorithm
      * @param string               $contentEncryptionAlgorithm
+     *
+     * @return void
      */
-    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm): void
+    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
     {
         $this->jweBuilder = $jweBuilder;
         $this->jweLoader = $jweLoader;

@@ -19,17 +19,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 final class SpomkyLabsLexikJoseBundle extends Bundle
 {
     /**
-     * {@inheritdoc}
+     * @return SpomkyLabsLexikJoseExtension
      */
-    public function getContainerExtension(): SpomkyLabsLexikJoseExtension
+    public function getContainerExtension()
     {
         return new SpomkyLabsLexikJoseExtension();
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
-    public function build(ContainerBuilder $container): void
+    public function build(ContainerBuilder $container)
     {
         parent::build($container);
         $container->addCompilerPass(new EncryptionSupportCompilerPass());

@@ -44,8 +44,10 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
 
     /**
      * @param mixed $issuer
+     *
+     * @return void
      */
-    public function checkClaim($issuer): void
+    public function checkClaim($issuer)
     {
         if ($this->issuer !== $issuer) {
             throw new \Exception(sprintf('The issuer "%s" is not allowed.', $issuer));
@@ -54,8 +56,10 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
 
     /**
      * @param mixed $value
+     *
+     * @return void
      */
-    public function checkHeader($value): void
+    public function checkHeader($value)
     {
         $this->checkClaim($value);
     }
