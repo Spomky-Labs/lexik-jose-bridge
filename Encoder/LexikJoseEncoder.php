@@ -121,6 +121,11 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private $ttl;
 
     /**
+     * @var array
+     */
+    private $mandatoryClaims;
+
+    /**
      * LexikJoseEncoder constructor.
      *
      * @param JWSBuilder           $jwsBuilder
@@ -132,6 +137,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param string               $signatureAlgorithm
      * @param string               $issuer
      * @param int                  $ttl
+     * @param array                $mandatoryClaims
      */
     public function __construct(JWSBuilder $jwsBuilder,
                                 JWSVerifier $jwsLoader,
@@ -142,7 +148,8 @@ final class LexikJoseEncoder implements JWTEncoderInterface
                                 string $signatureAlgorithm,
                                 string $issuer,
                                 string $audience,
-                                int $ttl
+                                int $ttl,
+                                array $mandatoryClaims = []
     ) {
         $this->jwsBuilder = $jwsBuilder;
         $this->jwsLoader = $jwsLoader;
@@ -154,6 +161,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->issuer = $issuer;
         $this->audience = $audience;
         $this->ttl = $ttl;
+        $this->mandatoryClaims = $mandatoryClaims;
     }
 
     /**
@@ -285,7 +293,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
         }
         $payload = $jsonConverter->decode($jws->getPayload());
-        $this->claimCheckerManager->check($payload);
+        $this->claimCheckerManager->check($payload, $this->mandatoryClaims);
 
         return $payload;
     }

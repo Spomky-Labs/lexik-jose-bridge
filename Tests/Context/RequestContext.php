@@ -211,4 +211,23 @@ trait RequestContext
             throw new \Exception();
         }
     }
+
+    /**
+     * @Then the error listener should receive an invalid token event containing an exception with message :message
+     */
+    public function theErrorListenerShouldReceiveAnInvalidTokenEventContainingAnExceptionWithMessage($message)
+    {
+        $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
+
+        foreach ($events as $event) {
+            $exception = current($events)->getException();
+            do {
+                if ($exception->getMessage() === $message) {
+                    return;
+                }
+            } while ($exception = $exception->getPrevious());
+        }
+
+        throw new \Exception();
+    }
 }

@@ -59,6 +59,14 @@ final class Configuration implements ConfigurationInterface
                     ->treatNullLike([])
                     ->treatFalseLike([])
                 ->end()
+                ->arrayNode('mandatory_claims')
+                    ->info('List of claims that must be present.')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->treatNullLike([])
+                    ->treatFalseLike([])
+                ->end()
             ->end();
 
         $this->addEncryptionSection($rootNode);

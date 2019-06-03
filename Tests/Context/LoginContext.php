@@ -138,6 +138,39 @@ trait LoginContext
     }
 
     /**
+     * @Given I have a signed and encrypted token but without the :claim claim
+     */
+    public function iHaveASignedAndEncryptedTokenButWithoutTheClaim($claim)
+    {
+        /** @var JWSBuilder $jwsBuilder */
+        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $payload = $this->getBasicPayload();
+        unset($payload[$claim]);
+        $signatureKey = $this->getSignatureKey();
+        $jwt = $jwsBuilder
+            ->create()
+            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->addSignature($signatureKey, $this->getSignatureHeader())
+            ->build();
+        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $jws = $serialzer->serialize($jwt);
+
+        /** @var JWEBuilder $jweBuilder */
+        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $encryptionKey = $this->getEncryptionKey();
+        $jwe = $jweBuilder
+            ->create()
+            ->withPayload($jws)
+            ->withSharedProtectedHeader($this->getEncryptionHeader())
+            ->addRecipient($encryptionKey)
+            ->build();
+
+        $serialzer = new JWECompactSerializer(new StandardConverter());
+
+        $this->token = $serialzer->serialize($jwe, 0);
+    }
+
+    /**
      * @Given I have an expired, signed and encrypted token
      */
     public function iHaveAnExpiredSignedAndEncryptedToken()
@@ -263,6 +296,7 @@ trait LoginContext
             'jti'      => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
             'iss'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
             'aud'      => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.audience'),
+            'ip'       => '127.0.0.1'
         ];
     }
 
