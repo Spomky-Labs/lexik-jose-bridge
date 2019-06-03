@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
 use Base64Url\Base64Url;
+use Exception;
 use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\HeaderCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
@@ -32,7 +33,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use function Safe\sprintf;
-use Throwable;
 
 /**
  * Json Web Token encoder/decoder.
@@ -203,7 +203,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             }
 
             return $jwt;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new JWTEncodeFailureException('encoding_error', 'An error occurred while trying to encode the JWT token: '.$e->getMessage(), $e);
         }
     }
@@ -334,7 +334,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token. The following claim was not verified: %s.', $e->getClaim()));
         } catch (InvalidHeaderException $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token. The following header was not verified: %s.', $e->getHeader()));
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
         }
     }
