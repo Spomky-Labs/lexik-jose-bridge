@@ -16,24 +16,28 @@
         }
     ],
     "require": {
-        "web-token/jwt-bundle": "^1.3.8",
-        "web-token/jwt-checker": "^1.3.8",
-        "web-token/jwt-signature": "^1.3.8",
-        "web-token/jwt-encryption": "^1.3.8",
-        "web-token/jwt-key-mgmt": "^1.3.8",
+        "web-token/jwt-core": "^2.0@alpha",
+        "web-token/jwt-util-ecc": "^2.0@alpha",
+        "web-token/jwt-bundle": "^2.0@alpha",
+        "web-token/jwt-checker": "^2.0@alpha",
+        "web-token/jwt-signature": "^2.0@alpha",
+        "web-token/jwt-encryption": "^2.0@alpha",
+        "web-token/jwt-key-mgmt": "^2.0@alpha",
         "lexik/jwt-authentication-bundle": "^2.0",
-        "thecodingmachine/safe": "^0.1.15"
+        "thecodingmachine/safe": "^0.1.15",
+        "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "infection/infection": "^0.12",
-        "symfony/templating": "^3.3|^4.0",
-        "symfony/yaml": "^3.3|^4.0",
-        "symfony/form": "^3.3|^4.0",
-        "symfony/finder": "^3.3|^4.0",
-        "symfony/twig-bundle": "^3.3|^4.0",
-        "symfony/expression-language": "^3.3|^4.0",
-        "symfony/dependency-injection": "^3.3|^4.0",
-        "sensio/framework-extra-bundle": "^3.3|^4.0|^5.0",
+        "infection/infection": "^0.13",
+        "symfony/templating": "^4.3",
+        "symfony/yaml": "^4.3",
+        "symfony/form": "^4.3",
+        "symfony/finder": "^4.3",
+        "symfony/twig-bundle": "^4.3",
+        "symfony/expression-language": "^4.3",
+        "symfony/dependency-injection": "^4.3",
+        "symfony/var-dumper": "^4.3",
+        "sensio/framework-extra-bundle": "^4.0|^5.0",
         "behat/behat": "^3.0",
         "behat/mink-extension": "^2.1",
         "behat/mink-browserkit-driver": "^1.1",
@@ -41,7 +45,10 @@
         "phpstan/phpstan": "^0.11",
         "phpstan/phpstan-deprecation-rules": "^0.11",
         "phpstan/phpstan-strict-rules": "^0.11",
-        "thecodingmachine/phpstan-safe-rule": "^0.1"
+        "thecodingmachine/phpstan-safe-rule": "^0.1",
+        "web-token/jwt-signature-algorithm-rsa": "^2.0@alpha",
+        "web-token/jwt-encryption-algorithm-aesgcmkw": "^2.0@alpha",
+        "web-token/jwt-encryption-algorithm-aesgcm": "^2.0@alpha"
     },
     "autoload": {
         "psr-4": {

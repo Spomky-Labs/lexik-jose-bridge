@@ -42,7 +42,7 @@ final class EncHeaderChecker implements HeaderChecker
      *
      * @return void
      */
-    public function checkHeader($algorithm)
+    public function checkHeader($algorithm): void
     {
         if (!\is_string($algorithm)) {
             throw new InvalidHeaderException('The value of the header "enc" is not valid', 'enc', $algorithm);

@@ -19,6 +19,10 @@ framework:
     fragments:       ~
     http_method_override: true
 
+services:
+    Psr\EventDispatcher\EventDispatcherInterface:
+        alias: Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+
 # Twig Configuration
 twig:
     debug:            true

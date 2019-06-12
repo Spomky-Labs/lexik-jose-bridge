@@ -1,8 +1,8 @@
 Jose Bridge for the LexikJWTAuthenticationBundle
 ================================================
 
-[![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=v2.2)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=v2.2)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=v2.2)
+[![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=v3.0)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=v3.0)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=v3.0)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
 
@@ -20,12 +20,12 @@ The release process [is described here](Resources/doc/Release.md).
 # Prerequisites
 
 This library needs at least:
-* ![PHP 7.1+](https://img.shields.io/badge/PHP-7.1%2B-ff69b4.svg)
-* Symfony 3.3+ or 4.0+.
+* ![PHP 7.2+](https://img.shields.io/badge/PHP-7.2%2B-ff69b4.svg)
+* Symfony 4.3+.
 
 # Continuous Integration
 
-It has been successfully tested using `PHP 7.1` and `PHP 7.2` and `nightly`.
+It has been successfully tested using `PHP 7.2` and `PHP 7.3`.
 
 We also track bugs and code quality using [Scrutinizer-CI](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge) and [Sensio Insight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2).
 
@@ -41,7 +41,7 @@ Code coverage is not performed, but `Behavior driven development` (BDD) is used 
 The preferred way to install this bundle is to rely on Symfony Flex:
 
 ```sh
-composer req "spomky-labs/lexik-jose-bridge:^2.0"
+composer req "spomky-labs/lexik-jose-bridge:^3.0"
 ```
 
 ## Manual Installation

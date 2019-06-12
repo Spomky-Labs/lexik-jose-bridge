@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
-use Jose\Component\Core\Converter\StandardConverter;
 use Jose\Component\Core\JWK;
+use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Encryption\JWEBuilder;
 use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
 use Jose\Component\Signature\JWSBuilder;
@@ -53,14 +53,6 @@ trait LoginContext
     }
 
     /**
-     * @return StandardConverter
-     */
-    private function getJsonConverter(): StandardConverter
-    {
-        return new StandardConverter();
-    }
-
-    /**
      * @Given I have a valid signed token
      */
     public function iHaveAValidSignedToken()
@@ -71,10 +63,10 @@ trait LoginContext
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
-            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
             ->build();
-        $serialzer = new JWSCompactSerializer($this->getJsonConverter());
+        $serialzer = new JWSCompactSerializer();
         $this->token = $serialzer->serialize($jwt, 0);
     }
 
@@ -118,10 +110,10 @@ trait LoginContext
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
-            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
             ->build();
-        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
@@ -134,7 +126,7 @@ trait LoginContext
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serialzer = new JWECompactSerializer(new StandardConverter());
+        $serialzer = new JWECompactSerializer();
 
         $this->token = $serialzer->serialize($jwe, 0);
     }
@@ -151,10 +143,10 @@ trait LoginContext
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
-            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
             ->build();
-        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
@@ -167,7 +159,7 @@ trait LoginContext
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serialzer = new JWECompactSerializer(new StandardConverter());
+        $serialzer = new JWECompactSerializer();
 
         $this->token = $serialzer->serialize($jwe, 0);
     }
@@ -190,10 +182,10 @@ trait LoginContext
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
-            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
             ->build();
-        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
@@ -206,7 +198,7 @@ trait LoginContext
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serialzer = new JWECompactSerializer(new StandardConverter());
+        $serialzer = new JWECompactSerializer();
 
         $this->token = $serialzer->serialize($jwe, 0);
     }
@@ -227,10 +219,10 @@ trait LoginContext
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
-            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
             ->build();
-        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
@@ -243,7 +235,7 @@ trait LoginContext
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serialzer = new JWECompactSerializer(new StandardConverter());
+        $serialzer = new JWECompactSerializer();
 
         $this->token = $serialzer->serialize($jwe, 0);
     }
@@ -264,10 +256,10 @@ trait LoginContext
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
-            ->withPayload($this->getJsonConverter()->encode($payload))
+            ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
             ->build();
-        $serialzer = new JWSCompactSerializer(new StandardConverter());
+        $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
@@ -280,7 +272,7 @@ trait LoginContext
             ->addRecipient($encryptionKey)
             ->build();
 
-        $serialzer = new JWECompactSerializer(new StandardConverter());
+        $serialzer = new JWECompactSerializer();
 
         $this->token = $serialzer->serialize($jwe, 0);
     }
