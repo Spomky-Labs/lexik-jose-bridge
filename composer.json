@@ -47,7 +47,7 @@
         "web-token/jwt-signature-algorithm-rsa": "^2.0.3",
         "web-token/jwt-encryption-algorithm-aesgcmkw": "^2.0.3",
         "web-token/jwt-encryption-algorithm-aesgcm": "^2.0.3",
-        "web-token/jwt-signature-algorithm-hmac": "^2..30"
+        "web-token/jwt-signature-algorithm-hmac": "^2.0.3"
     },
     "autoload": {
         "psr-4": {
