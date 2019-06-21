@@ -16,11 +16,11 @@
         }
     ],
     "require": {
-        "web-token/jwt-bundle": "^2.0",
-        "web-token/jwt-checker": "^2.0",
-        "web-token/jwt-signature": "^2.0",
-        "web-token/jwt-encryption": "^2.0",
-        "web-token/jwt-key-mgmt": "^2.0",
+        "web-token/jwt-bundle": "^2.0.3",
+        "web-token/jwt-checker": "^2.0.3",
+        "web-token/jwt-signature": "^2.0.3",
+        "web-token/jwt-encryption": "^2.0.3",
+        "web-token/jwt-key-mgmt": "^2.0.3",
         "lexik/jwt-authentication-bundle": "^2.0",
         "thecodingmachine/safe": "^0.1.15",
         "psr/event-dispatcher": "^1.0"
@@ -44,10 +44,10 @@
         "phpstan/phpstan-deprecation-rules": "^0.11",
         "phpstan/phpstan-strict-rules": "^0.11",
         "thecodingmachine/phpstan-safe-rule": "^0.1",
-        "web-token/jwt-signature-algorithm-rsa": "^2.0",
-        "web-token/jwt-encryption-algorithm-aesgcmkw": "^2.0",
-        "web-token/jwt-encryption-algorithm-aesgcm": "^2.0",
-        "web-token/jwt-signature-algorithm-hmac": "^2.0"
+        "web-token/jwt-signature-algorithm-rsa": "^2.0.3",
+        "web-token/jwt-encryption-algorithm-aesgcmkw": "^2.0.3",
+        "web-token/jwt-encryption-algorithm-aesgcm": "^2.0.3",
+        "web-token/jwt-signature-algorithm-hmac": "^2..30"
     },
     "autoload": {
         "psr-4": {
