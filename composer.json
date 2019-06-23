@@ -19,6 +19,7 @@
         "web-token/jwt-bundle": "^2.0.3",
         "web-token/jwt-checker": "^2.0.3",
         "web-token/jwt-signature": "^2.0.3",
+        "web-token/jwt-signature-algorithm-rsa": "^2.0.3",
         "web-token/jwt-encryption": "^2.0.3",
         "web-token/jwt-key-mgmt": "^2.0.3",
         "lexik/jwt-authentication-bundle": "^2.0",
@@ -43,7 +44,6 @@
         "phpstan/phpstan-deprecation-rules": "^0.11",
         "phpstan/phpstan-strict-rules": "^0.11",
         "thecodingmachine/phpstan-safe-rule": "^0.1",
-        "web-token/jwt-signature-algorithm-rsa": "^2.0.3",
         "web-token/jwt-encryption-algorithm-aesgcmkw": "^2.0.3",
         "web-token/jwt-encryption-algorithm-aesgcm": "^2.0.3",
         "web-token/jwt-signature-algorithm-hmac": "^2.0.3",
@@ -62,7 +62,12 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.0.x-dev",
+            "v1.0": "1.0.x",
+            "v2.0": "2.0.x",
+            "v2.1": "2.1.x",
+            "v2.2": "2.2.x",
+            "v3.0": "3.0.x"
         }
     }
 }
