@@ -28,7 +28,6 @@
     "require-dev": {
         "infection/infection": "^0.13",
         "symfony/templating": "^4.3",
-        "symfony/yaml": "^4.3",
         "symfony/form": "^4.3",
         "symfony/finder": "^4.3",
         "symfony/twig-bundle": "^4.3",
@@ -47,7 +46,8 @@
         "web-token/jwt-signature-algorithm-rsa": "^2.0.3",
         "web-token/jwt-encryption-algorithm-aesgcmkw": "^2.0.3",
         "web-token/jwt-encryption-algorithm-aesgcm": "^2.0.3",
-        "web-token/jwt-signature-algorithm-hmac": "^2.0.3"
+        "web-token/jwt-signature-algorithm-hmac": "^2.0.3",
+        "phpstan/phpstan-beberlei-assert": "^0.11.1"
     },
     "autoload": {
         "psr-4": {

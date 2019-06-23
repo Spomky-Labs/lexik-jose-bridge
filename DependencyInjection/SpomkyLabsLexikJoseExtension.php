@@ -18,7 +18,7 @@ use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExtensionInterface
@@ -67,8 +67,8 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
      */
     public function loadServices(ContainerBuilder $container)
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.php');
     }
 
     /**
@@ -76,8 +76,8 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
      */
     public function loadEncryptionServices(ContainerBuilder $container)
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('encryption_services.yml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('encryption_services.php');
     }
 
     /**

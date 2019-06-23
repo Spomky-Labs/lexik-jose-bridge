@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Assert\Assertion;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,8 +26,8 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('lexik_jose');
-        $rootNode = $this->getRootNode($treeBuilder, 'lexik_jose');
-
+        $rootNode = $treeBuilder->getRootNode();
+        Assertion::isInstanceOf($rootNode, ArrayNodeDefinition::class, 'Invalid root node');
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
@@ -79,7 +80,7 @@ final class Configuration implements ConfigurationInterface
     /**
      * @return void
      */
-    private function addEncryptionSection(NodeDefinition $node)
+    private function addEncryptionSection(ArrayNodeDefinition $node)
     {
         $node
             ->addDefaultsIfNotSet()
@@ -107,14 +108,5 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-    }
-
-    private function getRootNode(TreeBuilder $treeBuilder, string $name): NodeDefinition
-    {
-        if (!\method_exists($treeBuilder, 'getRootNode')) {
-            return $treeBuilder->root($name);
-        }
-
-        return $treeBuilder->getRootNode();
     }
 }
