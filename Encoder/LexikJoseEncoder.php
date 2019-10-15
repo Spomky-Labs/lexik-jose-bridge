@@ -217,10 +217,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      */
     private function sign(array $payload): string
     {
-        $payload = array_merge(
-            $payload,
-            $this->getAdditionalPayload()
-        );
+        $payload += $this->getAdditionalPayload();
         $headers = $this->getSignatureHeader();
         $signatureKey = $this->signatureKeyset->get($this->signatureKeyIndex);
         if ($signatureKey->has('kid')) {
