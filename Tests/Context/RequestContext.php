@@ -188,7 +188,7 @@ trait RequestContext
             throw new \Exception('No exception caught.');
         }
         if ($message !== $this->getException()->getMessage()) {
-            throw new \Exception(sprintf('The exception has not the expected message: "%s". Message is "".', $message, $this->getException()->getMessage()));
+            throw new \Exception(sprintf('The exception has not the expected message: "%s". Message is "%s".', $message, $this->getException()->getMessage()));
         }
     }
 
