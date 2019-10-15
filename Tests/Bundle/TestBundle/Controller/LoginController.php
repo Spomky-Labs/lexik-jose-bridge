@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\TestBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
-final class LoginController extends Controller
+final class LoginController extends AbstractController
 {
     /**
      * @Route("/login", name="login")
      * @Template
      */
-    public function loginAction()
+    public function loginAction(): array
     {
         $authenticationUtils = $this->get('security.authentication_utils');
         $error = $authenticationUtils->getLastAuthenticationError();

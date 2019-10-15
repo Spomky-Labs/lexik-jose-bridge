@@ -17,9 +17,6 @@ use Jose\Component\Checker\HeaderChecker;
 use Jose\Component\Checker\InvalidHeaderException;
 use function Safe\sprintf;
 
-/**
- * Class EncHeaderChecker.
- */
 final class EncHeaderChecker implements HeaderChecker
 {
     /**
@@ -27,11 +24,6 @@ final class EncHeaderChecker implements HeaderChecker
      */
     private $algorithm;
 
-    /**
-     * AlgHeaderChecker constructor.
-     *
-     * @param string $algorithm
-     */
     public function __construct(string $algorithm)
     {
         $this->algorithm = $algorithm;
@@ -40,7 +32,8 @@ final class EncHeaderChecker implements HeaderChecker
     /**
      * @param mixed $algorithm
      *
-     * @return void
+     * @throws InvalidHeaderException
+     * @throws \Safe\Exceptions\StringsException
      */
     public function checkHeader($algorithm): void
     {

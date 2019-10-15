@@ -47,7 +47,7 @@ final class JWTListener
     /**
      * @param JWTCreatedEvent $event
      */
-    public function onJWTCreated(JWTCreatedEvent $event)
+    public function onJWTCreated(JWTCreatedEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -60,7 +60,7 @@ final class JWTListener
     /**
      * @param JWTDecodedEvent $event
      */
-    public function onJWTDecoded(JWTDecodedEvent $event)
+    public function onJWTDecoded(JWTDecodedEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -74,7 +74,7 @@ final class JWTListener
     /**
      * @param JWTExpiredEvent $event
      */
-    public function onJWTExpired(JWTExpiredEvent $event)
+    public function onJWTExpired(JWTExpiredEvent $event): void
     {
         $this->expired_token_events[] = $event;
     }
@@ -82,7 +82,7 @@ final class JWTListener
     /**
      * @return JWTExpiredEvent[]
      */
-    public function getExpiredTokenEvents()
+    public function getExpiredTokenEvents(): array
     {
         $result = $this->expired_token_events;
         $this->expired_token_events = [];
@@ -93,7 +93,7 @@ final class JWTListener
     /**
      * @param JWTInvalidEvent $event
      */
-    public function onJWTInvalid(JWTInvalidEvent $event)
+    public function onJWTInvalid(JWTInvalidEvent $event): void
     {
         $this->invalid_token_events[] = $event;
     }
@@ -101,7 +101,7 @@ final class JWTListener
     /**
      * @return JWTInvalidEvent[]
      */
-    public function getInvalidTokenEvents()
+    public function getInvalidTokenEvents(): array
     {
         $result = $this->invalid_token_events;
         $this->invalid_token_events = [];

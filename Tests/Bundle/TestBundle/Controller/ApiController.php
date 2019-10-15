@@ -13,20 +13,20 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\TestBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/api")
  */
-final class ApiController extends Controller
+final class ApiController extends AbstractController
 {
     /**
      * @Route("/anonymous")
      */
-    public function anonymousAction()
+    public function anonymousAction(): Response
     {
         $user = $this->getUser();
         if (null === $user) {
@@ -42,7 +42,7 @@ final class ApiController extends Controller
      * @Route("/hello")
      * @Security("is_granted('ROLE_USER')")
      */
-    public function helloAction()
+    public function helloAction(): Response
     {
         $user = $this->getUser();
         $message = "Hello {$user->getUsername()}!";
@@ -54,7 +54,7 @@ final class ApiController extends Controller
      * @Route("/admin")
      * @Security("is_granted('ROLE_ADMIN')")
      */
-    public function adminAction()
+    public function adminAction(): Response
     {
         $user = $this->getUser();
         $message = "Hello {$user->getUsername()}!";

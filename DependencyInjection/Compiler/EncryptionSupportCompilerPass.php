@@ -18,15 +18,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-/**
- * Class EncryptionSupportCompilerPass.
- */
 final class EncryptionSupportCompilerPass implements CompilerPassInterface
 {
-    /**
-     * @return void
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (false === $container->hasDefinition(LexikJoseEncoder::class) || false === $container->getParameter('lexik_jose_bridge.encoder.encryption.enabled')) {
             return;

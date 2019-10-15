@@ -27,7 +27,6 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "infection/infection": "^0.13",
         "symfony/templating": "^4.3",
         "symfony/form": "^4.3",
         "symfony/finder": "^4.3",
@@ -62,7 +61,6 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev",
             "v1.0": "1.0.x",
             "v2.0": "2.0.x",
             "v2.1": "2.1.x",

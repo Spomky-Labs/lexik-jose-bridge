@@ -15,9 +15,6 @@ namespace SpomkyLabs\TestBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Class SpomkyLabsTestBundle.
- */
 final class SpomkyLabsTestBundle extends Bundle
 {
 }

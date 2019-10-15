@@ -40,7 +40,7 @@ final class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return sys_get_temp_dir().'/SpomkyLabsLexikBridgeTest';
     }
@@ -48,7 +48,7 @@ final class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__.'/config/config.yml');
     }

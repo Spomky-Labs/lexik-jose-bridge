@@ -31,10 +31,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         return 'lexik_jose';
     }
 
-    /**
-     * @return void
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -62,28 +59,19 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $this->loadServices($container);
     }
 
-    /**
-     * @return void
-     */
-    public function loadServices(ContainerBuilder $container)
+    public function loadServices(ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.php');
     }
 
-    /**
-     * @return void
-     */
-    public function loadEncryptionServices(ContainerBuilder $container)
+    public function loadEncryptionServices(ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('encryption_services.php');
     }
 
-    /**
-     * @return void
-     */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $isDebug = $container->getParameter('kernel.debug');
         $bridgeConfig = current($container->getExtensionConfig($this->getAlias()));

@@ -14,6 +14,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/Features')
     ->in(__DIR__.'/Resources')
     ->in(__DIR__.'/Tests')
+    ->path(__DIR__.'/SpomkyLabsLexikJoseBundle.php')
 ;
 
 return PhpCsFixer\Config::create()
@@ -24,7 +25,6 @@ return PhpCsFixer\Config::create()
         '@DoctrineAnnotation' => true,
         '@PHP70Migration' => true,
         '@PHP71Migration' => true,
-        'phpdoc_no_empty_return' => false,
         'strict_param' => true,
         'strict_comparison' => true,
         'array_syntax' => ['syntax' => 'short'],

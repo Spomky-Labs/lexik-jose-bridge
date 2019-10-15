@@ -178,10 +178,8 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      * @param int|string           $encryptionKeyIndex
      * @param string               $keyEncryptionAlgorithm
      * @param string               $contentEncryptionAlgorithm
-     *
-     * @return void
      */
-    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm)
+    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm): void
     {
         $this->jweBuilder = $jweBuilder;
         $this->jweLoader = $jweLoader;
@@ -195,7 +193,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function encode(array $payload)
+    public function encode(array $payload): string
     {
         try {
             $jwt = $this->sign($payload);
@@ -313,7 +311,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token)
+    public function decode($token): array
     {
         try {
             if (null !== $this->jweBuilder) {
@@ -355,7 +353,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @return array
      */
-    private function getSignatureHeader()
+    private function getSignatureHeader(): array
     {
         return [
             'typ' => 'JWT',
@@ -367,7 +365,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @return array
      */
-    private function getEncryptionHeader()
+    private function getEncryptionHeader(): array
     {
         return [
             'typ' => 'JWT',

@@ -21,7 +21,7 @@ final class SpomkyLabsLexikJoseBundle extends Bundle
     /**
      * @return SpomkyLabsLexikJoseExtension
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): SpomkyLabsLexikJoseExtension
     {
         return new SpomkyLabsLexikJoseExtension();
     }
@@ -29,7 +29,7 @@ final class SpomkyLabsLexikJoseBundle extends Bundle
     /**
      * @return void
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
         $container->addCompilerPass(new EncryptionSupportCompilerPass());

@@ -24,11 +24,6 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
      */
     private $issuer;
 
-    /**
-     * IssuerChecker constructor.
-     *
-     * @param string $issuer
-     */
     public function __construct(string $issuer)
     {
         $this->issuer = $issuer;
@@ -45,7 +40,7 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
     /**
      * @param mixed $issuer
      *
-     * @return void
+     * @throws \Safe\Exceptions\StringsException
      */
     public function checkClaim($issuer): void
     {
@@ -57,7 +52,7 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
     /**
      * @param mixed $value
      *
-     * @return void
+     * @throws \Safe\Exceptions\StringsException
      */
     public function checkHeader($value): void
     {
