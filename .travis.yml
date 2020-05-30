@@ -9,10 +9,12 @@ cache:
 php:
     - 7.2
     - 7.3
+    - 7.4
     - nightly
 
 before_install:
     - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+    - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install: travis_retry composer install
 
