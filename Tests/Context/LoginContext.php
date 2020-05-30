@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
+use function array_key_exists;
+use Exception;
 use Jose\Component\Core\JWK;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Encryption\JWEBuilder;
@@ -81,7 +83,7 @@ trait LoginContext
         $token_decoded = $encoder->decode($this->getToken());
 
         if ($value !== $token_decoded[$claim]) {
-            throw new \Exception();
+            throw new Exception();
         }
     }
 
@@ -94,8 +96,8 @@ trait LoginContext
         $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
 
         $token_decoded = $encoder->decode($this->getToken());
-        if (!\array_key_exists($claim, $token_decoded)) {
-            throw new \Exception();
+        if (!array_key_exists($claim, $token_decoded)) {
+            throw new Exception();
         }
     }
 
@@ -341,9 +343,6 @@ trait LoginContext
         $this->token = $content['token'];
     }
 
-    /**
-     * @return JWK
-     */
     private function getSignatureKey(): JWK
     {
         $keyIndex = $this->getContainer()->getParameter('lexik_jose_bridge.encoder.key_index');
@@ -351,9 +350,6 @@ trait LoginContext
         return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.signature')->get($keyIndex);
     }
 
-    /**
-     * @return JWK
-     */
     private function getEncryptionKey(): JWK
     {
         $keyIndex = $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_index');

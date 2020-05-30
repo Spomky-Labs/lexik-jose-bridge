@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\TestBundle\EventListener;
 
+use function array_key_exists;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
@@ -36,17 +37,11 @@ final class JWTListener
      */
     private $invalid_token_events = [];
 
-    /**
-     * @param RequestStack $requestStack
-     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * @param JWTCreatedEvent $event
-     */
     public function onJWTCreated(JWTCreatedEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -57,23 +52,17 @@ final class JWTListener
         $event->setData($payload);
     }
 
-    /**
-     * @param JWTDecodedEvent $event
-     */
     public function onJWTDecoded(JWTDecodedEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
         $payload = $event->getPayload();
 
-        if (!\array_key_exists('ip', $payload) || $payload['ip'] !== $request->getClientIp()) {
+        if (!array_key_exists('ip', $payload) || $payload['ip'] !== $request->getClientIp()) {
             $event->markAsInvalid();
         }
     }
 
-    /**
-     * @param JWTExpiredEvent $event
-     */
     public function onJWTExpired(JWTExpiredEvent $event): void
     {
         $this->expired_token_events[] = $event;
@@ -90,9 +79,6 @@ final class JWTListener
         return $result;
     }
 
-    /**
-     * @param JWTInvalidEvent $event
-     */
     public function onJWTInvalid(JWTInvalidEvent $event): void
     {
         $this->invalid_token_events[] = $event;

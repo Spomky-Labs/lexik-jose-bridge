@@ -4,6 +4,8 @@ default:
     autoload:
         '': '%paths.base%'
     extensions:
+#        Caciobanu\Behat\DeprecationExtension:
+#            mode: 999999
         Behat\Symfony2Extension:
             kernel:
                 debug: true

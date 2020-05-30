@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
 use Behat\Mink\Driver\BrowserKitDriver;
+use function count;
+use Exception;
 
 trait RequestContext
 {
@@ -54,7 +56,7 @@ trait RequestContext
     }
 
     /**
-     * @return \Exception|null
+     * @return Exception|null
      */
     public function getException()
     {
@@ -100,7 +102,7 @@ trait RequestContext
     {
         $token = $this->getToken();
         if (null === $token) {
-            throw new \Exception('The token is not available. Are you logged in?');
+            throw new Exception('The token is not available. Are you logged in?');
         }
 
         $this->getRequestBuilder()->addHeader('Authorization', 'Bearer '.$token);
@@ -138,7 +140,7 @@ trait RequestContext
     public function iTheRequestTo($method, $uri)
     {
         if (!$this->getSession()->getDriver() instanceof BrowserKitDriver) {
-            throw new \Exception('Unsupported driver.');
+            throw new Exception('Unsupported driver.');
         }
 
         $client = $this->getSession()->getDriver()->getClient();
@@ -155,7 +157,7 @@ trait RequestContext
                 $this->getRequestBuilder()->getServer(),
                 $this->getRequestBuilder()->getContent()
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->exception = $e;
         }
         $client->followRedirects(true);
@@ -174,7 +176,7 @@ trait RequestContext
      */
     public function iShouldNotReceiveAnException()
     {
-        if ($this->getException() instanceof \Exception) {
+        if ($this->getException() instanceof Exception) {
             throw $this->getException();
         }
     }
@@ -184,11 +186,11 @@ trait RequestContext
      */
     public function iShouldReceiveAnException($message)
     {
-        if (!$this->getException() instanceof \Exception) {
-            throw new \Exception('No exception caught.');
+        if (!$this->getException() instanceof Exception) {
+            throw new Exception('No exception caught.');
         }
         if ($message !== $this->getException()->getMessage()) {
-            throw new \Exception(sprintf('The exception has not the expected message: "%s". Message is "%s".', $message, $this->getException()->getMessage()));
+            throw new Exception(sprintf('The exception has not the expected message: "%s". Message is "%s".', $message, $this->getException()->getMessage()));
         }
     }
 
@@ -198,8 +200,8 @@ trait RequestContext
     public function theErrorListenerShouldReceiveAnExpiredTokenEvent()
     {
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getExpiredTokenEvents();
-        if (1 !== \count($events)) {
-            throw new \Exception();
+        if (1 !== count($events)) {
+            throw new Exception();
         }
     }
 
@@ -209,8 +211,8 @@ trait RequestContext
     public function theErrorListenerShouldReceiveAnInvalidTokenEvent()
     {
         $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
-        if (1 !== \count($events)) {
-            throw new \Exception();
+        if (1 !== count($events)) {
+            throw new Exception();
         }
     }
 
@@ -230,6 +232,6 @@ trait RequestContext
             } while ($exception = $exception->getPrevious());
         }
 
-        throw new \Exception();
+        throw new Exception();
     }
 }

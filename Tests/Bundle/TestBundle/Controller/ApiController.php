@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\TestBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,7 +40,7 @@ final class ApiController extends AbstractController
 
     /**
      * @Route("/hello")
-     * @Security("is_granted('ROLE_USER')")
+     * @IsGranted("ROLE_USER")
      */
     public function helloAction(): Response
     {
@@ -52,7 +52,7 @@ final class ApiController extends AbstractController
 
     /**
      * @Route("/admin")
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function adminAction(): Response
     {

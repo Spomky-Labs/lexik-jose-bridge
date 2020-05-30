@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
+use function array_key_exists;
 use Jose\Bundle\JoseFramework\Helper\ConfigurationHelper;
 use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 use Symfony\Component\Config\FileLocator;
@@ -75,7 +76,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     {
         $isDebug = $container->getParameter('kernel.debug');
         $bridgeConfig = current($container->getExtensionConfig($this->getAlias()));
-        if (!\array_key_exists('claim_checked', $bridgeConfig)) {
+        if (!array_key_exists('claim_checked', $bridgeConfig)) {
             $bridgeConfig['claim_checked'] = [];
         }
         $claim_aliases = array_merge(
@@ -96,11 +97,6 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $bridgeConfig
-     * @param bool             $isDebug
-     */
     private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug): void
     {
         ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);

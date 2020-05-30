@@ -5,13 +5,18 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
+
+use function array_key_exists;
+use Exception;
+use function in_array;
+use function is_array;
 
 /**
  * Behat context class.
@@ -32,11 +37,11 @@ trait ResponseContext
     {
         $header = $this->getSession()->getResponseHeaders();
 
-        if (!\array_key_exists('content-type', $header)) {
-            throw new \Exception('The response header has no content-type.');
+        if (!array_key_exists('content-type', $header)) {
+            throw new Exception('The response header has no content-type.');
         }
-        if (!\in_array($content_type, $header['content-type'], true)) {
-            throw new \Exception(sprintf('The response header content-type does not contain "%s".', $content_type));
+        if (!in_array($content_type, $header['content-type'], true)) {
+            throw new Exception(sprintf('The response header content-type does not contain "%s".', $content_type));
         }
     }
 
@@ -47,11 +52,11 @@ trait ResponseContext
     {
         $content = json_decode($this->getSession()->getPage()->getContent(), true);
 
-        if (!\is_array($content)) {
-            throw new \Exception('The response is not a JSON object.');
+        if (!is_array($content)) {
+            throw new Exception('The response is not a JSON object.');
         }
-        if (!\array_key_exists('token', $content)) {
-            throw new \Exception('The response does not contain a token.');
+        if (!array_key_exists('token', $content)) {
+            throw new Exception('The response does not contain a token.');
         }
     }
 }

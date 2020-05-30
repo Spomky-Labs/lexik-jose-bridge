@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
-use Assert\Assertion;
+use RuntimeException;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -27,7 +27,9 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('lexik_jose');
         $rootNode = $treeBuilder->getRootNode();
-        Assertion::isInstanceOf($rootNode, ArrayNodeDefinition::class, 'Invalid root node');
+        if (!$rootNode instanceof ArrayNodeDefinition) {
+            throw new RuntimeException('Invalid root node');
+        }
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()

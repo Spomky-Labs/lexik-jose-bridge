@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2019 Spomky-Labs
+ * Copyright (c) 2014-2020 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -15,6 +15,7 @@ namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
 use Base64Url\Base64Url;
 use Exception;
+use function is_string;
 use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\HeaderCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
@@ -134,16 +135,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * LexikJoseEncoder constructor.
      *
-     * @param JWSBuilder           $jwsBuilder
-     * @param JWSVerifier          $jwsLoader
-     * @param ClaimCheckerManager  $claimCheckerManager
-     * @param HeaderCheckerManager $signatureHeaderCheckerManager
-     * @param JWKSet               $signatureKeyset
-     * @param int|string           $signatureKeyIndex
-     * @param string               $signatureAlgorithm
-     * @param string               $issuer
-     * @param int                  $ttl
-     * @param array                $mandatoryClaims
+     * @param int|string $signatureKeyIndex
      */
     public function __construct(JWSBuilder $jwsBuilder,
                                 JWSVerifier $jwsLoader,
@@ -171,13 +163,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     }
 
     /**
-     * @param JWEBuilder           $jweBuilder
-     * @param JWEDecrypter         $jweLoader
-     * @param HeaderCheckerManager $encryptionHeaderCheckerManager
-     * @param JWKSet               $encryptionKeyset
-     * @param int|string           $encryptionKeyIndex
-     * @param string               $keyEncryptionAlgorithm
-     * @param string               $contentEncryptionAlgorithm
+     * @param int|string $encryptionKeyIndex
      */
     public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm): void
     {
@@ -208,11 +194,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         }
     }
 
-    /**
-     * @param array $payload
-     *
-     * @return string
-     */
     private function sign(array $payload): string
     {
         $payload += $this->getAdditionalPayload();
@@ -233,11 +214,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         return $serializer->serialize($jws, 0);
     }
 
-    /**
-     * @param string $jws
-     *
-     * @return string
-     */
     public function encrypt(string $jws): string
     {
         $headers = $this->getEncryptionHeader();
@@ -260,11 +236,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     }
 
     /**
-     * @param string $token
-     *
      * @throws JWTDecodeFailureException
-     *
-     * @return string
      */
     private function decrypt(string $token): string
     {
@@ -279,15 +251,11 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     }
 
     /**
-     * @param string $token
-     *
      * @throws InvalidClaimException
      * @throws InvalidHeaderException
      * @throws JWTDecodeFailureException
      * @throws MissingMandatoryClaimException
      * @throws MissingMandatoryHeaderParameterException
-     *
-     * @return array
      */
     private function verify(string $token): array
     {
@@ -298,7 +266,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
         }
         $jwt = $jws->getPayload();
-        if (!\is_string($jwt)) {
+        if (!is_string($jwt)) {
             throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
         }
 
@@ -336,9 +304,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         }
     }
 
-    /**
-     * @return array
-     */
     private function getAdditionalPayload(): array
     {
         return [
@@ -350,9 +315,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getSignatureHeader(): array
     {
         return [
@@ -362,9 +324,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getEncryptionHeader(): array
     {
         return [

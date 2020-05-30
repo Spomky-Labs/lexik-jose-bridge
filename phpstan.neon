@@ -6,8 +6,9 @@ parameters:
         - %currentWorkingDirectory%/Tests
         - %currentWorkingDirectory%/var
         - %currentWorkingDirectory%/vendor
+    checkMissingIterableValueType: false
     ignoreErrors:
-        - '#Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\:\:scalarNode\(\)\.#'
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
