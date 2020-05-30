@@ -45,7 +45,7 @@ The `key_set` parameters must contain valid key sets as per the [RFC7517](https:
 
 **Note: we highly recommend you to enable the encryption support as the token may contain very sensitive information**
 
-##Creation of the keys
+## Creation of the keys
 
 As you can see in the previous sections, the keys are available through environment variables
 `LEXIK_JOSE_SIGNATURE_KEYSET` and `LEXIK_JOSE_ENCRYPTION_KEYSET`.
@@ -63,7 +63,7 @@ curl -OL https://github.com/web-token/jwt-app/raw/gh-pages/jose.phar.pubkey
 chmod +x jose.phar
 ```
 
-###Signature Keyset
+### Signature Keyset
 
 The following commands will generate 3 keys. The result should be set to the environment variable `LEXIK_JOSE_SIGNATURE_KEYSET`.
 
@@ -97,7 +97,7 @@ The recommended key size for RSA signature is 2048 bits. 4096 bits and up offer 
 
 *Note: the key size should be at least of the hash size e.g. HS512 => 512 bits.*
 
-###Encryption Keyset
+### Encryption Keyset
 
 For encryption, the commands are very similar.
 
@@ -107,7 +107,7 @@ For encryption, the commands are very similar.
 
 Example: `./jose.phar keyset:generate:oct 3 512 --use enc --alg A256GCMKW --random_id`
 
-##Rotation of the keys
+## Rotation of the keys
 
 After a period of time, you should change the key(s) used to compute the tokens.
 But you should also keep the current key(s) in the keysets to continue validating already issued tokens.
