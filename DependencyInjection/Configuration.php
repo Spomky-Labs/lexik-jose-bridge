@@ -31,6 +31,12 @@ final class Configuration implements ConfigurationInterface
             throw new RuntimeException('Invalid root node');
         }
         $rootNode
+            ->validate()
+                ->ifTrue(static function(array $config): bool {
+                    return !isset($config['key_set']) && !isset($config['key_set_remote']);
+                })
+                ->thenInvalid('You must either configure a "key_set" or a "key_set_remote".')
+            ->end()
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('server_name')
@@ -47,7 +53,16 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('key_set')
                     ->info('Private/Shared keys used by this server to validate signed tokens. Must be a JWKSet object.')
-                    ->isRequired()
+                ->end()
+                ->arrayNode('key_set_remote')
+                    ->children()
+                        ->scalarNode('type')
+                            ->info('The type of the remote key set, either `jku` or `x5u`.')
+                        ->end()
+                        ->scalarNode('url')
+                            ->info('The URL from where the key set should be downloaded.')
+                        ->end()
+                    ->end()
                 ->end()
                 ->scalarNode('key_index')
                     ->info('Index of the key in the key set used to sign the tokens. Could be an integer or the key ID.')

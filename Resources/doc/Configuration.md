@@ -3,7 +3,7 @@ How to configure this bundle?
 
 If you installed this bundle using Symfony Flex, it comes with a default configuration.
 **It is very important to change the key sets otherwise you will have a security issue.**
-**See the last section of this page to understand how to procced.**
+**See the last section of this page to understand how to proceed.**
 
 *Note: you can find [a complete example from our application configuration used for the tests](https://github.com/Spomky-Labs/lexik-jose-bridge/blob/v2.0/Tests/app/config/config.yml#L27-L41).*
 
@@ -18,15 +18,30 @@ lexik_jose:
     key_index: 0                                  // The index of the signature key in the key set
     signature_algorithm: "RS512"                  // The signature algorithm.
     claim_checked:                                // A list of additional claim checker aliases (optional).
-        - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com/components/claim-checker for more information
+        - 'my_claim_checker_alias'                // See https://web-token.spomky-labs.com/the-components/claim-checker for more information
     mandatory_claims:                             // A list of claims that must be present (optional).
-        - 'exp'                                   // See https://web-token.spomky-labs.com/components/claim-checker for more information
+        - 'exp'                                   // See https://web-token.spomky-labs.com/the-components/claim-checker for more information
         - 'iat'
         - 'iss'
         - 'aud'
 ```
 
 For all available signature algorithms and key sets, please refer to the [web-token/jwt-framework documentation](https://web-token.spomky-labs.com/).
+
+### With signature keys read from remote
+
+Use the `key_set_remote` instead of the `key_set` entry to read the signature keys from a remote endpoint. To get it
+working you need an HTTP client and a JKU factory configured. See
+[this documentation](https://web-token.spomky-labs.com/the-symfony-bundle/key-and-key-set-management/key-set-management-jwkset#distant-key-sets)
+to learn how to do it.
+
+```yml
+lexik_jose:
+    ...
+    key_set_remote:
+        type: 'jku'                               // The type of the remote key set, either `jku` or `x5u`
+        url: 'https://my.auth.server/jwks`        // The HTTPS url of the server providing the key set
+```
 
 ## With Encryption
 
