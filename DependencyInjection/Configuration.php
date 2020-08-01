@@ -33,8 +33,8 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->validate()
             ->ifTrue(static function (array $config): bool {
-                    return !isset($config['key_set']) && !isset($config['key_set_remote']);
-                })
+                return !isset($config['key_set']) && !isset($config['key_set_remote']);
+            })
             ->thenInvalid('You must either configure a "key_set" or a "key_set_remote".')
             ->end()
             ->addDefaultsIfNotSet()
