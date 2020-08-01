@@ -19,7 +19,8 @@ return static function (ContainerConfigurator $container): void {
     $container = $container->services()->defaults()
         ->private()
         ->autoconfigure()
-        ->autowire();
+        ->autowire()
+    ;
 
     $container->set('spomkylabs_lexik_jose_checker_key_encryption_algorithm')
         ->class(AlgHeaderChecker::class)

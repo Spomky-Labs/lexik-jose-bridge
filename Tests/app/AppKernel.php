@@ -21,7 +21,7 @@ final class AppKernel extends Kernel
      */
     public function registerBundles(): array
     {
-        $bundles = [
+        return [
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
@@ -33,8 +33,6 @@ final class AppKernel extends Kernel
             new SpomkyLabs\TestBundle\SpomkyLabsTestBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
         ];
-
-        return $bundles;
     }
 
     /**

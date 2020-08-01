@@ -19,18 +19,18 @@ use Exception;
 
 trait RequestContext
 {
-    private $request_builder = null;
-    private $exception = null;
+    private $request_builder;
+    private $exception;
 
     /**
-     * @return string|null
+     * @return null|string
      */
     abstract public function getToken();
 
     /**
      * Returns Mink session.
      *
-     * @param string|null $name name of the session OR active session will be used
+     * @param null|string $name name of the session OR active session will be used
      *
      * @return \Behat\Mink\Session
      */
@@ -44,19 +44,7 @@ trait RequestContext
     abstract public function locatePath($uri);
 
     /**
-     * @return \SpomkyLabs\LexikJoseBundle\Features\Context\RequestBuilder
-     */
-    protected function getRequestBuilder()
-    {
-        if (null === $this->request_builder) {
-            $this->request_builder = new RequestBuilder();
-        }
-
-        return $this->request_builder;
-    }
-
-    /**
-     * @return Exception|null
+     * @return null|Exception
      */
     public function getException()
     {
@@ -65,6 +53,9 @@ trait RequestContext
 
     /**
      * @Given I add key :key with value :value in the header
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function iAddKeyWithValueInTheHeader($key, $value)
     {
@@ -73,6 +64,9 @@ trait RequestContext
 
     /**
      * @Given I add key :key with value :value in the query parameter
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function iAddKeyWithValueInTheQueryParameter($key, $value)
     {
@@ -81,14 +75,20 @@ trait RequestContext
 
     /**
      * @Given I add user :user and password :secret in the authorization header
+     *
+     * @param mixed $user
+     * @param mixed $secret
      */
     public function iAddUserAndPasswordInTheAuthorizationHeader($user, $secret)
     {
-        $this->getRequestBuilder()->addHeader('Authorization', 'Basic '.base64_encode("$user:$secret"));
+        $this->getRequestBuilder()->addHeader('Authorization', 'Basic '.base64_encode("{$user}:{$secret}"));
     }
 
     /**
      * @Given I add key :key with value :value in the body request
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function iAddKeyWithValueInTheBodyRequest($key, $value)
     {
@@ -110,6 +110,8 @@ trait RequestContext
 
     /**
      * @Given the request content type is :content_type
+     *
+     * @param mixed $content_type
      */
     public function theContentTypeIs($content_type)
     {
@@ -136,6 +138,7 @@ trait RequestContext
      * @When I :method the request to :uri
      *
      * @param string $method
+     * @param mixed  $uri
      */
     public function iTheRequestTo($method, $uri)
     {
@@ -165,6 +168,8 @@ trait RequestContext
 
     /**
      * @Given I am on the page :url
+     *
+     * @param mixed $url
      */
     public function iAmOnThePage($url)
     {
@@ -183,6 +188,8 @@ trait RequestContext
 
     /**
      * @Then I should receive an exception :message
+     *
+     * @param mixed $message
      */
     public function iShouldReceiveAnException($message)
     {
@@ -218,6 +225,8 @@ trait RequestContext
 
     /**
      * @Then the error listener should receive an invalid token event containing an exception with message :message
+     *
+     * @param mixed $message
      */
     public function theErrorListenerShouldReceiveAnInvalidTokenEventContainingAnExceptionWithMessage($message)
     {
@@ -233,5 +242,17 @@ trait RequestContext
         }
 
         throw new Exception();
+    }
+
+    /**
+     * @return \SpomkyLabs\LexikJoseBundle\Features\Context\RequestBuilder
+     */
+    protected function getRequestBuilder()
+    {
+        if (null === $this->request_builder) {
+            $this->request_builder = new RequestBuilder();
+        }
+
+        return $this->request_builder;
     }
 }

@@ -113,12 +113,12 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private $encryptionKeyIndex;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     private $keyEncryptionAlgorithm;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     private $contentEncryptionAlgorithm;
 
@@ -137,17 +137,18 @@ final class LexikJoseEncoder implements JWTEncoderInterface
      *
      * @param int|string $signatureKeyIndex
      */
-    public function __construct(JWSBuilder $jwsBuilder,
-                                JWSVerifier $jwsLoader,
-                                ClaimCheckerManager $claimCheckerManager,
-                                HeaderCheckerManager $signatureHeaderCheckerManager,
-                                JWKSet $signatureKeyset,
-                                $signatureKeyIndex,
-                                string $signatureAlgorithm,
-                                string $issuer,
-                                string $audience,
-                                int $ttl,
-                                array $mandatoryClaims = []
+    public function __construct(
+        JWSBuilder $jwsBuilder,
+        JWSVerifier $jwsLoader,
+        ClaimCheckerManager $claimCheckerManager,
+        HeaderCheckerManager $signatureHeaderCheckerManager,
+        JWKSet $signatureKeyset,
+        $signatureKeyIndex,
+        string $signatureAlgorithm,
+        string $issuer,
+        string $audience,
+        int $ttl,
+        array $mandatoryClaims = []
     ) {
         $this->jwsBuilder = $jwsBuilder;
         $this->jwsLoader = $jwsLoader;
@@ -194,26 +195,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         }
     }
 
-    private function sign(array $payload): string
-    {
-        $payload += $this->getAdditionalPayload();
-        $headers = $this->getSignatureHeader();
-        $signatureKey = $this->signatureKeyset->get($this->signatureKeyIndex);
-        if ($signatureKey->has('kid')) {
-            $headers['kid'] = $signatureKey->get('kid');
-        }
-
-        $jws = $this->jwsBuilder
-            ->create()
-            ->withPayload(JsonConverter::encode($payload))
-            ->addSignature($signatureKey, $headers)
-            ->build();
-
-        $serializer = new JWSCompactSerializer();
-
-        return $serializer->serialize($jws, 0);
-    }
-
     public function encrypt(string $jws): string
     {
         $headers = $this->getEncryptionHeader();
@@ -228,11 +209,62 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             ->withPayload($jws)
             ->withSharedProtectedHeader($headers)
             ->addRecipient($encryptionKey)
-            ->build();
+            ->build()
+        ;
 
         $serializer = new JWECompactSerializer();
 
         return $serializer->serialize($jwe, 0);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function decode($token): array
+    {
+        try {
+            if (null !== $this->jweBuilder) {
+                $token = $this->decrypt($token);
+            }
+
+            return $this->verify($token);
+        } catch (InvalidClaimException $e) {
+            switch ($e->getClaim()) {
+                case 'exp':
+                    $reason = JWTDecodeFailureException::EXPIRED_TOKEN;
+
+                    break;
+                default:
+                    $reason = JWTDecodeFailureException::INVALID_TOKEN;
+            }
+
+            throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token. The following claim was not verified: %s.', $e->getClaim()));
+        } catch (InvalidHeaderException $e) {
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token. The following header was not verified: %s.', $e->getHeader()));
+        } catch (Exception $e) {
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
+        }
+    }
+
+    private function sign(array $payload): string
+    {
+        $payload += $this->getAdditionalPayload();
+        $headers = $this->getSignatureHeader();
+        $signatureKey = $this->signatureKeyset->get($this->signatureKeyIndex);
+        if ($signatureKey->has('kid')) {
+            $headers['kid'] = $signatureKey->get('kid');
+        }
+
+        $jws = $this->jwsBuilder
+            ->create()
+            ->withPayload(JsonConverter::encode($payload))
+            ->addSignature($signatureKey, $headers)
+            ->build()
+        ;
+
+        $serializer = new JWSCompactSerializer();
+
+        return $serializer->serialize($jws, 0);
     }
 
     /**
@@ -274,34 +306,6 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         $this->claimCheckerManager->check($payload, $this->mandatoryClaims);
 
         return $payload;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function decode($token): array
-    {
-        try {
-            if (null !== $this->jweBuilder) {
-                $token = $this->decrypt($token);
-            }
-
-            return $this->verify($token);
-        } catch (InvalidClaimException $e) {
-            switch ($e->getClaim()) {
-                case 'exp':
-                    $reason = JWTDecodeFailureException::EXPIRED_TOKEN;
-                    break;
-                default:
-                    $reason = JWTDecodeFailureException::INVALID_TOKEN;
-            }
-
-            throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token. The following claim was not verified: %s.', $e->getClaim()));
-        } catch (InvalidHeaderException $e) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token. The following header was not verified: %s.', $e->getHeader()));
-        } catch (Exception $e) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
-        }
     }
 
     private function getAdditionalPayload(): array

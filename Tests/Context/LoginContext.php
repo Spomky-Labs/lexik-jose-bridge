@@ -30,12 +30,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 trait LoginContext
 {
     /**
-     * @var string|null
+     * @var null|string
      */
-    private $token = null;
+    private $token;
 
     /**
-     * @param string|null $name name of the session OR active session will be used
+     * @param null|string $name name of the session OR active session will be used
      *
      * @return \Behat\Mink\Session
      */
@@ -47,7 +47,7 @@ trait LoginContext
     abstract public function getContainer();
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function getToken()
     {
@@ -67,13 +67,17 @@ trait LoginContext
             ->create()
             ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
-            ->build();
+            ->build()
+        ;
         $serialzer = new JWSCompactSerializer();
         $this->token = $serialzer->serialize($jwt, 0);
     }
 
     /**
      * @Given the token must contain the claim :claim with value :value
+     *
+     * @param mixed $claim
+     * @param mixed $value
      */
     public function theTokenMustContainTheClaimWithValue($claim, $value)
     {
@@ -89,6 +93,8 @@ trait LoginContext
 
     /**
      * @Given the token must contain the claim :claim
+     *
+     * @param mixed $claim
      */
     public function theTokenMustContainTheClaim($claim)
     {
@@ -114,7 +120,8 @@ trait LoginContext
             ->create()
             ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
-            ->build();
+            ->build()
+        ;
         $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
@@ -126,7 +133,8 @@ trait LoginContext
             ->withPayload($jws)
             ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
-            ->build();
+            ->build()
+        ;
 
         $serialzer = new JWECompactSerializer();
 
@@ -135,6 +143,8 @@ trait LoginContext
 
     /**
      * @Given I have a signed and encrypted token but without the :claim claim
+     *
+     * @param mixed $claim
      */
     public function iHaveASignedAndEncryptedTokenButWithoutTheClaim($claim)
     {
@@ -147,7 +157,8 @@ trait LoginContext
             ->create()
             ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
-            ->build();
+            ->build()
+        ;
         $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
@@ -159,7 +170,8 @@ trait LoginContext
             ->withPayload($jws)
             ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
-            ->build();
+            ->build()
+        ;
 
         $serialzer = new JWECompactSerializer();
 
@@ -186,7 +198,8 @@ trait LoginContext
             ->create()
             ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
-            ->build();
+            ->build()
+        ;
         $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
@@ -198,7 +211,8 @@ trait LoginContext
             ->withPayload($jws)
             ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
-            ->build();
+            ->build()
+        ;
 
         $serialzer = new JWECompactSerializer();
 
@@ -223,7 +237,8 @@ trait LoginContext
             ->create()
             ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
-            ->build();
+            ->build()
+        ;
         $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
@@ -235,7 +250,8 @@ trait LoginContext
             ->withPayload($jws)
             ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
-            ->build();
+            ->build()
+        ;
 
         $serialzer = new JWECompactSerializer();
 
@@ -260,7 +276,8 @@ trait LoginContext
             ->create()
             ->withPayload(JsonConverter::encode($payload))
             ->addSignature($signatureKey, $this->getSignatureHeader())
-            ->build();
+            ->build()
+        ;
         $serialzer = new JWSCompactSerializer();
         $jws = $serialzer->serialize($jwt);
 
@@ -272,11 +289,22 @@ trait LoginContext
             ->withPayload($jws)
             ->withSharedProtectedHeader($this->getEncryptionHeader())
             ->addRecipient($encryptionKey)
-            ->build();
+            ->build()
+        ;
 
         $serialzer = new JWECompactSerializer();
 
         $this->token = $serialzer->serialize($jwe, 0);
+    }
+
+    /**
+     * @Then I store the token
+     */
+    public function iStoreTheToken()
+    {
+        $content = json_decode($this->getSession()->getPage()->getContent(), true);
+
+        $this->token = $content['token'];
     }
 
     /**
@@ -331,16 +359,6 @@ trait LoginContext
         }
 
         return $header;
-    }
-
-    /**
-     * @Then I store the token
-     */
-    public function iStoreTheToken()
-    {
-        $content = json_decode($this->getSession()->getPage()->getContent(), true);
-
-        $this->token = $content['token'];
     }
 
     private function getSignatureKey(): JWK

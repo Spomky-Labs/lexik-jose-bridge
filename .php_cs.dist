@@ -21,6 +21,7 @@ return PhpCsFixer\Config::create()
         '@PSR1' => true,
         '@PSR2' => true,
         '@Symfony' => true,
+        '@PhpCsFixer' => true,
         '@DoctrineAnnotation' => true,
         '@PHP70Migration' => true,
         '@PHP71Migration' => true,
@@ -34,8 +35,10 @@ return PhpCsFixer\Config::create()
         'native_function_invocation' => [
             'include' => ['@compiler_optimized'],
             'scope' => 'namespaced',
+            'strict' => true,
         ],
         'mb_str_functions' => true,
+        'method_chaining_indentation' => true,
         'linebreak_after_opening_tag' => true,
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
@@ -56,6 +59,8 @@ return PhpCsFixer\Config::create()
             'style' => 'annotation',
         ],
         'php_unit_test_case_static_method_calls' => true,
+        'php_unit_expectation' => true,
+        'php_unit_test_class_requires_covers' => false,
         'global_namespace_import' => [
             'import_classes' => true,
             'import_constants' => true,

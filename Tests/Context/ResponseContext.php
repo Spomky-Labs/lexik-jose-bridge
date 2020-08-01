@@ -24,7 +24,7 @@ use function is_array;
 trait ResponseContext
 {
     /**
-     * @param string|null $name name of the session OR active session will be used
+     * @param null|string $name name of the session OR active session will be used
      *
      * @return \Behat\Mink\Session
      */
@@ -32,6 +32,8 @@ trait ResponseContext
 
     /**
      * @Then the response content-type should be :content_type
+     *
+     * @param mixed $content_type
      */
     public function theResponseContentTypeShouldBe($content_type)
     {

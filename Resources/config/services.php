@@ -22,7 +22,8 @@ return static function (ContainerConfigurator $container): void {
     $container = $container->services()->defaults()
         ->private()
         ->autoconfigure()
-        ->autowire();
+        ->autowire()
+    ;
 
     $container->set(LexikJoseEncoder::class)
         ->args([

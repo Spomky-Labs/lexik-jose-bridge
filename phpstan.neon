@@ -9,8 +9,10 @@ parameters:
     checkMissingIterableValueType: false
     ignoreErrors:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\:\:scalarNode\(\)\.#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:addDefaultsIfNotSet\(\)\.#'
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon

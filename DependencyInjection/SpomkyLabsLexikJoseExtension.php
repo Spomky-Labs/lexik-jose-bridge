@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use function array_key_exists;
 use Jose\Bundle\JoseFramework\Helper\ConfigurationHelper;
 use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
@@ -91,7 +90,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
 
         if (isset($bridgeConfig['key_set_remote'])) {
             ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', $bridgeConfig['key_set_remote']['type'], ['url' => $bridgeConfig['key_set_remote']['url'], 'is_public' => $isDebug]);
-        } else if (isset($bridgeConfig['key_set'])) {
+        } elseif (isset($bridgeConfig['key_set'])) {
             ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
         }
 

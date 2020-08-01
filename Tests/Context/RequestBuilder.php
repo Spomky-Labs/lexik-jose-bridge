@@ -44,9 +44,9 @@ final class RequestBuilder
     private $request_parameter = [];
 
     /**
-     * @var string|null
+     * @var null|string
      */
-    private $content = null;
+    private $content;
 
     /**
      * @var string
@@ -296,7 +296,7 @@ final class RequestBuilder
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function getContent()
     {
