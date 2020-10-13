@@ -83,11 +83,11 @@ you must install the corresponding packages:
 
 * Signature Algorithms
     * All: `composer require web-token/signature-pack`
-    * HMAC: `composer require jwt-signature-algorithm-hmac`
-    * ECDSA: `composer require jwt-signature-algorithm-ecdsa`
-    * EdDSA: `composer require jwt-signature-algorithm-eddsa`
-    * None: `composer require jwt-signature-algorithm-none` (not recommended)
-    * Experimental: `composer require jwt-signature-algorithm-experimental` (not recommended)
+    * HMAC: `composer require web-token/jwt-signature-algorithm-hmac`
+    * ECDSA: `composer require web-token/jwt-signature-algorithm-ecdsa`
+    * EdDSA: `composer require web-token/jwt-signature-algorithm-eddsa`
+    * None: `composer require web-token/jwt-signature-algorithm-none` (not recommended)
+    * Experimental: `composer require web-token/jwt-signature-algorithm-experimental` (not recommended)
 * Encryption Algorithms
     * All: `composer require web-token/encryption-pack`
     * Key Encryption:
