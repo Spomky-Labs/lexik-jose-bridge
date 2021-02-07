@@ -40,7 +40,7 @@ lexik_jose:
     ...
     key_set_remote:
         type: 'jku'                               // The type of the remote key set, either `jku` or `x5u`
-        url: 'https://my.auth.server/jwks`        // The HTTPS url of the server providing the key set
+        url: 'https://my.auth.server/jwks'        // The HTTPS url of the server providing the key set
 ```
 
 ## With Encryption
