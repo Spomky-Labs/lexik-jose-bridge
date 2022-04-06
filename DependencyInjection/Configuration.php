@@ -30,6 +30,8 @@ final class Configuration implements ConfigurationInterface
         if (!$rootNode instanceof ArrayNodeDefinition) {
             throw new RuntimeException('Invalid root node');
         }
+
+        // @phpstan-ignore-next-line
         $rootNode
             ->validate()
             ->ifTrue(static function (array $config): bool {
@@ -97,6 +99,7 @@ final class Configuration implements ConfigurationInterface
 
     private function addEncryptionSection(ArrayNodeDefinition $node): void
     {
+        // @phpstan-ignore-next-line
         $node
             ->addDefaultsIfNotSet()
             ->children()

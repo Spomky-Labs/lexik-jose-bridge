@@ -16,7 +16,6 @@ namespace SpomkyLabs\LexikJoseBundle\Checker;
 use function is_string;
 use Jose\Component\Checker\HeaderChecker;
 use Jose\Component\Checker\InvalidHeaderException;
-use function Safe\sprintf;
 
 final class EncHeaderChecker implements HeaderChecker
 {

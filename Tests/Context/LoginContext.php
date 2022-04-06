@@ -16,13 +16,14 @@ namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 use function array_key_exists;
 use Exception;
 use Jose\Component\Core\JWK;
+use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Encryption\JWEBuilder;
 use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerializer;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 
 /**
  * Behat context class.
@@ -41,10 +42,29 @@ trait LoginContext
      */
     abstract public function getSession($name = null);
 
-    /**
-     * @return ContainerInterface
-     */
-    abstract public function getContainer();
+    abstract public function getJWSBuilder(): JWSBuilder;
+
+    abstract public function getJWEBuilder(): JWEBuilder;
+
+    abstract public function getEncoder(): LexikJoseEncoder;
+
+    abstract public function getJWKSetSignature(): JWKSet;
+
+    abstract public function getJWKSetEncryption(): JWKSet;
+
+    abstract public function getIssuer(): string;
+
+    abstract public function getAudience(): string;
+
+    abstract public function getSignatureAlgorithm(): string;
+
+    abstract public function getKeyEncryptionAlgorithm(): string;
+
+    abstract public function getContentEncryptionAlgorithm(): string;
+
+    abstract public function getEncoderKeyIndex(): string;
+
+    abstract public function getEncoderEncryptionKeyIndex(): string;
 
     /**
      * @return null|string
@@ -60,7 +80,7 @@ trait LoginContext
     public function iHaveAValidSignedToken()
     {
         /** @var JWSBuilder $jwsBuilder */
-        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $jwsBuilder = $this->getJWSBuilder();
         $payload = $this->getBasicPayload();
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
@@ -82,8 +102,9 @@ trait LoginContext
     public function theTokenMustContainTheClaimWithValue($claim, $value)
     {
         $this->theTokenMustContainTheClaim($claim);
+
         /** @var JWTEncoderInterface $encoder */
-        $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
+        $encoder = $this->getEncoder();
         $token_decoded = $encoder->decode($this->getToken());
 
         if ($value !== $token_decoded[$claim]) {
@@ -99,7 +120,7 @@ trait LoginContext
     public function theTokenMustContainTheClaim($claim)
     {
         /** @var JWTEncoderInterface $encoder */
-        $encoder = $this->getContainer()->get('lexik_jwt_authentication.encoder');
+        $encoder = $this->getEncoder();
 
         $token_decoded = $encoder->decode($this->getToken());
         if (!array_key_exists($claim, $token_decoded)) {
@@ -113,7 +134,7 @@ trait LoginContext
     public function iHaveAValidSignedAndEncryptedToken()
     {
         /** @var JWSBuilder $jwsBuilder */
-        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $jwsBuilder = $this->getJWSBuilder();
         $payload = $this->getBasicPayload();
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
@@ -126,7 +147,7 @@ trait LoginContext
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
-        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $jweBuilder = $this->getJWEBuilder();
         $encryptionKey = $this->getEncryptionKey();
         $jwe = $jweBuilder
             ->create()
@@ -149,7 +170,7 @@ trait LoginContext
     public function iHaveASignedAndEncryptedTokenButWithoutTheClaim($claim)
     {
         /** @var JWSBuilder $jwsBuilder */
-        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $jwsBuilder = $this->getJWSBuilder();
         $payload = $this->getBasicPayload();
         unset($payload[$claim]);
         $signatureKey = $this->getSignatureKey();
@@ -163,7 +184,7 @@ trait LoginContext
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
-        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $jweBuilder = $this->getJWEBuilder();
         $encryptionKey = $this->getEncryptionKey();
         $jwe = $jweBuilder
             ->create()
@@ -184,7 +205,7 @@ trait LoginContext
     public function iHaveAnExpiredSignedAndEncryptedToken()
     {
         /** @var JWSBuilder $jwsBuilder */
-        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $jwsBuilder = $this->getJWSBuilder();
         $payload = array_merge(
             $this->getBasicPayload(),
             [
@@ -204,7 +225,7 @@ trait LoginContext
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
-        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $jweBuilder = $this->getJWEBuilder();
         $encryptionKey = $this->getEncryptionKey();
         $jwe = $jweBuilder
             ->create()
@@ -225,7 +246,7 @@ trait LoginContext
     public function iHaveASignedAndEncryptedTokenButWithWrongIssuer()
     {
         /** @var JWSBuilder $jwsBuilder */
-        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $jwsBuilder = $this->getJWSBuilder();
         $payload = array_merge(
             $this->getBasicPayload(),
             [
@@ -243,7 +264,7 @@ trait LoginContext
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
-        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $jweBuilder = $this->getJWEBuilder();
         $encryptionKey = $this->getEncryptionKey();
         $jwe = $jweBuilder
             ->create()
@@ -264,7 +285,7 @@ trait LoginContext
     public function iHaveASignedAndEncryptedTokenButWithWrongAudience()
     {
         /** @var JWSBuilder $jwsBuilder */
-        $jwsBuilder = $this->getContainer()->get('jose.jws_builder.lexik_jose');
+        $jwsBuilder = $this->getJWSBuilder();
         $payload = array_merge(
             $this->getBasicPayload(),
             [
@@ -282,7 +303,7 @@ trait LoginContext
         $jws = $serialzer->serialize($jwt);
 
         /** @var JWEBuilder $jweBuilder */
-        $jweBuilder = $this->getContainer()->get('jose.jwe_builder.lexik_jose');
+        $jweBuilder = $this->getJWEBuilder();
         $encryptionKey = $this->getEncryptionKey();
         $jwe = $jweBuilder
             ->create()
@@ -318,8 +339,8 @@ trait LoginContext
             'iat' => time() - 100,
             'nbf' => time() - 100,
             'jti' => 'w53JxRXaEwGn80Jb4c-EZieTfvWgZDzhBw4C3Gv_0VId4zj4KaY6ujkDv9C3y7LLj5gSi9JCzfuBR2Km4vBsVA',
-            'iss' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.issuer'),
-            'aud' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.audience'),
+            'iss' => $this->getIssuer(),
+            'aud' => $this->getAudience(),
             'ip' => '127.0.0.1',
         ];
     }
@@ -332,7 +353,7 @@ trait LoginContext
         $header = [
             'typ' => 'JWT',
             'cty' => 'JWT',
-            'alg' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.signature_algorithm'),
+            'alg' => $this->getSignatureAlgorithm(),
         ];
         $signatureKey = $this->getSignatureKey();
         if ($signatureKey->has('kid')) {
@@ -350,8 +371,8 @@ trait LoginContext
         $header = [
             'typ' => 'JWT',
             'cty' => 'JWT',
-            'alg' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm'),
-            'enc' => $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm'),
+            'alg' => $this->getKeyEncryptionAlgorithm(),
+            'enc' => $this->getContentEncryptionAlgorithm(),
         ];
         $encryption_key = $this->getEncryptionKey();
         if ($encryption_key->has('kid')) {
@@ -363,15 +384,19 @@ trait LoginContext
 
     private function getSignatureKey(): JWK
     {
-        $keyIndex = $this->getContainer()->getParameter('lexik_jose_bridge.encoder.key_index');
+        $keyIndex = $this->getEncoderKeyIndex();
 
-        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.signature')->get($keyIndex);
+        $jwkSet = $this->getJWKSetSignature();
+
+        return $jwkSet->get($keyIndex);
     }
 
     private function getEncryptionKey(): JWK
     {
-        $keyIndex = $this->getContainer()->getParameter('lexik_jose_bridge.encoder.encryption.key_index');
+        $keyIndex = $this->getEncoderEncryptionKeyIndex();
 
-        return $this->getContainer()->get('jose.key_set.lexik_jose_bridge.encryption')->get($keyIndex);
+        $jwkSet = $this->getJWKSetEncryption();
+
+        return $jwkSet->get($keyIndex);
     }
 }

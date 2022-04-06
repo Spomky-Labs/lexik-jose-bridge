@@ -16,7 +16,7 @@ use Jose\Component\Checker\IssuerChecker;
 use SpomkyLabs\LexikJoseBundle\Checker\AlgHeaderChecker;
 use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $container): void {
     $container = $container->services()->defaults()
@@ -27,11 +27,11 @@ return static function (ContainerConfigurator $container): void {
 
     $container->set(LexikJoseEncoder::class)
         ->args([
-            ref('jose.jws_builder.lexik_jose'),
-            ref('jose.jws_verifier.lexik_jose'),
-            ref('jose.claim_checker.lexik_jose'),
-            ref('jose.header_checker.lexik_jose_signature'),
-            ref('jose.key_set.lexik_jose_bridge.signature'),
+            service('jose.jws_builder.lexik_jose'),
+            service('jose.jws_verifier.lexik_jose'),
+            service('jose.claim_checker.lexik_jose'),
+            service('jose.header_checker.lexik_jose_signature'),
+            service('jose.key_set.lexik_jose_bridge.signature'),
             '%lexik_jose_bridge.encoder.key_index%',
             '%lexik_jose_bridge.encoder.signature_algorithm%',
             '%lexik_jose_bridge.encoder.issuer%',

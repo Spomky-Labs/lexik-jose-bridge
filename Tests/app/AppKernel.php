@@ -24,6 +24,7 @@ final class AppKernel extends Kernel
         return [
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
 
@@ -32,6 +33,8 @@ final class AppKernel extends Kernel
             new Jose\Bundle\JoseFramework\JoseFrameworkBundle(),
             new SpomkyLabs\TestBundle\SpomkyLabsTestBundle(),
             new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
+
+            new FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle(),
         ];
     }
 
@@ -40,7 +43,15 @@ final class AppKernel extends Kernel
      */
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/SpomkyLabsLexikBridgeTest';
+        return sys_get_temp_dir().'/SpomkyLabsLexikBridgeTest/cache';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogDir(): string
+    {
+        return sys_get_temp_dir().'/SpomkyLabsLexikBridgeTest/logs';
     }
 
     /**

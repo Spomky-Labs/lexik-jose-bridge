@@ -9,17 +9,36 @@ framework:
     form: ~
     csrf_protection: ~
     session:
-        storage_id: session.storage.mock_file
+#        storage_id: session.storage.mock_file
+        storage_factory_id: session.storage.factory.mock_file
     router:
-        resource: '%kernel.root_dir%/config/routing.yml'
+        resource: '%kernel.project_dir%/Tests/app/config/routing.yml'
         strict_requirements: ~
-    templating:
-        engines: ['twig']
+#    templating:
+#        engines: ['twig']
     trusted_hosts:   ~
     fragments:       ~
     http_method_override: true
 
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    SpomkyLabs\TestBundle\:
+        resource: '../../../Tests/Bundle/TestBundle/*'
+        exclude:
+            - '../../../Tests/Bundle/TestBundle/Controller/'
+
+    SpomkyLabs\TestBundle\Controller\:
+        resource: '../../../Tests/Bundle/TestBundle/Controller/*'
+        tags: ['controller.service_arguments']
+
+    SpomkyLabs\LexikJoseBundle\Features\Context\:
+        resource: '../../../Tests/Context/*'
+        arguments:
+            - '@behat.driver.service_container'
+
     Psr\EventDispatcher\EventDispatcherInterface:
         alias: Symfony\Contracts\EventDispatcher\EventDispatcherInterface
 
@@ -29,8 +48,8 @@ twig:
     strict_variables: true
 
 lexik_jwt_authentication:
-    secret_key: '%kernel.root_dir%/keys/private.key'
-    public_key: '%kernel.root_dir%/keys/public.key'
+    secret_key: '%kernel.project_dir%/Tests/app/keys/private.key'
+    public_key: '%kernel.project_dir%/Tests/app/keys/public.key'
 
 lexik_jose:
     ttl: 1000
@@ -53,3 +72,10 @@ lexik_jose:
         key_index: "KEY_ID_0"
         key_encryption_algorithm: 'A256GCMKW' # The key encryption algorithm
         content_encryption_algorithm: 'A256GCM' # The content encryption algorithm
+
+monolog:
+    handlers:
+        file_log:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
