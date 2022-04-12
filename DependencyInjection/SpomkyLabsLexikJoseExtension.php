@@ -75,7 +75,13 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     public function prepend(ContainerBuilder $container): void
     {
         $isDebug = (bool) $container->getParameter('kernel.debug');
-        $bridgeConfig = (array) current($container->getExtensionConfig($this->getAlias()));
+        $bridgeConfig = (array) $container->getExtensionConfig($this->getAlias());
+
+        $resolvingBag = $container->getParameterBag();
+        $bridgeConfig = $resolvingBag->resolveValue($bridgeConfig);
+
+        $bridgeConfig = $this->processConfiguration(new Configuration(), $bridgeConfig);
+
         if (!array_key_exists('claim_checked', $bridgeConfig)) {
             $bridgeConfig['claim_checked'] = [];
         }
