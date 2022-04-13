@@ -50,8 +50,6 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
     public function addFragmentParameter($key, $value): static
     {
@@ -62,8 +60,6 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
     public function removeFragmentParameter($key): static
     {
@@ -75,8 +71,6 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
     public function addQueryParameter($key, $value): static
     {
@@ -87,8 +81,6 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
     public function removeQueryParameter($key): static
     {
@@ -100,8 +92,6 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
     public function addServer($key, $value): static
     {
@@ -112,8 +102,6 @@ final class RequestBuilder
 
     /**
      * @param $key
-     *
-     * @return self
      */
     public function removeServer($key): static
     {
@@ -125,8 +113,6 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
     public function addHeader($key, $value): static
     {
@@ -137,8 +123,6 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
     public function removeHeader($key): static
     {
@@ -150,8 +134,6 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
     public function addRequestParameter($key, $value): static
     {
@@ -162,8 +144,6 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
     public function removeRequestParameter($key): static
     {
@@ -179,8 +159,6 @@ final class RequestBuilder
 
     /**
      * @param $content
-     *
-     * @return self
      */
     public function setContent($content): static
     {
@@ -189,9 +167,6 @@ final class RequestBuilder
         return $this;
     }
 
-    /**
-     * @return self
-     */
     public function unsetContent(): static
     {
         $this->content = null;
@@ -201,8 +176,6 @@ final class RequestBuilder
 
     /**
      * @param string $method
-     *
-     * @return self
      */
     public function setMethod($method): static
     {
@@ -211,9 +184,6 @@ final class RequestBuilder
         return $this;
     }
 
-    /**
-     * @return self
-     */
     public function unsetMethod(): static
     {
         $this->method = 'GET';
@@ -223,8 +193,6 @@ final class RequestBuilder
 
     /**
      * @param $uri
-     *
-     * @return self
      */
     public function setUri($uri): static
     {
@@ -233,9 +201,6 @@ final class RequestBuilder
         return $this;
     }
 
-    /**
-     * @return self
-     */
     public function unsetUri(): static
     {
         $this->uri = '/';
