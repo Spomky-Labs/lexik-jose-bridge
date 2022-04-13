@@ -10,11 +10,8 @@ use Jose\Component\Checker\InvalidHeaderException;
 
 final class AlgHeaderChecker implements HeaderChecker
 {
-    private readonly string $algorithm;
-
-    public function __construct(string $algorithm)
+    public function __construct(private readonly string $algorithm)
     {
-        $this->algorithm = $algorithm;
     }
 
     public function checkHeader(mixed $algorithm): void
