@@ -21,7 +21,7 @@ The release process [is described here](Resources/doc/Release.md).
 # Prerequisites
 
 This library needs at least:
-* ![PHP 7.2+](https://img.shields.io/badge/PHP-7.2%2B-ff69b4.svg)
+* PHP 8.1+
 * Symfony 6.0+.
 
 # Installation
