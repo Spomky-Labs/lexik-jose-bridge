@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
-use Behat\Mink\Session;
 use function array_key_exists;
+use Behat\Mink\Session;
 use Exception;
 use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;

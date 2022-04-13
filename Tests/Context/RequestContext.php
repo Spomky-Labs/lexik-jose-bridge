@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
-use Behat\Mink\Session;
 use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Session;
 use function count;
 use Exception;
 use SpomkyLabs\TestBundle\EventListener\JWTListener;
@@ -246,7 +246,7 @@ trait RequestContext
             $exception = current($events)
                 ->getException()
             ;
-            while($exception !== null) {
+            while ($exception !== null) {
                 if ($exception->getMessage() === $message) {
                     return;
                 }

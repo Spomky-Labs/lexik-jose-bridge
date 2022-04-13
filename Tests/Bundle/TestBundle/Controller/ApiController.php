@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 final class ApiController extends AbstractController
 {
     #[Route(path: '/anonymous')]
-    public function anonymousAction(TokenStorageInterface $tokenStorage) : Response
+    public function anonymousAction(TokenStorageInterface $tokenStorage): Response
     {
         $user = $tokenStorage->getToken()?->getUser();
         if ($user === null) {
@@ -22,26 +22,31 @@ final class ApiController extends AbstractController
         } else {
             $message = "Hello {$user->getUserIdentifier()}!";
         }
+
         return new Response($message);
     }
+
     /**
      * @IsGranted("ROLE_USER")
      */
     #[Route(path: '/hello')]
-    public function helloAction(TokenStorageInterface $tokenStorage) : Response
+    public function helloAction(TokenStorageInterface $tokenStorage): Response
     {
         $user = $tokenStorage->getToken()?->getUser();
         $message = "Hello {$user->getUserIdentifier()}!";
+
         return new Response($message);
     }
+
     /**
      * @IsGranted("ROLE_ADMIN")
      */
     #[Route(path: '/admin')]
-    public function adminAction(TokenStorageInterface $tokenStorage) : Response
+    public function adminAction(TokenStorageInterface $tokenStorage): Response
     {
         $user = $tokenStorage->getToken()?->getUser();
         $message = "Hello {$user->getUserIdentifier()}!";
+
         return new Response($message);
     }
 }

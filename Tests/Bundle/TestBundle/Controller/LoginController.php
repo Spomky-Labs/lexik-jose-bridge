@@ -15,10 +15,11 @@ final class LoginController extends AbstractController
      * @Template
      */
     #[Route(path: '/login', name: 'login')]
-    public function loginAction(AuthenticationUtils $authenticationUtils) : array
+    public function loginAction(AuthenticationUtils $authenticationUtils): array
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+
         return [
             'last_username' => $lastUsername,
             'error' => $error,
