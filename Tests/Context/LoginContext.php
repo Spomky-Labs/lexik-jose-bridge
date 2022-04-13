@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
 use function array_key_exists;
@@ -31,12 +22,12 @@ use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 trait LoginContext
 {
     /**
-     * @var null|string
+     * @var string|null
      */
     private $token;
 
     /**
-     * @param null|string $name name of the session OR active session will be used
+     * @param string|null $name name of the session OR active session will be used
      *
      * @return \Behat\Mink\Session
      */
@@ -67,7 +58,7 @@ trait LoginContext
     abstract public function getEncoderEncryptionKeyIndex(): string;
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getToken()
     {
@@ -95,9 +86,6 @@ trait LoginContext
 
     /**
      * @Given the token must contain the claim :claim with value :value
-     *
-     * @param mixed $claim
-     * @param mixed $value
      */
     public function theTokenMustContainTheClaimWithValue($claim, $value)
     {
@@ -114,8 +102,6 @@ trait LoginContext
 
     /**
      * @Given the token must contain the claim :claim
-     *
-     * @param mixed $claim
      */
     public function theTokenMustContainTheClaim($claim)
     {
@@ -123,7 +109,7 @@ trait LoginContext
         $encoder = $this->getEncoder();
 
         $token_decoded = $encoder->decode($this->getToken());
-        if (!array_key_exists($claim, $token_decoded)) {
+        if (! array_key_exists($claim, $token_decoded)) {
             throw new Exception();
         }
     }
@@ -164,8 +150,6 @@ trait LoginContext
 
     /**
      * @Given I have a signed and encrypted token but without the :claim claim
-     *
-     * @param mixed $claim
      */
     public function iHaveASignedAndEncryptedTokenButWithoutTheClaim($claim)
     {
@@ -247,12 +231,9 @@ trait LoginContext
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
-        $payload = array_merge(
-            $this->getBasicPayload(),
-            [
-                'iss' => 'BAD ISSUER',
-            ]
-        );
+        $payload = array_merge($this->getBasicPayload(), [
+            'iss' => 'BAD ISSUER',
+        ]);
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()
@@ -286,12 +267,9 @@ trait LoginContext
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
-        $payload = array_merge(
-            $this->getBasicPayload(),
-            [
-                'aud' => 'BAD AUDIENCE',
-            ]
-        );
+        $payload = array_merge($this->getBasicPayload(), [
+            'aud' => 'BAD AUDIENCE',
+        ]);
         $signatureKey = $this->getSignatureKey();
         $jwt = $jwsBuilder
             ->create()

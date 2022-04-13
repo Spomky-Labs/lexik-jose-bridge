@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection\Compiler;
 
 use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
@@ -22,7 +13,9 @@ final class EncryptionSupportCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (false === $container->hasDefinition(LexikJoseEncoder::class) || false === $container->getParameter('lexik_jose_bridge.encoder.encryption.enabled')) {
+        if ($container->hasDefinition(LexikJoseEncoder::class) === false || $container->getParameter(
+            'lexik_jose_bridge.encoder.encryption.enabled'
+        ) === false) {
             return;
         }
 

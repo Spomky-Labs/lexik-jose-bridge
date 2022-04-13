@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\Checker;
 
 use function is_string;
@@ -29,20 +20,17 @@ final class EncHeaderChecker implements HeaderChecker
         $this->algorithm = $algorithm;
     }
 
-    /**
-     * @param mixed $algorithm
-     *
-     * @throws InvalidHeaderException
-     * @throws \Safe\Exceptions\StringsException
-     */
     public function checkHeader($algorithm): void
     {
-        if (!is_string($algorithm)) {
+        if (! is_string($algorithm)) {
             throw new InvalidHeaderException('The value of the header "enc" is not valid', 'enc', $algorithm);
         }
 
         if ($this->algorithm !== $algorithm) {
-            throw new InvalidHeaderException(sprintf('The algorithm "%s" is not known.', $algorithm), 'enc', $algorithm);
+            throw new InvalidHeaderException(sprintf(
+                'The algorithm "%s" is not known.',
+                $algorithm
+            ), 'enc', $algorithm);
         }
     }
 

@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -43,7 +34,7 @@ final class AppKernel extends Kernel
      */
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/SpomkyLabsLexikBridgeTest/cache';
+        return sys_get_temp_dir() . '/SpomkyLabsLexikBridgeTest/cache';
     }
 
     /**
@@ -51,7 +42,7 @@ final class AppKernel extends Kernel
      */
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/SpomkyLabsLexikBridgeTest/logs';
+        return sys_get_temp_dir() . '/SpomkyLabsLexikBridgeTest/logs';
     }
 
     /**
@@ -59,6 +50,6 @@ final class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(__DIR__.'/config/config.yml');
+        $loader->load(__DIR__ . '/config/config.yml');
     }
 }

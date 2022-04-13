@@ -48,12 +48,6 @@ jobs:
           chmod +x local-php-security-checker
           ./local-php-security-checker
 
-      - name: "Code Style"
-        run: |
-          wget -O php-cs-fixer https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/latest/download/php-cs-fixer.phar
-          chmod a+x php-cs-fixer
-          ./php-cs-fixer fix --dry-run --stop-on-violation --using-cache=no
-
       - name: "Static Analysis"
         run: "vendor/bin/phpstan"
 

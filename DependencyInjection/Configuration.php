@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
 use RuntimeException;
@@ -27,7 +18,7 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('lexik_jose');
         $rootNode = $treeBuilder->getRootNode();
-        if (!$rootNode instanceof ArrayNodeDefinition) {
+        if (! $rootNode instanceof ArrayNodeDefinition) {
             throw new RuntimeException('Invalid root node');
         }
 
@@ -35,21 +26,25 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->validate()
             ->ifTrue(static function (array $config): bool {
-                return !isset($config['key_set']) && !isset($config['key_set_remote']);
+                return ! isset($config['key_set']) && ! isset($config['key_set_remote']);
             })
             ->thenInvalid('You must either configure a "key_set" or a "key_set_remote".')
             ->end()
             ->addDefaultsIfNotSet()
             ->children()
             ->scalarNode('server_name')
-            ->info('The name of the server. The recommended value is the server URL. This value will be used to check the issuer of the token.')
+            ->info(
+                'The name of the server. The recommended value is the server URL. This value will be used to check the issuer of the token.'
+            )
             ->isRequired()
             ->end()
             ->scalarNode('audience')
             ->info('The audience of the token. If not set `server_name` will be used.')
             ->end()
             ->integerNode('ttl')
-            ->info('The lifetime of a token (in second). For security reasons, a value below 1 hour (3600 sec) is recommended.')
+            ->info(
+                'The lifetime of a token (in second). For security reasons, a value below 1 hour (3600 sec) is recommended.'
+            )
             ->min(0)
             ->defaultValue(1800)
             ->end()
@@ -77,14 +72,16 @@ final class Configuration implements ConfigurationInterface
             ->arrayNode('claim_checked')
             ->info('List of aliases to claim checkers.')
             ->useAttributeAsKey('name')
-            ->prototype('scalar')->end()
+            ->prototype('scalar')
+            ->end()
             ->treatNullLike([])
             ->treatFalseLike([])
             ->end()
             ->arrayNode('mandatory_claims')
             ->info('List of claims that must be present.')
             ->useAttributeAsKey('name')
-            ->prototype('scalar')->end()
+            ->prototype('scalar')
+            ->end()
             ->defaultValue([])
             ->treatNullLike([])
             ->treatFalseLike([])

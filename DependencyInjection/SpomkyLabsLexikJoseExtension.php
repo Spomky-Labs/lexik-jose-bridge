@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\DependencyInjection;
 
 use function array_key_exists;
@@ -37,7 +28,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        if (!isset($config['audience'])) {
+        if (! isset($config['audience'])) {
             $config['audience'] = $config['server_name'];
         }
 
@@ -50,10 +41,19 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
         $container->setParameter('lexik_jose_bridge.encoder.mandatory_claims', $config['mandatory_claims']);
 
         $container->setParameter('lexik_jose_bridge.encoder.encryption.enabled', $config['encryption']['enabled']);
-        if (true === $config['encryption']['enabled']) {
-            $container->setParameter('lexik_jose_bridge.encoder.encryption.key_index', $config['encryption']['key_index']);
-            $container->setParameter('lexik_jose_bridge.encoder.encryption.key_encryption_algorithm', $config['encryption']['key_encryption_algorithm']);
-            $container->setParameter('lexik_jose_bridge.encoder.encryption.content_encryption_algorithm', $config['encryption']['content_encryption_algorithm']);
+        if ($config['encryption']['enabled'] === true) {
+            $container->setParameter(
+                'lexik_jose_bridge.encoder.encryption.key_index',
+                $config['encryption']['key_index']
+            );
+            $container->setParameter(
+                'lexik_jose_bridge.encoder.encryption.key_encryption_algorithm',
+                $config['encryption']['key_encryption_algorithm']
+            );
+            $container->setParameter(
+                'lexik_jose_bridge.encoder.encryption.content_encryption_algorithm',
+                $config['encryption']['content_encryption_algorithm']
+            );
             $this->loadEncryptionServices($container);
         }
 
@@ -62,13 +62,13 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
 
     public function loadServices(ContainerBuilder $container): void
     {
-        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
     }
 
     public function loadEncryptionServices(ContainerBuilder $container): void
     {
-        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('encryption_services.php');
     }
 
@@ -82,37 +82,91 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
 
         $bridgeConfig = $this->processConfiguration(new Configuration(), $bridgeConfig);
 
-        if (!array_key_exists('claim_checked', $bridgeConfig)) {
+        if (! array_key_exists('claim_checked', $bridgeConfig)) {
             $bridgeConfig['claim_checked'] = [];
         }
         $claim_aliases = array_merge(
             $bridgeConfig['claim_checked'],
             ['exp', 'iat', 'lexik_jose_audience', 'lexik_jose_issuer']
         );
-        ConfigurationHelper::addJWSBuilder($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
-        ConfigurationHelper::addJWSVerifier($container, $this->getAlias(), [$bridgeConfig['signature_algorithm']], $isDebug);
+        ConfigurationHelper::addJWSBuilder(
+            $container,
+            $this->getAlias(),
+            [$bridgeConfig['signature_algorithm']],
+            $isDebug
+        );
+        ConfigurationHelper::addJWSVerifier(
+            $container,
+            $this->getAlias(),
+            [$bridgeConfig['signature_algorithm']],
+            $isDebug
+        );
         ConfigurationHelper::addClaimChecker($container, $this->getAlias(), $claim_aliases, $isDebug);
-        ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_signature', ['lexik_jose_signature_algorithm']);
+        ConfigurationHelper::addHeaderChecker(
+            $container,
+            $this->getAlias() . '_signature',
+            ['lexik_jose_signature_algorithm']
+        );
 
         if (isset($bridgeConfig['key_set_remote'])) {
-            ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', $bridgeConfig['key_set_remote']['type'], ['url' => $bridgeConfig['key_set_remote']['url'], 'is_public' => $isDebug]);
+            ConfigurationHelper::addKeyset(
+                $container,
+                'lexik_jose_bridge.signature',
+                $bridgeConfig['key_set_remote']['type'],
+                [
+                    'url' => $bridgeConfig['key_set_remote']['url'],
+                    'is_public' => $isDebug,
+                ]
+            );
         } elseif (isset($bridgeConfig['key_set'])) {
-            ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', ['value' => $bridgeConfig['key_set'], 'is_public' => $isDebug]);
+            ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.signature', 'jwkset', [
+                'value' => $bridgeConfig['key_set'],
+                'is_public' => $isDebug,
+            ]);
         }
 
-        if (isset($bridgeConfig['encryption']['enabled']) && (true === $bridgeConfig['encryption']['enabled'])) {
+        if (isset($bridgeConfig['encryption']['enabled']) && ($bridgeConfig['encryption']['enabled'] === true)) {
             $this->enableEncryptionSupport($container, $bridgeConfig, $isDebug);
         }
 
-        $lexikConfig = ['encoder' => ['service' => LexikJoseEncoder::class]];
+        $lexikConfig = [
+            'encoder' => [
+                'service' => LexikJoseEncoder::class,
+            ],
+        ];
         $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
     }
 
     private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug): void
     {
-        ConfigurationHelper::addJWEBuilder($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
-        ConfigurationHelper::addJWEDecrypter($container, $this->getAlias(), [$bridgeConfig['encryption']['key_encryption_algorithm']], [$bridgeConfig['encryption']['content_encryption_algorithm']], ['DEF'], $isDebug);
-        ConfigurationHelper::addHeaderChecker($container, $this->getAlias().'_encryption', ['lexik_jose_audience', 'lexik_jose_issuer', 'lexik_jose_key_encryption_algorithm', 'lexik_jose_content_encryption_algorithm']);
-        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', ['value' => $bridgeConfig['encryption']['key_set'], 'is_public' => $isDebug]);
+        ConfigurationHelper::addJWEBuilder(
+            $container,
+            $this->getAlias(),
+            [$bridgeConfig['encryption']['key_encryption_algorithm']],
+            [$bridgeConfig['encryption']['content_encryption_algorithm']],
+            ['DEF'],
+            $isDebug
+        );
+        ConfigurationHelper::addJWEDecrypter(
+            $container,
+            $this->getAlias(),
+            [$bridgeConfig['encryption']['key_encryption_algorithm']],
+            [$bridgeConfig['encryption']['content_encryption_algorithm']],
+            ['DEF'],
+            $isDebug
+        );
+        ConfigurationHelper::addHeaderChecker(
+            $container,
+            $this->getAlias() . '_encryption',
+            ['lexik_jose_audience',
+                'lexik_jose_issuer',
+                'lexik_jose_key_encryption_algorithm',
+                'lexik_jose_content_encryption_algorithm',
+            ]
+        );
+        ConfigurationHelper::addKeyset($container, 'lexik_jose_bridge.encryption', 'jwkset', [
+            'value' => $bridgeConfig['encryption']['key_set'],
+            'is_public' => $isDebug,
+        ]);
     }
 }
