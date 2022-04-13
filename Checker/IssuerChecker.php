@@ -32,7 +32,7 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
         }
     }
 
-    public function checkHeader($value): void
+    public function checkHeader(mixed $value): void
     {
         $this->checkClaim($value);
     }
