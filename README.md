@@ -1,15 +1,16 @@
 Jose Bridge for the LexikJWTAuthenticationBundle
 ================================================
 
-[![Build Status](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge.svg?branch=v3.0)](https://travis-ci.org/Spomky-Labs/lexik-jose-bridge)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/badges/quality-score.png?b=v3.0)](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge/?branch=v3.0)
+![Build Status](https://github.com/Spomky-Labs/lexik-jose-bridge/workflows/Coding%20Standards/badge.svg)
+![Build Status](https://github.com/Spomky-Labs/lexik-jose-bridge/workflows/Static%20Analyze/badge.svg)
+![Build Status](https://github.com/Spomky-Labs/lexik-jose-bridge/workflows/Rector%20Checkstyle/badge.svg)
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2/big.png)](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2)
+![Build Status](https://github.com/Spomky-Labs/lexik-jose-bridge/workflows/Unit%20and%20Functional%20Tests/badge.svg)
 
-[![Latest Stable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/stable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
-[![Total Downloads](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/downloads.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
-[![Latest Unstable Version](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
-[![License](https://poser.pugx.org/spomky-labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/spomky-labs/lexik-jose-bridge)
+[![Latest Stable Version](https://poser.pugx.org/Spomky-Labs/lexik-jose-bridge/v/stable.png)](https://packagist.org/packages/Spomky-Labs/lexik-jose-bridge)
+[![Total Downloads](https://poser.pugx.org/Spomky-Labs/lexik-jose-bridge/downloads.png)](https://packagist.org/packages/Spomky-Labs/lexik-jose-bridge)
+[![Latest Unstable Version](https://poser.pugx.org/Spomky-Labs/lexik-jose-bridge/v/unstable.png)](https://packagist.org/packages/Spomky-Labs/lexik-jose-bridge)
+[![License](https://poser.pugx.org/Spomky-Labs/lexik-jose-bridge/license.png)](https://packagist.org/packages/Spomky-Labs/lexik-jose-bridge)
 
 This Symfony Bundle provides a JWT Encoder for the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) that uses the [web-token/jwt-framework](https://github.com/web-token/jwt-framework) as JWT Creator/Loader.
 
@@ -21,20 +22,9 @@ The release process [is described here](Resources/doc/Release.md).
 
 This library needs at least:
 * ![PHP 7.2+](https://img.shields.io/badge/PHP-7.2%2B-ff69b4.svg)
-* Symfony 4.3+.
-
-# Continuous Integration
-
-It has been successfully tested using `PHP 7.2` and `PHP 7.3`.
-
-We also track bugs and code quality using [Scrutinizer-CI](https://scrutinizer-ci.com/g/Spomky-Labs/lexik-jose-bridge) and [Sensio Insight](https://insight.sensiolabs.com/projects/b351c9ca-b49f-4f22-925a-8e0cab6b8cb2).
-
-Coding Standards are verified by [StyleCI](https://styleci.io/repos/61054893).
-
-Code coverage is not performed, but `Behavior driven development` (BDD) is used to test this bundle. 
+* Symfony 6.0+.
 
 # Installation
-
 
 ## Symfony Flex
 
@@ -116,12 +106,17 @@ I bring solutions to your problems and answer your questions.
 
 If you really love that project and the work I have done or if you want I prioritize your issues, then you can help me out for a couple of :beers: or more!
 
+[Become a sponsor](https://github.com/sponsors/Spomky)
+
+Or
+
 [![Become a Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/FlorentMorselli)
 
 # Contributing
 
-Requests for new features, bug fixes and all other ideas to make this library useful are welcome. [Please follow these best practices](Resources/doc/Contributing.md).
+If you discover a security vulnerability within the project, please **don't use the bug tracker and don't publish it publicly**.
+Instead, all security issues must be sent to security [at] spomky-labs.com.
 
 # Licence
 
-This software is release under [MIT licence](LICENSE).
+This project is release under [MIT licence](LICENSE).
