@@ -12,9 +12,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 final class LoginController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
      * @Template
      */
+    #[Route(path: '/login', name: 'login')]
     public function loginAction(AuthenticationUtils $authenticationUtils): array
     {
         $error = $authenticationUtils->getLastAuthenticationError();

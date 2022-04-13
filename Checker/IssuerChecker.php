@@ -10,10 +10,7 @@ use Jose\Component\Checker\HeaderChecker;
 
 final class IssuerChecker implements ClaimChecker, HeaderChecker
 {
-    /**
-     * @var string
-     */
-    private $issuer;
+    private readonly string $issuer;
 
     public function __construct(string $issuer)
     {
@@ -28,7 +25,7 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
         return 'iss';
     }
 
-    public function checkClaim($issuer): void
+    public function checkClaim(mixed $issuer): void
     {
         if ($this->issuer !== $issuer) {
             throw new Exception(sprintf('The issuer "%s" is not allowed.', $issuer));

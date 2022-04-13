@@ -9,45 +9,21 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class RequestBuilder
 {
-    /**
-     * @var array
-     */
-    private $query = [];
+    private array $query = [];
 
-    /**
-     * @var array
-     */
-    private $fragment = [];
+    private array $fragment = [];
 
-    /**
-     * @var array
-     */
-    private $server = [];
+    private array $server = [];
 
-    /**
-     * @var array
-     */
-    private $header = [];
+    private array $header = [];
 
-    /**
-     * @var array
-     */
-    private $request_parameter = [];
+    private array $request_parameter = [];
 
-    /**
-     * @var string|null
-     */
-    private $content;
+    private ?string $content = null;
 
-    /**
-     * @var string
-     */
-    private $method = 'GET';
+    private string $method = 'GET';
 
-    /**
-     * @var string
-     */
-    private $uri = '/';
+    private string $uri = '/';
 
     /**
      * @return string
@@ -295,7 +271,7 @@ final class RequestBuilder
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     public function getRequest()
     {

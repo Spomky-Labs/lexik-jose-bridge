@@ -22,7 +22,7 @@ final class FeatureContext extends MinkContext implements SnippetAcceptingContex
     use LoginContext;
     use RequestContext;
 
-    public function __construct(private ContainerInterface $container)
+    public function __construct(private readonly ContainerInterface $container)
     {
     }
 

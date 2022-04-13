@@ -30,95 +30,41 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
  */
 final class LexikJoseEncoder implements JWTEncoderInterface
 {
-    /**
-     * @var string
-     */
-    private $issuer;
+    private readonly string $issuer;
 
-    /**
-     * @var string
-     */
-    private $audience;
+    private readonly string $audience;
 
-    /**
-     * @var JWSBuilder
-     */
-    private $jwsBuilder;
+    private readonly JWSBuilder $jwsBuilder;
 
-    /**
-     * @var JWSVerifier
-     */
-    private $jwsLoader;
+    private readonly JWSVerifier $jwsLoader;
 
-    /**
-     * @var ClaimCheckerManager
-     */
-    private $claimCheckerManager;
+    private readonly ClaimCheckerManager $claimCheckerManager;
 
-    /**
-     * @var HeaderCheckerManager
-     */
-    private $signatureHeaderCheckerManager;
+    private readonly HeaderCheckerManager $signatureHeaderCheckerManager;
 
-    /**
-     * @var HeaderCheckerManager
-     */
-    private $encryptionHeaderCheckerManager;
+    private ?HeaderCheckerManager $encryptionHeaderCheckerManager = null;
 
-    /**
-     * @var JWKSet
-     */
-    private $signatureKeyset;
+    private JWKSet $signatureKeyset;
 
-    /**
-     * @var int|string
-     */
-    private $signatureKeyIndex;
+    private readonly int|string $signatureKeyIndex;
 
-    /**
-     * @var string
-     */
-    private $signatureAlgorithm;
+    private readonly string $signatureAlgorithm;
 
-    /**
-     * @var JWEBuilder
-     */
-    private $jweBuilder;
+    private ?JWEBuilder $jweBuilder = null;
 
-    /**
-     * @var JWEDecrypter
-     */
-    private $jweLoader;
+    private ?JWEDecrypter $jweLoader = null;
 
-    /**
-     * @var JWKSet
-     */
-    private $encryptionKeyset;
+    private ?JWKSet $encryptionKeyset = null;
 
-    /**
-     * @var int|string
-     */
-    private $encryptionKeyIndex;
+    private int|string|null $encryptionKeyIndex = null;
 
-    /**
-     * @var string|null
-     */
-    private $keyEncryptionAlgorithm;
+    private ?string $keyEncryptionAlgorithm = null;
 
-    /**
-     * @var string|null
-     */
-    private $contentEncryptionAlgorithm;
+    private ?string $contentEncryptionAlgorithm = null;
 
-    /**
-     * @var int
-     */
-    private $ttl;
+    private readonly int $ttl;
 
-    /**
-     * @var array
-     */
-    private $mandatoryClaims;
+    private readonly array $mandatoryClaims;
 
     /**
      * LexikJoseEncoder constructor.

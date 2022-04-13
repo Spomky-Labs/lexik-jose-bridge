@@ -20,6 +20,7 @@
         }
     ],
     "require": {
+        "php": ">=8.1",
         "lexik/jwt-authentication-bundle": "^2.0",
         "psr/event-dispatcher": "^1.0",
         "thecodingmachine/safe": "^2.0",
@@ -40,6 +41,7 @@
         "phpstan/phpstan-beberlei-assert": "^1.0",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
+        "rector/rector": "^0.12",
         "sensio/framework-extra-bundle": "^6.0",
         "symfony/dependency-injection": "^6.0",
         "symfony/expression-language": "^6.0",

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
 use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Session;
 use function count;
 use Exception;
 use SpomkyLabs\TestBundle\EventListener\JWTListener;
@@ -27,7 +28,7 @@ trait RequestContext
      *
      * @param string|null $name name of the session OR active session will be used
      *
-     * @return \Behat\Mink\Session
+     * @return Session
      */
     abstract public function getSession($name = null);
 
@@ -245,18 +246,19 @@ trait RequestContext
             $exception = current($events)
                 ->getException()
             ;
-            do {
+            while ($exception !== null) {
                 if ($exception->getMessage() === $message) {
                     return;
                 }
-            } while ($exception = $exception->getPrevious());
+                $exception = $exception->getPrevious();
+            }
         }
 
         throw new Exception();
     }
 
     /**
-     * @return \SpomkyLabs\LexikJoseBundle\Features\Context\RequestBuilder
+     * @return RequestBuilder
      */
     protected function getRequestBuilder()
     {

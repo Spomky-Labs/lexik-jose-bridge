@@ -10,17 +10,14 @@ use Jose\Component\Checker\InvalidHeaderException;
 
 final class AlgHeaderChecker implements HeaderChecker
 {
-    /**
-     * @var string
-     */
-    private $algorithm;
+    private readonly string $algorithm;
 
     public function __construct(string $algorithm)
     {
         $this->algorithm = $algorithm;
     }
 
-    public function checkHeader($algorithm): void
+    public function checkHeader(mixed $algorithm): void
     {
         if (! is_string($algorithm)) {
             throw new InvalidHeaderException('The value of the header "alg" is not valid', 'alg', $algorithm);
