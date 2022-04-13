@@ -28,7 +28,31 @@ This library needs at least:
 
 ## Symfony Flex
 
-The preferred way to install this bundle is to rely on Symfony Flex:
+The preferred way to install this bundle is to rely on Symfony Flex and composer.
+Before installing the bundle, it is mandatory to declare specific Flex servers into your composer.json file.
+
+```sh
+composer config --json extra.symfony.endpoint '["https://api.github.com/repos/Spomky-Labs/recipes/contents/index.json?ref=main", "flex://defaults"]'
+```
+
+Or if you prefer, you can directly update your `composer.json` file.
+
+```json
+{
+    "name": "acme/application",
+    "description": "ACME Application",
+    "extra": {
+        "symfony": {
+            "endpoint": [
+                "https://api.github.com/repos/Spomky-Labs/recipes/contents/index.json?ref=main",
+                "flex://defaults"
+            ]
+        }
+    }
+}
+```
+
+Then, you can install the bundle. It will be automatically configured with the default configuration.
 
 ```sh
 composer require spomky-labs/lexik-jose-bridge
@@ -37,11 +61,6 @@ composer require spomky-labs/lexik-jose-bridge
 ## Manual Installation
 
 If you do not use Symfony Flex, then use Composer and install the bundle manually.
-
-```sh
-composer require spomky-labs/lexik-jose-bridge
-```
-
 Then, add this bundle and the `web-token/jwt-framework` bundles into your kernel:
 
 ```php
@@ -72,14 +91,14 @@ If you need other signature algorithms (e.g EC based, HMAC) or if you want to us
 you must install the corresponding packages:
 
 * Signature Algorithms
-    * All: `composer require web-token/signature-pack`
+    * All: `composer require web-token/signature-pack` (not recommended)
     * HMAC: `composer require web-token/jwt-signature-algorithm-hmac`
     * ECDSA: `composer require web-token/jwt-signature-algorithm-ecdsa`
     * EdDSA: `composer require web-token/jwt-signature-algorithm-eddsa`
     * None: `composer require web-token/jwt-signature-algorithm-none` (not recommended)
     * Experimental: `composer require web-token/jwt-signature-algorithm-experimental` (not recommended)
 * Encryption Algorithms
-    * All: `composer require web-token/encryption-pack`
+    * All: `composer require web-token/encryption-pack` (not recommended)
     * Key Encryption:
         * ECDH-ES: `composer require web-token/jwt-encryption-algorithm-ecdh-es`
         * AES Key Wrapping: `composer require web-token/jwt-encryption-algorithm-aeskw`

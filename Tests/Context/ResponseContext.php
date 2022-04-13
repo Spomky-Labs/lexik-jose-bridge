@@ -25,7 +25,7 @@ trait ResponseContext
     /**
      * @Then the response content-type should be :content_type
      */
-    public function theResponseContentTypeShouldBe($content_type)
+    public function theResponseContentTypeShouldBe($content_type): void
     {
         $header = $this->getSession()
             ->getResponseHeaders()
@@ -42,7 +42,7 @@ trait ResponseContext
     /**
      * @Then the response should contain a token
      */
-    public function theResponseShouldContainAToken()
+    public function theResponseShouldContainAToken(): void
     {
         $content = json_decode($this->getSession()->getPage()->getContent(), true);
 

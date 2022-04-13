@@ -12,16 +12,13 @@ use SpomkyLabs\TestBundle\EventListener\JWTListener;
 
 trait RequestContext
 {
-    private $request_builder;
+    private ?RequestBuilder $request_builder = null;
 
-    private $exception;
+    private ?Exception $exception = null;
 
     abstract public function getJWTListener(): JWTListener;
 
-    /**
-     * @return string|null
-     */
-    abstract public function getToken();
+    abstract public function getToken(): ?string;
 
     /**
      * Returns Mink session.
@@ -39,10 +36,7 @@ trait RequestContext
      */
     abstract public function locatePath($uri);
 
-    /**
-     * @return Exception|null
-     */
-    public function getException()
+    public function getException(): ?Exception
     {
         return $this->exception;
     }
@@ -257,10 +251,7 @@ trait RequestContext
         throw new Exception();
     }
 
-    /**
-     * @return RequestBuilder
-     */
-    protected function getRequestBuilder()
+    protected function getRequestBuilder(): RequestBuilder
     {
         if ($this->request_builder === null) {
             $this->request_builder = new RequestBuilder();
