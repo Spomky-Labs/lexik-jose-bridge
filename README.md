@@ -31,7 +31,7 @@ This library needs at least:
 The preferred way to install this bundle is to rely on Symfony Flex:
 
 ```sh
-composer req "spomky-labs/lexik-jose-bridge:^3.0"
+composer require spomky-labs/lexik-jose-bridge
 ```
 
 ## Manual Installation
