@@ -22,10 +22,10 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
         return 'iss';
     }
 
-    public function checkClaim(mixed $issuer): void
+    public function checkClaim(mixed $value): void
     {
-        if ($this->issuer !== $issuer) {
-            throw new Exception(sprintf('The issuer "%s" is not allowed.', $issuer));
+        if ($this->issuer !== $value) {
+            throw new Exception(sprintf('The issuer "%s" is not allowed.', $value));
         }
     }
 

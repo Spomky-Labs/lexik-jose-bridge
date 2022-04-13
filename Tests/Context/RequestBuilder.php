@@ -25,10 +25,7 @@ final class RequestBuilder
 
     private string $uri = '/';
 
-    /**
-     * @return string
-     */
-    public function getUri()
+    public function getUri(): string
     {
         $parse_url = parse_url($this->uri);
         $parse_url['query'] = array_merge($parse_url['query'] ?? [], $this->query);
@@ -43,9 +40,9 @@ final class RequestBuilder
         return
             ((isset($parse_url['scheme'])) ? $parse_url['scheme'] . '://' : '')
             . ((isset($parse_url['user'])) ? $parse_url['user'] . ((isset($parse_url['pass'])) ? ':' . $parse_url['pass'] : '') . '@' : '')
-            . ((isset($parse_url['host'])) ? $parse_url['host'] : '')
+            . ($parse_url['host'] ?? '')
             . ((isset($parse_url['port'])) ? ':' . $parse_url['port'] : '')
-            . ((isset($parse_url['path'])) ? $parse_url['path'] : '')
+            . ($parse_url['path'] ?? '')
             . ((isset($parse_url['query'])) ? '?' . http_build_query($parse_url['query']) : '')
             . ((isset($parse_url['fragment'])) ? '#' . http_build_query($parse_url['fragment']) : '');
     }
@@ -53,10 +50,8 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
-    public function addFragmentParameter($key, $value)
+    public function addFragmentParameter($key, $value): static
     {
         $this->fragment[$key] = $value;
 
@@ -65,10 +60,8 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
-    public function removeFragmentParameter($key)
+    public function removeFragmentParameter($key): static
     {
         unset($this->fragment[$key]);
 
@@ -78,10 +71,8 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
-    public function addQueryParameter($key, $value)
+    public function addQueryParameter($key, $value): static
     {
         $this->query[$key] = $value;
 
@@ -90,10 +81,8 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
-    public function removeQueryParameter($key)
+    public function removeQueryParameter($key): static
     {
         unset($this->query[$key]);
 
@@ -103,10 +92,8 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
-    public function addServer($key, $value)
+    public function addServer($key, $value): static
     {
         $this->server[$key] = $value;
 
@@ -115,10 +102,8 @@ final class RequestBuilder
 
     /**
      * @param $key
-     *
-     * @return self
      */
-    public function removeServer($key)
+    public function removeServer($key): static
     {
         unset($this->server[$key]);
 
@@ -128,10 +113,8 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
-    public function addHeader($key, $value)
+    public function addHeader($key, $value): static
     {
         $this->header[$key] = $value;
 
@@ -140,10 +123,8 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
-    public function removeHeader($key)
+    public function removeHeader($key): static
     {
         unset($this->header[$key]);
 
@@ -153,10 +134,8 @@ final class RequestBuilder
     /**
      * @param string $key
      * @param string $value
-     *
-     * @return self
      */
-    public function addRequestParameter($key, $value)
+    public function addRequestParameter($key, $value): static
     {
         $this->request_parameter[$key] = $value;
 
@@ -165,40 +144,30 @@ final class RequestBuilder
 
     /**
      * @param string $key
-     *
-     * @return self
      */
-    public function removeRequestParameter($key)
+    public function removeRequestParameter($key): static
     {
         unset($this->request_parameter[$key]);
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getRequestParameters()
+    public function getRequestParameters(): array
     {
         return $this->request_parameter;
     }
 
     /**
      * @param $content
-     *
-     * @return self
      */
-    public function setContent($content)
+    public function setContent($content): static
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function unsetContent()
+    public function unsetContent(): static
     {
         $this->content = null;
 
@@ -207,20 +176,15 @@ final class RequestBuilder
 
     /**
      * @param string $method
-     *
-     * @return self
      */
-    public function setMethod($method)
+    public function setMethod($method): static
     {
         $this->method = $method;
 
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function unsetMethod()
+    public function unsetMethod(): static
     {
         $this->method = 'GET';
 
@@ -229,30 +193,22 @@ final class RequestBuilder
 
     /**
      * @param $uri
-     *
-     * @return self
      */
-    public function setUri($uri)
+    public function setUri($uri): static
     {
         $this->uri = $uri;
 
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function unsetUri()
+    public function unsetUri(): static
     {
         $this->uri = '/';
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getServer()
+    public function getServer(): array
     {
         $data = $this->server;
         foreach ($this->header as $key => $value) {
@@ -262,18 +218,12 @@ final class RequestBuilder
         return $data;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @return Request
-     */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return Request::create(
             $this->getUri(),

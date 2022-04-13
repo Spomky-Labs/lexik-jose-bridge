@@ -22,7 +22,7 @@ final class IpClaimChecker implements ClaimChecker
     /**
      * {@inheritdoc}
      */
-    public function checkClaim($ip): void
+    public function checkClaim(mixed $ip): void
     {
         if (! is_string($ip) || ! filter_var($ip, FILTER_VALIDATE_IP)) {
             throw new InvalidClaimException('The claim "ip" is not valid.', 'ip', $ip);

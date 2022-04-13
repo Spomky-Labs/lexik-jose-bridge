@@ -14,6 +14,7 @@ use Jose\Component\Encryption\JWEBuilder;
 use Jose\Component\Encryption\Serializer\CompactSerializer as JWECompactSerializer;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerializer;
+use const JSON_THROW_ON_ERROR;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use SpomkyLabs\LexikJoseBundle\Encoder\LexikJoseEncoder;
 
@@ -58,10 +59,7 @@ trait LoginContext
 
     abstract public function getEncoderEncryptionKeyIndex(): string;
 
-    /**
-     * @return string|null
-     */
-    public function getToken()
+    public function getToken(): ?string
     {
         return $this->token;
     }
@@ -69,7 +67,7 @@ trait LoginContext
     /**
      * @Given I have a valid signed token
      */
-    public function iHaveAValidSignedToken()
+    public function iHaveAValidSignedToken(): void
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
@@ -88,7 +86,7 @@ trait LoginContext
     /**
      * @Given the token must contain the claim :claim with value :value
      */
-    public function theTokenMustContainTheClaimWithValue($claim, $value)
+    public function theTokenMustContainTheClaimWithValue($claim, $value): void
     {
         $this->theTokenMustContainTheClaim($claim);
 
@@ -104,7 +102,7 @@ trait LoginContext
     /**
      * @Given the token must contain the claim :claim
      */
-    public function theTokenMustContainTheClaim($claim)
+    public function theTokenMustContainTheClaim($claim): void
     {
         /** @var JWTEncoderInterface $encoder */
         $encoder = $this->getEncoder();
@@ -118,7 +116,7 @@ trait LoginContext
     /**
      * @Given I have a valid signed and encrypted token
      */
-    public function iHaveAValidSignedAndEncryptedToken()
+    public function iHaveAValidSignedAndEncryptedToken(): void
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
@@ -152,7 +150,7 @@ trait LoginContext
     /**
      * @Given I have a signed and encrypted token but without the :claim claim
      */
-    public function iHaveASignedAndEncryptedTokenButWithoutTheClaim($claim)
+    public function iHaveASignedAndEncryptedTokenButWithoutTheClaim($claim): void
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
@@ -187,7 +185,7 @@ trait LoginContext
     /**
      * @Given I have an expired, signed and encrypted token
      */
-    public function iHaveAnExpiredSignedAndEncryptedToken()
+    public function iHaveAnExpiredSignedAndEncryptedToken(): void
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
@@ -228,7 +226,7 @@ trait LoginContext
     /**
      * @Given I have a signed and encrypted token but with wrong issuer
      */
-    public function iHaveASignedAndEncryptedTokenButWithWrongIssuer()
+    public function iHaveASignedAndEncryptedTokenButWithWrongIssuer(): void
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
@@ -264,7 +262,7 @@ trait LoginContext
     /**
      * @Given I have a signed and encrypted token but with wrong audience
      */
-    public function iHaveASignedAndEncryptedTokenButWithWrongAudience()
+    public function iHaveASignedAndEncryptedTokenButWithWrongAudience(): void
     {
         /** @var JWSBuilder $jwsBuilder */
         $jwsBuilder = $this->getJWSBuilder();
@@ -300,17 +298,14 @@ trait LoginContext
     /**
      * @Then I store the token
      */
-    public function iStoreTheToken()
+    public function iStoreTheToken(): void
     {
-        $content = json_decode($this->getSession()->getPage()->getContent(), true);
+        $content = json_decode($this->getSession()->getPage()->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->token = $content['token'];
     }
 
-    /**
-     * @return array
-     */
-    private function getBasicPayload()
+    private function getBasicPayload(): array
     {
         return [
             'username' => 'user1',
@@ -324,10 +319,7 @@ trait LoginContext
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getSignatureHeader()
+    private function getSignatureHeader(): array
     {
         $header = [
             'typ' => 'JWT',
@@ -342,10 +334,7 @@ trait LoginContext
         return $header;
     }
 
-    /**
-     * @return array
-     */
-    private function getEncryptionHeader()
+    private function getEncryptionHeader(): array
     {
         $header = [
             'typ' => 'JWT',
@@ -365,17 +354,17 @@ trait LoginContext
     {
         $keyIndex = $this->getEncoderKeyIndex();
 
-        $jwkSet = $this->getJWKSetSignature();
-
-        return $jwkSet->get($keyIndex);
+        return $this->getJWKSetSignature()
+            ->get($keyIndex)
+        ;
     }
 
     private function getEncryptionKey(): JWK
     {
         $keyIndex = $this->getEncoderEncryptionKeyIndex();
 
-        $jwkSet = $this->getJWKSetEncryption();
-
-        return $jwkSet->get($keyIndex);
+        return $this->getJWKSetEncryption()
+            ->get($keyIndex)
+        ;
     }
 }
