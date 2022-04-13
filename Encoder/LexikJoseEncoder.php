@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
-use Base64Url\Base64Url;
 use Exception;
 use function is_string;
 use Jose\Component\Checker\ClaimCheckerManager;
@@ -33,7 +32,7 @@ use Jose\Component\Signature\Serializer\CompactSerializer as JWSCompactSerialize
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
-use function Safe\sprintf;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * Json Web Token encoder/decoder.
@@ -234,6 +233,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
                     $reason = JWTDecodeFailureException::EXPIRED_TOKEN;
 
                     break;
+
                 default:
                     $reason = JWTDecodeFailureException::INVALID_TOKEN;
             }
@@ -311,7 +311,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private function getAdditionalPayload(): array
     {
         return [
-            'jti' => Base64Url::encode(random_bytes(64)),
+            'jti' => Base64UrlSafe::encode(random_bytes(64)),
             'exp' => time() + $this->ttl,
             'iat' => time(),
             'iss' => $this->issuer,

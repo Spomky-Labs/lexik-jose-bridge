@@ -6,22 +6,23 @@ default:
     extensions:
 #        Caciobanu\Behat\DeprecationExtension:
 #            mode: 999999
-        Behat\Symfony2Extension:
+        FriendsOfBehat\SymfonyExtension:
             kernel:
                 debug: true
                 path: 'Tests/app/AppKernel.php'
-                bootstrap: 'Tests/app/autoload.php'
+                class: AppKernel
+            bootstrap: 'Tests/app/autoload.php'
         Behat\MinkExtension:
             show_cmd: firefox %s
             base_url: 'https://www.example.test/'
             sessions:
-                symfony2:
-                    symfony2: ~
+                symfony:
+                    symfony: ~
     suites:
         default:
             paths:
                 - '%paths.base%/Features'
             contexts:
                 - 'SpomkyLabs\LexikJoseBundle\Features\Context\FeatureContext'
-            mink_session: 'symfony2'
+            mink_session: 'symfony'
             bundle: 'SpomkyLabsLexikJoseBundle'

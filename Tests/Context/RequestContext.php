@@ -16,11 +16,14 @@ namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 use Behat\Mink\Driver\BrowserKitDriver;
 use function count;
 use Exception;
+use SpomkyLabs\TestBundle\EventListener\JWTListener;
 
 trait RequestContext
 {
     private $request_builder;
     private $exception;
+
+    abstract public function getJWTListener(): JWTListener;
 
     /**
      * @return null|string
@@ -206,9 +209,9 @@ trait RequestContext
      */
     public function theErrorListenerShouldReceiveAnExpiredTokenEvent()
     {
-        $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getExpiredTokenEvents();
+        $events = $this->getJWTListener()->getExpiredTokenEvents();
         if (1 !== count($events)) {
-            throw new Exception();
+            throw new Exception('Expected 1 expired token event, got '.count($events));
         }
     }
 
@@ -217,9 +220,9 @@ trait RequestContext
      */
     public function theErrorListenerShouldReceiveAnInvalidTokenEvent()
     {
-        $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
+        $events = $this->getJWTListener()->getInvalidTokenEvents();
         if (1 !== count($events)) {
-            throw new Exception();
+            throw new Exception('Expected 1 invalid token event, got '.count($events));
         }
     }
 
@@ -230,7 +233,7 @@ trait RequestContext
      */
     public function theErrorListenerShouldReceiveAnInvalidTokenEventContainingAnExceptionWithMessage($message)
     {
-        $events = $this->getContainer()->get('acme_api.event.jwt_created_listener')->getInvalidTokenEvents();
+        $events = $this->getJWTListener()->getInvalidTokenEvents();
 
         foreach ($events as $event) {
             $exception = current($events)->getException();

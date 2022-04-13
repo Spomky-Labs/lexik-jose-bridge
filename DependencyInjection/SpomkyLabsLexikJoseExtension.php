@@ -27,7 +27,7 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
     /**
      * {@inheritdoc}
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'lexik_jose';
     }
@@ -74,13 +74,14 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
 
     public function prepend(ContainerBuilder $container): void
     {
-        $isDebug = $container->getParameter('kernel.debug');
-        $bridgeConfig = $container->getExtensionConfig($this->getAlias());
+        $isDebug = (bool) $container->getParameter('kernel.debug');
+        $bridgeConfig = (array) $container->getExtensionConfig($this->getAlias());
 
         $resolvingBag = $container->getParameterBag();
         $bridgeConfig = $resolvingBag->resolveValue($bridgeConfig);
 
         $bridgeConfig = $this->processConfiguration(new Configuration(), $bridgeConfig);
+
         if (!array_key_exists('claim_checked', $bridgeConfig)) {
             $bridgeConfig['claim_checked'] = [];
         }

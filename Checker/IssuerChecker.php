@@ -16,7 +16,6 @@ namespace SpomkyLabs\LexikJoseBundle\Checker;
 use Exception;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\HeaderChecker;
-use function Safe\sprintf;
 
 final class IssuerChecker implements ClaimChecker, HeaderChecker
 {

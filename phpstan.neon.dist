@@ -1,15 +1,12 @@
 parameters:
-    level: 7
+    level: 8
     paths:
         - ./
-    excludes_analyse:
+    excludePaths:
         - %currentWorkingDirectory%/Tests
         - %currentWorkingDirectory%/var
         - %currentWorkingDirectory%/vendor
     checkMissingIterableValueType: false
-    ignoreErrors:
-        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\:\:scalarNode\(\)\.#'
-        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:addDefaultsIfNotSet\(\)\.#'
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon

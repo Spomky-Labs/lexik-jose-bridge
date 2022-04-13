@@ -16,7 +16,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/Tests')
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR1' => true,
         '@PSR2' => true,
@@ -55,7 +55,7 @@ return PhpCsFixer\Config::create()
             'comment_type' => 'all_multiline',
         ],
         'php_unit_test_annotation' => [
-            'case' => 'snake',
+            //'case' => 'snake',
             'style' => 'annotation',
         ],
         'php_unit_test_case_static_method_calls' => true,
