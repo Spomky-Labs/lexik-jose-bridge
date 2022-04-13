@@ -245,11 +245,12 @@ trait RequestContext
             $exception = current($events)
                 ->getException()
             ;
-            do {
+            while($exception !== null) {
                 if ($exception->getMessage() === $message) {
                     return;
                 }
-            } while ($exception = $exception->getPrevious());
+                $exception = $exception->getPrevious();
+            }
         }
 
         throw new Exception();
