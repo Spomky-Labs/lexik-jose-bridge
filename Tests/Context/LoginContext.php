@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
+use Behat\Mink\Session;
 use function array_key_exists;
 use Exception;
 use Jose\Component\Core\JWK;
@@ -29,7 +30,7 @@ trait LoginContext
     /**
      * @param string|null $name name of the session OR active session will be used
      *
-     * @return \Behat\Mink\Session
+     * @return Session
      */
     abstract public function getSession($name = null);
 

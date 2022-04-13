@@ -10,15 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @Route("/api")
- */
+#[Route(path: '/api')]
 final class ApiController extends AbstractController
 {
-    /**
-     * @Route("/anonymous")
-     */
-    public function anonymousAction(TokenStorageInterface $tokenStorage): Response
+    #[Route(path: '/anonymous')]
+    public function anonymousAction(TokenStorageInterface $tokenStorage) : Response
     {
         $user = $tokenStorage->getToken()?->getUser();
         if ($user === null) {
@@ -26,31 +22,26 @@ final class ApiController extends AbstractController
         } else {
             $message = "Hello {$user->getUserIdentifier()}!";
         }
-
         return new Response($message);
     }
-
     /**
-     * @Route("/hello")
      * @IsGranted("ROLE_USER")
      */
-    public function helloAction(TokenStorageInterface $tokenStorage): Response
+    #[Route(path: '/hello')]
+    public function helloAction(TokenStorageInterface $tokenStorage) : Response
     {
         $user = $tokenStorage->getToken()?->getUser();
         $message = "Hello {$user->getUserIdentifier()}!";
-
         return new Response($message);
     }
-
     /**
-     * @Route("/admin")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function adminAction(TokenStorageInterface $tokenStorage): Response
+    #[Route(path: '/admin')]
+    public function adminAction(TokenStorageInterface $tokenStorage) : Response
     {
         $user = $tokenStorage->getToken()?->getUser();
         $message = "Hello {$user->getUserIdentifier()}!";
-
         return new Response($message);
     }
 }

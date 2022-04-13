@@ -13,20 +13,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class JWTListener
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private readonly RequestStack $requestStack;
 
     /**
      * @var JWTExpiredEvent[]
      */
-    private $expired_token_events = [];
+    private array $expired_token_events = [];
 
     /**
      * @var JWTInvalidEvent[]
      */
-    private $invalid_token_events = [];
+    private array $invalid_token_events = [];
 
     public function __construct(RequestStack $requestStack)
     {

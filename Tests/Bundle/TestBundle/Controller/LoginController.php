@@ -12,14 +12,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 final class LoginController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
      * @Template
      */
-    public function loginAction(AuthenticationUtils $authenticationUtils): array
+    #[Route(path: '/login', name: 'login')]
+    public function loginAction(AuthenticationUtils $authenticationUtils) : array
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-
         return [
             'last_username' => $lastUsername,
             'error' => $error,

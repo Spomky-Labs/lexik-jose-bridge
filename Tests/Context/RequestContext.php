@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
+use Behat\Mink\Session;
 use Behat\Mink\Driver\BrowserKitDriver;
 use function count;
 use Exception;
@@ -27,7 +28,7 @@ trait RequestContext
      *
      * @param string|null $name name of the session OR active session will be used
      *
-     * @return \Behat\Mink\Session
+     * @return Session
      */
     abstract public function getSession($name = null);
 
@@ -257,7 +258,7 @@ trait RequestContext
     }
 
     /**
-     * @return \SpomkyLabs\LexikJoseBundle\Features\Context\RequestBuilder
+     * @return RequestBuilder
      */
     protected function getRequestBuilder()
     {

@@ -1,6 +1,16 @@
 <?php
 
 declare(strict_types=1);
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
+use Jose\Bundle\JoseFramework\JoseFrameworkBundle;
+use SpomkyLabs\TestBundle\SpomkyLabsTestBundle;
+use SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle;
+use FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
@@ -13,19 +23,19 @@ final class AppKernel extends Kernel
     public function registerBundles(): array
     {
         return [
-            new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Symfony\Bundle\MonologBundle\MonologBundle(),
-            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            new Symfony\Bundle\TwigBundle\TwigBundle(),
+            new SensioFrameworkExtraBundle(),
+            new FrameworkBundle(),
+            new MonologBundle(),
+            new SecurityBundle(),
+            new TwigBundle(),
 
-            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+            new LexikJWTAuthenticationBundle(),
 
-            new Jose\Bundle\JoseFramework\JoseFrameworkBundle(),
-            new SpomkyLabs\TestBundle\SpomkyLabsTestBundle(),
-            new SpomkyLabs\LexikJoseBundle\SpomkyLabsLexikJoseBundle(),
+            new JoseFrameworkBundle(),
+            new SpomkyLabsTestBundle(),
+            new SpomkyLabsLexikJoseBundle(),
 
-            new FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle(),
+            new FriendsOfBehatSymfonyExtensionBundle(),
         ];
     }
 
