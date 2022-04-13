@@ -10,11 +10,8 @@ use Jose\Component\Checker\HeaderChecker;
 
 final class IssuerChecker implements ClaimChecker, HeaderChecker
 {
-    private readonly string $issuer;
-
-    public function __construct(string $issuer)
+    public function __construct(private readonly string $issuer)
     {
-        $this->issuer = $issuer;
     }
 
     /**
@@ -32,7 +29,7 @@ final class IssuerChecker implements ClaimChecker, HeaderChecker
         }
     }
 
-    public function checkHeader($value): void
+    public function checkHeader(mixed $value): void
     {
         $this->checkClaim($value);
     }

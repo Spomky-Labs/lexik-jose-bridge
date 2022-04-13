@@ -142,6 +142,12 @@ final class LexikJoseEncoder implements JWTEncoderInterface
 
     public function encrypt(string $jws): string
     {
+        if ($this->jweBuilder === null || $this->encryptionKeyset === null || $this->encryptionKeyIndex === null) {
+            throw new JWTDecodeFailureException(
+                'decoding_error',
+                'The service is not configured for issuing encrypted tokens.'
+            );
+        }
         $headers = $this->getEncryptionHeader();
         $encryptionKey = $this->encryptionKeyset->get($this->encryptionKeyIndex);
 
@@ -157,9 +163,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             ->build()
         ;
 
-        $serializer = new JWECompactSerializer();
-
-        return $serializer->serialize($jwe, 0);
+        return (new JWECompactSerializer())->serialize($jwe, 0);
     }
 
     /**
@@ -174,15 +178,10 @@ final class LexikJoseEncoder implements JWTEncoderInterface
 
             return $this->verify($token);
         } catch (InvalidClaimException $e) {
-            switch ($e->getClaim()) {
-                case 'exp':
-                    $reason = JWTDecodeFailureException::EXPIRED_TOKEN;
-
-                    break;
-
-                default:
-                    $reason = JWTDecodeFailureException::INVALID_TOKEN;
-            }
+            $reason = match ($e->getClaim()) {
+                'exp' => JWTDecodeFailureException::EXPIRED_TOKEN,
+                default => JWTDecodeFailureException::INVALID_TOKEN,
+            };
 
             throw new JWTDecodeFailureException($reason, sprintf(
                 'Invalid JWT Token. The following claim was not verified: %s.',
@@ -217,13 +216,17 @@ final class LexikJoseEncoder implements JWTEncoderInterface
             ->build()
         ;
 
-        $serializer = new JWSCompactSerializer();
-
-        return $serializer->serialize($jws, 0);
+        return (new JWSCompactSerializer())->serialize($jws, 0);
     }
 
     private function decrypt(string $token): string
     {
+        if ($this->jweLoader === null || $this->encryptionKeyset === null || $this->encryptionHeaderCheckerManager === null) {
+            throw new JWTDecodeFailureException(
+                'decoding_error',
+                'The service is not configured for accepting encrypted tokens.'
+            );
+        }
         $serializer = new JWECompactSerializer();
         $jwe = $serializer->unserialize($token);
         $this->encryptionHeaderCheckerManager->check($jwe, 0);

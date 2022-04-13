@@ -1,0 +1,20 @@
+parameters:
+    level: 8
+    paths:
+        - ./
+    excludePaths:
+        - %currentWorkingDirectory%/.github
+        - %currentWorkingDirectory%/Tests
+        - %currentWorkingDirectory%/vendor
+        - %currentWorkingDirectory%/ecs.php
+        - %currentWorkingDirectory%/rector.php
+    checkMissingIterableValueType: false
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/ekino/phpstan-banned-code/extension.neon
+    - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon

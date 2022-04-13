@@ -1,31 +1,10 @@
-.PHONY: mu
-mu: vendor ## Mutation tests
-	vendor/bin/infection -s --threads=$(nproc) --min-msi=23 --min-covered-msi=45
-	vendor/bin/phpunit --coverage-text
-
 .PHONY: tests
 tests: vendor ## Run all tests
-	vendor/bin/phpunit  --color
-
-.PHONY: code-coverage-html
-cc: vendor ## Show test coverage rates (HTML)
-	vendor/bin/phpunit --coverage-html ./build
+	vendor/bin/behat
 
 .PHONY: cs
 cs: vendor ## Fix all files using defined ECS rules
 	vendor/bin/ecs check --fix
-
-.PHONY: tu
-tu: vendor ## Run only unit tests
-	vendor/bin/phpunit --color --group Unit
-
-.PHONY: ti
-ti: vendor ## Run only integration tests
-	vendor/bin/phpunit --color --group Integration
-
-.PHONY: tf
-tf: vendor ## Run only functional tests
-	vendor/bin/phpunit --color --group Functional
 
 .PHONY: st
 st: vendor ## Run static analyse
@@ -45,15 +24,16 @@ ci-cc: vendor ## Show test coverage rates (console)
 ci-cs: vendor ## Check all files using defined ECS rules
 	vendor/bin/ecs check
 
+.PHONY: rector
+rector: vendor ## Check all files using Rector
+	vendor/bin/rector process --ansi --dry-run --xdebug
+
 ################################################
 
 
 vendor: composer.json composer.lock
 	composer validate
 	composer install
-.PHONY: rector
-rector: vendor ## Check all files using Rector
-	vendor/bin/rector process --ansi --dry-run --xdebug
 
 .DEFAULT_GOAL := help
 help:
