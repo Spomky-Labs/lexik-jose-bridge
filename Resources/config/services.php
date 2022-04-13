@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 use Jose\Component\Checker\AudienceChecker;
 use Jose\Component\Checker\IssuerChecker;
 use SpomkyLabs\LexikJoseBundle\Checker\AlgHeaderChecker;
@@ -19,7 +10,8 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $container): void {
-    $container = $container->services()->defaults()
+    $container = $container->services()
+        ->defaults()
         ->private()
         ->autoconfigure()
         ->autowire()
@@ -43,26 +35,30 @@ return static function (ContainerConfigurator $container): void {
 
     $container->set('spomkylabs_lexik_jose_checker_audience')
         ->class(AudienceChecker::class)
-        ->args([
-            '%lexik_jose_bridge.encoder.audience%',
+        ->args(['%lexik_jose_bridge.encoder.audience%'])
+        ->tag('jose.checker.claim', [
+            'alias' => 'lexik_jose_audience',
         ])
-        ->tag('jose.checker.claim', ['alias' => 'lexik_jose_audience'])
-        ->tag('jose.checker.header', ['alias' => 'lexik_jose_audience'])
+        ->tag('jose.checker.header', [
+            'alias' => 'lexik_jose_audience',
+        ])
     ;
 
     $container->set('spomkylabs_lexik_jose_checker_issuer')
         ->class(IssuerChecker::class)
-        ->args([
-            ['%lexik_jose_bridge.encoder.issuer%'],
+        ->args([['%lexik_jose_bridge.encoder.issuer%']])
+        ->tag('jose.checker.claim', [
+            'alias' => 'lexik_jose_issuer',
         ])
-        ->tag('jose.checker.claim', ['alias' => 'lexik_jose_issuer'])
-        ->tag('jose.checker.header', ['alias' => 'lexik_jose_issuer'])
+        ->tag('jose.checker.header', [
+            'alias' => 'lexik_jose_issuer',
+        ])
     ;
     $container->set('spomkylabs_lexik_jose_checker_signature_algorithm')
         ->class(AlgHeaderChecker::class)
-        ->args([
-            '%lexik_jose_bridge.encoder.signature_algorithm%',
+        ->args(['%lexik_jose_bridge.encoder.signature_algorithm%'])
+        ->tag('jose.checker.header', [
+            'alias' => 'lexik_jose_signature_algorithm',
         ])
-        ->tag('jose.checker.header', ['alias' => 'lexik_jose_signature_algorithm'])
     ;
 };

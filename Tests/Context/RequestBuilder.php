@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
 use function count;
@@ -44,7 +35,7 @@ final class RequestBuilder
     private $request_parameter = [];
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $content;
 
@@ -66,21 +57,21 @@ final class RequestBuilder
         $parse_url = parse_url($this->uri);
         $parse_url['query'] = array_merge($parse_url['query'] ?? [], $this->query);
         $parse_url['fragment'] = array_merge($parse_url['fragment'] ?? [], $this->fragment);
-        if (0 === count($parse_url['query'])) {
+        if (count($parse_url['query']) === 0) {
             unset($parse_url['query']);
         }
-        if (0 === count($parse_url['fragment'])) {
+        if (count($parse_url['fragment']) === 0) {
             unset($parse_url['fragment']);
         }
 
         return
-            ((isset($parse_url['scheme'])) ? $parse_url['scheme'].'://' : '')
-            .((isset($parse_url['user'])) ? $parse_url['user'].((isset($parse_url['pass'])) ? ':'.$parse_url['pass'] : '').'@' : '')
-            .((isset($parse_url['host'])) ? $parse_url['host'] : '')
-            .((isset($parse_url['port'])) ? ':'.$parse_url['port'] : '')
-            .((isset($parse_url['path'])) ? $parse_url['path'] : '')
-            .((isset($parse_url['query'])) ? '?'.http_build_query($parse_url['query']) : '')
-            .((isset($parse_url['fragment'])) ? '#'.http_build_query($parse_url['fragment']) : '');
+            ((isset($parse_url['scheme'])) ? $parse_url['scheme'] . '://' : '')
+            . ((isset($parse_url['user'])) ? $parse_url['user'] . ((isset($parse_url['pass'])) ? ':' . $parse_url['pass'] : '') . '@' : '')
+            . ((isset($parse_url['host'])) ? $parse_url['host'] : '')
+            . ((isset($parse_url['port'])) ? ':' . $parse_url['port'] : '')
+            . ((isset($parse_url['path'])) ? $parse_url['path'] : '')
+            . ((isset($parse_url['query'])) ? '?' . http_build_query($parse_url['query']) : '')
+            . ((isset($parse_url['fragment'])) ? '#' . http_build_query($parse_url['fragment']) : '');
     }
 
     /**
@@ -289,14 +280,14 @@ final class RequestBuilder
     {
         $data = $this->server;
         foreach ($this->header as $key => $value) {
-            $data[mb_strtoupper('HTTP_'.$key)] = $value;
+            $data[mb_strtoupper('HTTP_' . $key)] = $value;
         }
 
         return $data;
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getContent()
     {

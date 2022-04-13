@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\Encoder;
 
 use Exception;
@@ -19,8 +10,6 @@ use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\HeaderCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\InvalidHeaderException;
-use Jose\Component\Checker\MissingMandatoryClaimException;
-use Jose\Component\Checker\MissingMandatoryHeaderParameterException;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Encryption\JWEBuilder;
@@ -112,12 +101,12 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     private $encryptionKeyIndex;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $keyEncryptionAlgorithm;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $contentEncryptionAlgorithm;
 
@@ -165,8 +154,15 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     /**
      * @param int|string $encryptionKeyIndex
      */
-    public function enableEncryptionSupport(JWEBuilder $jweBuilder, JWEDecrypter $jweLoader, HeaderCheckerManager $encryptionHeaderCheckerManager, JWKSet $encryptionKeyset, $encryptionKeyIndex, string $keyEncryptionAlgorithm, string $contentEncryptionAlgorithm): void
-    {
+    public function enableEncryptionSupport(
+        JWEBuilder $jweBuilder,
+        JWEDecrypter $jweLoader,
+        HeaderCheckerManager $encryptionHeaderCheckerManager,
+        JWKSet $encryptionKeyset,
+        $encryptionKeyIndex,
+        string $keyEncryptionAlgorithm,
+        string $contentEncryptionAlgorithm
+    ): void {
         $this->jweBuilder = $jweBuilder;
         $this->jweLoader = $jweLoader;
         $this->encryptionKeyset = $encryptionKeyset;
@@ -184,13 +180,17 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         try {
             $jwt = $this->sign($payload);
 
-            if (null !== $this->jweBuilder) {
+            if ($this->jweBuilder !== null) {
                 $jwt = $this->encrypt($jwt);
             }
 
             return $jwt;
         } catch (Exception $e) {
-            throw new JWTEncodeFailureException('encoding_error', 'An error occurred while trying to encode the JWT token: '.$e->getMessage(), $e);
+            throw new JWTEncodeFailureException(
+                'encoding_error',
+                'An error occurred while trying to encode the JWT token: ' . $e->getMessage(),
+                $e
+            );
         }
     }
 
@@ -222,7 +222,7 @@ final class LexikJoseEncoder implements JWTEncoderInterface
     public function decode($token): array
     {
         try {
-            if (null !== $this->jweBuilder) {
+            if ($this->jweBuilder !== null) {
                 $token = $this->decrypt($token);
             }
 
@@ -238,11 +238,20 @@ final class LexikJoseEncoder implements JWTEncoderInterface
                     $reason = JWTDecodeFailureException::INVALID_TOKEN;
             }
 
-            throw new JWTDecodeFailureException($reason, sprintf('Invalid JWT Token. The following claim was not verified: %s.', $e->getClaim()));
+            throw new JWTDecodeFailureException($reason, sprintf(
+                'Invalid JWT Token. The following claim was not verified: %s.',
+                $e->getClaim()
+            ));
         } catch (InvalidHeaderException $e) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token. The following header was not verified: %s.', $e->getHeader()));
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf(
+                'Invalid JWT Token. The following header was not verified: %s.',
+                $e->getHeader()
+            ));
         } catch (Exception $e) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf('Invalid JWT Token: %s', $e->getMessage()), $e);
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, sprintf(
+                'Invalid JWT Token: %s',
+                $e->getMessage()
+            ), $e);
         }
     }
 
@@ -267,39 +276,38 @@ final class LexikJoseEncoder implements JWTEncoderInterface
         return $serializer->serialize($jws, 0);
     }
 
-    /**
-     * @throws JWTDecodeFailureException
-     */
     private function decrypt(string $token): string
     {
         $serializer = new JWECompactSerializer();
         $jwe = $serializer->unserialize($token);
         $this->encryptionHeaderCheckerManager->check($jwe, 0);
-        if (false === $this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset, 0)) {
-            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to decrypt the JWT token.');
+        if ($this->jweLoader->decryptUsingKeySet($jwe, $this->encryptionKeyset, 0) === false) {
+            throw new JWTDecodeFailureException(
+                'decoding_error',
+                'An error occurred while trying to decrypt the JWT token.'
+            );
         }
 
         return $jwe->getPayload();
     }
 
-    /**
-     * @throws InvalidClaimException
-     * @throws InvalidHeaderException
-     * @throws JWTDecodeFailureException
-     * @throws MissingMandatoryClaimException
-     * @throws MissingMandatoryHeaderParameterException
-     */
     private function verify(string $token): array
     {
         $serializer = new JWSCompactSerializer();
         $jws = $serializer->unserialize($token);
         $this->signatureHeaderCheckerManager->check($jws, 0);
-        if (false === $this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset, 0)) {
-            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
+        if ($this->jwsLoader->verifyWithKeySet($jws, $this->signatureKeyset, 0) === false) {
+            throw new JWTDecodeFailureException(
+                'decoding_error',
+                'An error occurred while trying to verify the JWT token.'
+            );
         }
         $jwt = $jws->getPayload();
-        if (!is_string($jwt)) {
-            throw new JWTDecodeFailureException('decoding_error', 'An error occurred while trying to verify the JWT token.');
+        if (! is_string($jwt)) {
+            throw new JWTDecodeFailureException(
+                'decoding_error',
+                'An error occurred while trying to verify the JWT token.'
+            );
         }
 
         $payload = JsonConverter::decode($jwt);

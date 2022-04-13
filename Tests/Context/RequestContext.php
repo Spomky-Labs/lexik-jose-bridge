@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2020 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace SpomkyLabs\LexikJoseBundle\Features\Context;
 
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -21,19 +12,20 @@ use SpomkyLabs\TestBundle\EventListener\JWTListener;
 trait RequestContext
 {
     private $request_builder;
+
     private $exception;
 
     abstract public function getJWTListener(): JWTListener;
 
     /**
-     * @return null|string
+     * @return string|null
      */
     abstract public function getToken();
 
     /**
      * Returns Mink session.
      *
-     * @param null|string $name name of the session OR active session will be used
+     * @param string|null $name name of the session OR active session will be used
      *
      * @return \Behat\Mink\Session
      */
@@ -47,7 +39,7 @@ trait RequestContext
     abstract public function locatePath($uri);
 
     /**
-     * @return null|Exception
+     * @return Exception|null
      */
     public function getException()
     {
@@ -56,46 +48,42 @@ trait RequestContext
 
     /**
      * @Given I add key :key with value :value in the header
-     *
-     * @param mixed $key
-     * @param mixed $value
      */
     public function iAddKeyWithValueInTheHeader($key, $value)
     {
-        $this->getRequestBuilder()->addHeader($key, $value);
+        $this->getRequestBuilder()
+            ->addHeader($key, $value)
+        ;
     }
 
     /**
      * @Given I add key :key with value :value in the query parameter
-     *
-     * @param mixed $key
-     * @param mixed $value
      */
     public function iAddKeyWithValueInTheQueryParameter($key, $value)
     {
-        $this->getRequestBuilder()->addQueryParameter($key, $value);
+        $this->getRequestBuilder()
+            ->addQueryParameter($key, $value)
+        ;
     }
 
     /**
      * @Given I add user :user and password :secret in the authorization header
-     *
-     * @param mixed $user
-     * @param mixed $secret
      */
     public function iAddUserAndPasswordInTheAuthorizationHeader($user, $secret)
     {
-        $this->getRequestBuilder()->addHeader('Authorization', 'Basic '.base64_encode("{$user}:{$secret}"));
+        $this->getRequestBuilder()
+            ->addHeader('Authorization', 'Basic ' . base64_encode("{$user}:{$secret}"))
+        ;
     }
 
     /**
      * @Given I add key :key with value :value in the body request
-     *
-     * @param mixed $key
-     * @param mixed $value
      */
     public function iAddKeyWithValueInTheBodyRequest($key, $value)
     {
-        $this->getRequestBuilder()->addRequestParameter($key, $value);
+        $this->getRequestBuilder()
+            ->addRequestParameter($key, $value)
+        ;
     }
 
     /**
@@ -104,21 +92,23 @@ trait RequestContext
     public function iAddTheTokenInTheAuthorizationHeader()
     {
         $token = $this->getToken();
-        if (null === $token) {
+        if ($token === null) {
             throw new Exception('The token is not available. Are you logged in?');
         }
 
-        $this->getRequestBuilder()->addHeader('Authorization', 'Bearer '.$token);
+        $this->getRequestBuilder()
+            ->addHeader('Authorization', 'Bearer ' . $token)
+        ;
     }
 
     /**
      * @Given the request content type is :content_type
-     *
-     * @param mixed $content_type
      */
     public function theContentTypeIs($content_type)
     {
-        $this->getRequestBuilder()->addServer('CONTENT_TYPE', $content_type);
+        $this->getRequestBuilder()
+            ->addServer('CONTENT_TYPE', $content_type)
+        ;
     }
 
     /**
@@ -126,7 +116,9 @@ trait RequestContext
      */
     public function theRequestIsNotSecured()
     {
-        $this->getRequestBuilder()->addServer('HTTPS', 'off');
+        $this->getRequestBuilder()
+            ->addServer('HTTPS', 'off')
+        ;
     }
 
     /**
@@ -134,34 +126,44 @@ trait RequestContext
      */
     public function theRequestIsSecured()
     {
-        $this->getRequestBuilder()->addServer('HTTPS', 'on');
+        $this->getRequestBuilder()
+            ->addServer('HTTPS', 'on')
+        ;
     }
 
     /**
      * @When I :method the request to :uri
      *
      * @param string $method
-     * @param mixed  $uri
      */
     public function iTheRequestTo($method, $uri)
     {
-        if (!$this->getSession()->getDriver() instanceof BrowserKitDriver) {
+        if (! $this->getSession()->getDriver() instanceof BrowserKitDriver) {
             throw new Exception('Unsupported driver.');
         }
 
-        $client = $this->getSession()->getDriver()->getClient();
+        $client = $this->getSession()
+            ->getDriver()
+            ->getClient()
+        ;
         $client->followRedirects(false);
 
-        $this->getRequestBuilder()->setUri($this->locatePath($uri));
+        $this->getRequestBuilder()
+            ->setUri($this->locatePath($uri))
+        ;
 
         try {
             $client->request(
                 $method,
-                $this->getRequestBuilder()->getUri(),
-                $this->getRequestBuilder()->getRequestParameters(),
+                $this->getRequestBuilder()
+                    ->getUri(),
+                $this->getRequestBuilder()
+                    ->getRequestParameters(),
                 [],
-                $this->getRequestBuilder()->getServer(),
-                $this->getRequestBuilder()->getContent()
+                $this->getRequestBuilder()
+                    ->getServer(),
+                $this->getRequestBuilder()
+                    ->getContent()
             );
         } catch (Exception $e) {
             $this->exception = $e;
@@ -171,8 +173,6 @@ trait RequestContext
 
     /**
      * @Given I am on the page :url
-     *
-     * @param mixed $url
      */
     public function iAmOnThePage($url)
     {
@@ -191,16 +191,18 @@ trait RequestContext
 
     /**
      * @Then I should receive an exception :message
-     *
-     * @param mixed $message
      */
     public function iShouldReceiveAnException($message)
     {
-        if (!$this->getException() instanceof Exception) {
+        if (! $this->getException() instanceof Exception) {
             throw new Exception('No exception caught.');
         }
         if ($message !== $this->getException()->getMessage()) {
-            throw new Exception(sprintf('The exception has not the expected message: "%s". Message is "%s".', $message, $this->getException()->getMessage()));
+            throw new Exception(sprintf(
+                'The exception has not the expected message: "%s". Message is "%s".',
+                $message,
+                $this->getException()->getMessage()
+            ));
         }
     }
 
@@ -209,9 +211,11 @@ trait RequestContext
      */
     public function theErrorListenerShouldReceiveAnExpiredTokenEvent()
     {
-        $events = $this->getJWTListener()->getExpiredTokenEvents();
-        if (1 !== count($events)) {
-            throw new Exception('Expected 1 expired token event, got '.count($events));
+        $events = $this->getJWTListener()
+            ->getExpiredTokenEvents()
+        ;
+        if (count($events) !== 1) {
+            throw new Exception('Expected 1 expired token event, got ' . count($events));
         }
     }
 
@@ -220,23 +224,27 @@ trait RequestContext
      */
     public function theErrorListenerShouldReceiveAnInvalidTokenEvent()
     {
-        $events = $this->getJWTListener()->getInvalidTokenEvents();
-        if (1 !== count($events)) {
-            throw new Exception('Expected 1 invalid token event, got '.count($events));
+        $events = $this->getJWTListener()
+            ->getInvalidTokenEvents()
+        ;
+        if (count($events) !== 1) {
+            throw new Exception('Expected 1 invalid token event, got ' . count($events));
         }
     }
 
     /**
      * @Then the error listener should receive an invalid token event containing an exception with message :message
-     *
-     * @param mixed $message
      */
     public function theErrorListenerShouldReceiveAnInvalidTokenEventContainingAnExceptionWithMessage($message)
     {
-        $events = $this->getJWTListener()->getInvalidTokenEvents();
+        $events = $this->getJWTListener()
+            ->getInvalidTokenEvents()
+        ;
 
         foreach ($events as $event) {
-            $exception = current($events)->getException();
+            $exception = current($events)
+                ->getException()
+            ;
             do {
                 if ($exception->getMessage() === $message) {
                     return;
@@ -252,7 +260,7 @@ trait RequestContext
      */
     protected function getRequestBuilder()
     {
-        if (null === $this->request_builder) {
+        if ($this->request_builder === null) {
             $this->request_builder = new RequestBuilder();
         }
 
