@@ -129,12 +129,14 @@ final class SpomkyLabsLexikJoseExtension extends Extension implements PrependExt
             $this->enableEncryptionSupport($container, $bridgeConfig, $isDebug);
         }
 
-        $lexikConfig = [
-            'encoder' => [
-                'service' => LexikJoseEncoder::class,
-            ],
-        ];
-        $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
+        if ($bridgeConfig['override_encoder']) {
+            $lexikConfig = [
+                'encoder' => [
+                    'service' => LexikJoseEncoder::class,
+                ],
+            ];
+            $container->prependExtensionConfig('lexik_jwt_authentication', $lexikConfig);
+        }
     }
 
     private function enableEncryptionSupport(ContainerBuilder $container, array $bridgeConfig, bool $isDebug): void
